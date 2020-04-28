@@ -30,7 +30,7 @@ spring:
   datasource:
     dbcp2:
       test-on-return: false
-    driver-class-name: oracle.jdbc.driver.OracleDriver
+    driver-class-name: com.mysql.jdbc.Driver
     druid:
       initial-size: 5
       max-active: 100
@@ -41,11 +41,11 @@ spring:
       test-while-idle: true
       time-between-eviction-runs-millis: 60000
       validation-query: SELECT 1 FROM DUAL
-    password: SPSS_MODEL
+    password: epms_cq
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:oracle:thin:@192.168.12.119:1522:ORCL10G
- #   url: jdbc:mysql://192.168.12.114:3306/iplatform_tools?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC&allowMultiQueries=true
-    username: SPSS_MODEL
+    # url: jdbc:oracle:thin:@192.168.12.119:1522:ORCL10G
+    url: jdbc:mysql://106.13.132.3:3306/speak?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC&allowMultiQueries=true
+    username: epms_cq
     
 ########################################################
 ###THYMELEAF (ThymeleafAutoConfiguration)
