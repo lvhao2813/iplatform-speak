@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.boco.share.privilege.dao.PriManagerMapper">
+
+	<resultMap type="com.boco.share.privilege.bean.PriManagerBean" id="priManager">
+		<result column="MGR_ID" property="mgrId" jdbcType="VARCHAR" />
+		<result column="USER_CODE" property="userCode" jdbcType="VARCHAR" />
+		<result column="MGR_NAME" property="mgrName" jdbcType="VARCHAR" />
+		<result column="MGR_TYPE" property="mgrType" jdbcType="VARCHAR" />
+		<result column="ORG_ID" property="orgId" jdbcType="VARCHAR" />
+		<result column="ORG_NAME" property="orgName" jdbcType="VARCHAR" />
+		<result column="TOP_PARENT_ID" property="topParentId" jdbcType="VARCHAR" />
+		<result column="TOP_PARENT_NAME" property="topParentName" jdbcType="VARCHAR" />
+		<result column="PASSWORD" property="password" jdbcType="VARCHAR" />
+		<result column="END_DATE" property="endDate" jdbcType="DATE" />
+		<result column="START_DATE" property="startDate" jdbcType="DATE" />
+		<result column="STOP" property="stop" jdbcType="VARCHAR" />
+		<result column="LOGIN_TIMES" property="loginTimes" jdbcType="DECIMAL" />
+		<result column="LAST_LOGIN_DATE" property="lastLoginDate" jdbcType="DATE" />
+		<result column="LOGIN_DATE" property="loginDate" jdbcType="DATE" />
+		<result column="GRANT_TYPE" property="grantType" jdbcType="VARCHAR" />
+		<result column="IS_SUPER" property="isSuper" jdbcType="DECIMAL" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+		<result column="UPDATED_DT" property="updatedDt" jdbcType="DATE" />
+		<result column="UPDATED_BY" property="updatedBy" jdbcType="VARCHAR" />
+		<result column="CREATED_DT" property="createdDt" jdbcType="DATE" />
+		<result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR" />
+		<result column="IS_DELETED" property="isDeleted" jdbcType="VARCHAR" />
+		<result column="VERSION" property="version" jdbcType="DECIMAL" />
+		<result column="ROLE_NAME" property="roleName" jdbcType="VARCHAR" />
+		<result column="E_MAIL" property="email" jdbcType="VARCHAR" />
+		<result column="MOBILE" property="mobile" jdbcType="VARCHAR" />
+		
+	</resultMap>
+
+	<select id="getManagerByCodeAndPassword"
+		resultMap="priManager"
+		parameterType="com.boco.share.privilege.bean.PriManagerBean">
+				SELECT
+				SPR.MGR_ID,
+				SPR.USER_CODE,
+				SPR.MGR_NAME,
+				SPR.MGR_TYPE,
+				SPR.ORG_ID,
+				SPR. PASSWORD,
+				SPR.END_DATE,
+				SPR.START_DATE,
+				SPR. STOP,
+				SPR.LOGIN_TIMES,
+				SPR.LAST_LOGIN_DATE,
+				SPR.LOGIN_DATE,
+				SPR.GRANT_TYPE,
+				SPR.IS_SUPER,
+				SPR. STATUS,
+				SPR.REMARK,
+				SPR.UPDATED_DT,
+				SPR.UPDATED_BY,
+				SPR.CREATED_DT,
+				SPR.CREATED_BY,
+				SPR.IS_DELETED,
+				SPR.VERSION,
+				SPR.MAIL,
+				SR.ROLE_NAME
+			FROM
+				STBL_PRI_MANAGER SPR
+			LEFT JOIN STBL_PRI_USER_ROLE SPUR ON SPR.MGR_ID = SPUR.MGR_ID
+			AND SPUR.IS_DELETED = 'N'
+			LEFT JOIN STBL_PRI_ROLE SR ON SPUR.ROLE_ID = SR.ROLE_ID
+			AND SR.IS_DELETED = 'N'
+			WHERE
+				SPR.IS_DELETED = 'N'
+		<if test="userCode!=null and userCode!=''">
+			AND SPR.USER_CODE = #{userCode}
+		</if>
+		<if test="password!=null and password!=''">
+			AND SPR.PASSWORD = #{password}
+		</if>
+	</select>
+
+	<select id="getUserRole" resultType="java.util.Map"
+		parameterType="String">
+		SELECT spur.USER_ROLE_ID,
+		spur.MGR_ID,
+		spur.ROLE_ID,
+		spur.STATUS,
+		spur.REMARK,
+		spur.UPDATED_DT,
+		spur.UPDATED_BY,
+		spur.CREATED_DT,
+		spur.CREATED_BY,
+		spur.IS_DELETED,
+		spur.VERSION,
+		(SELECT
+		SPR.ROLE_NAME
+		FROM STBL_PRI_ROLE SPR
+		WHERE SPR.ROLE_ID = spur.ROLE_ID)
+		ROLE_NAME
+		FROM STBL_PRI_USER_ROLE spur
+		WHERE spur.MGR_ID = #{mgrId} AND
+		ROWNUM = 1 AND spur.IS_DELETED = 'N'
+	</select>
+
+	<select id="loadAllMenu"
+		resultMap="com.boco.share.privilege.dao.PriMenuMapper.TblPriMenuResult">
+		SELECT MENU_ID,
+		parent_id,
+		menu_code,
+		menu_name,
+		description,
+		menu_link,
+		is_leaf,
+		menu_level,
+		menu_ord,
+		status,
+		remark,
+		updated_dt,
+		updated_by,
+		created_dt,
+		created_by,
+		is_deleted,
+		version,
+		optype
+		FROM
+		stbl_pri_menue
+		WHERE is_deleted = 'N'
+		START WITH parent_id = '0'
+		CONNECT
+		BY PRIOR menu_id = parent_id
+		ORDER SIBLINGS BY menu_ord
+	</select>
+
+	<select id="queryMenuAndOptByUser"
+		resultType="java.util.Map"
+		parameterType="com.boco.share.privilege.bean.PriManagerBean">
+		SELECT   spm.MENU_ID,
+			         spm.MENU_NAME,
+			         spm.MENU_CODE,
+			         spmo.MENU_OPT_ID,
+			         spo.OPT_CODE,
+			         spo.STATUS OPT_STATUS,
+			         spo.OPT_ORDER,
+			         spo.DESCRIPTION,
+			         spo.OPT_NAME,
+			         spo.OPT_ID,
+			         spro.ROLE_OPT_ID
+			  FROM   STBL_PRI_USER_ROLE spur,
+			         STBL_PRI_ROLE_OPT spro,
+			         STBL_PRI_MENU_OPT spmo,
+			         STBL_PRI_MENUE spm,
+			         STBL_PRI_OPT spo
+			 WHERE       SPUR.MGR_ID = #{mgrId}
+			         AND SPUR.IS_DELETED = 'N'
+			         AND SPRO.IS_DELETED = 'N'
+			         AND SPMO.IS_DELETED = 'N'
+			         AND SPM.IS_DELETED = 'N'
+			         AND SPO.IS_DELETED = 'N'
+			         AND SPUR.ROLE_ID = SPRO.ROLE_ID
+			         AND SPRO.MENU_OPT_ID = SPMO.MENU_OPT_ID
+			         AND SPMO.OPT_ID = SPO.OPT_ID
+			         AND SPMO.MENU_ID = SPM.MENU_ID
+  </select>
+
+	<select id="loadManagers"
+		parameterType="com.boco.share.privilege.bean.PriManagerBean"
+		resultMap="priManager">
+		SELECT   MGR_ID,
+			         USER_CODE,
+			         MGR_NAME,
+			         MGR_TYPE,
+			         ORG_ID,
+			         (SELECT   SPOZ.ORG_NAME
+			            FROM   STBL_PRI_ORGANIZATION SPOZ
+			           WHERE   SPOZ.ORG_ID = spm.ORG_ID)
+			            ORG_NAME,
+			         TOP_PARENT_ID,
+			         (SELECT   SPOZ.ORG_NAME
+			            FROM   STBL_PRI_ORGANIZATION SPOZ
+			           WHERE   SPOZ.ORG_ID = spm.TOP_PARENT_ID)
+			            TOP_PARENT_NAME,
+			         PASSWORD,
+			         END_DATE,
+			         START_DATE,
+			         STOP,
+			         LOGIN_TIMES,
+			         LAST_LOGIN_DATE,
+			         LOGIN_DATE,
+			         GRANT_TYPE,
+			         IS_SUPER,
+			         STATUS,
+			         MOBILE,
+			         REMARK,
+			         UPDATED_DT,
+			         UPDATED_BY,
+			         CREATED_DT,
+			         CREATED_BY,
+			         IS_DELETED,
+			         E_MAIL,
+			         VERSION
+			  FROM   STBL_PRI_MANAGER spm
+			 WHERE   is_deleted = 'N'
+			     AND   IS_SUPER !=1
+			 <if test="MGR_TYPE!=null and MGR_TYPE!=''">
+				AND MGR_TYPE = #{MGR_TYPE}
+			</if>
+			<if test="MGR_ID!=null and MGR_ID!=''">
+				AND MGR_ID = #{MGR_ID}
+			</if>
+			<if test="MGR_NAME!=null and MGR_NAME!=''">
+				AND MGR_NAME like '%'||#{MGR_NAME}||'%'
+			</if>
+			<if test="USER_CODE!=NULL and USER_CODE!=''">
+				AND USER_CODE =  #{USER_CODE}
+			</if>
+		  	order by  CREATED_DT DESC
+  </select>
+  
+  <insert id="insertManager" parameterType="com.boco.share.privilege.bean.PriManagerBean">
+		INSERT INTO STBL_PRI_MANAGER (MGR_ID,
+                              USER_CODE,
+                              MGR_NAME,
+                              PASSWORD,
+                              IS_SUPER,
+                              MOBILE,
+                              E_MAIL,
+                              CREATED_BY)
+        VALUES (#{mgrId}, #{userCode}, #{mgrName}, 
+			      #{password},0, #{mobile}, #{email}, #{createdBy})
+	</insert>
+  
+	<update id="deleteManager" parameterType="String">
+		UPDATE STBL_PRI_MANAGER set IS_DELETED = 'Y' WHERE MGR_ID = #{deleteId}	
+	</update>
+	
+	 <update id="batchDeleteManager" parameterType="String">
+        UPDATE STBL_PRI_MANAGER set IS_DELETED = 'Y' WHERE MGR_ID in
+       <foreach item="deleteIds" collection="array" open="(" separator="," close=")">
+            	#{deleteIds}
+        </foreach>
+    </update>
+    
+    <update id="updateManager" parameterType="com.boco.share.privilege.bean.PriManagerBean">
+		update STBL_PRI_MANAGER
+			SET UPDATED_DT=now(),
+				  VERSION=VERSION+1
+				  <if test="userCode!=null and userCode!=''">
+					, USER_CODE = #{userCode}
+				</if>
+				<if test="mgrName!=null and mgrName!=''">
+					, MGR_NAME = #{mgrName}
+				</if>
+				<if test="mgrType!=null and mgrType!=''">
+					, MGR_TYPE = #{mgrType}
+				</if>
+				<if test="orgId!=null and orgId!=''">
+					, ORG_ID = #{orgId}
+				</if>
+				<if test="topParentId!=null and topParentId!=''">
+					, TOP_PARENT_ID = #{topParentId}
+				</if>
+				<if test="password!=null and password!=''">
+					, PASSWORD = #{password}
+				</if>
+				<if test="mobile!=null and mobile!=''">
+					, MOBILE = #{mobile}
+				</if>
+				<if test="email!=null and email!=''">
+					, E_MAIL = #{email}
+				</if>
+				<if test="remark!=null and remark!=''">
+					, remark = #{remark}
+				</if>
+			     where MGR_ID = #{mgrId}
+	</update>
+	
+	<update id="updateMgrPwd" parameterType="java.util.HashMap" >
+	    UPDATE STBL_PRI_MANAGER
+	    SET PASSWORD = #{PASSWORD},
+		      UPDATED_DT = SYSDATE,
+		      UPDATED_BY = #{UPDATED_BY},
+		      VERSION = VERSION+1
+		     WHERE MGR_ID = #{mgrId}
+  </update>
+  
+  <update id="setStopOrActive" parameterType="String">
+		UPDATE   STBL_PRI_MANAGER
+		   SET   STOP = (CASE STOP WHEN '1' THEN '0' ELSE '1' END)
+		 WHERE   MGR_ID = #{mgrId} 
+	</update>
+  
+  <select id="queryHomeUrl" resultType="String" parameterType="String">
+		SELECT 
+		spm.menu_link
+		FROM STBL_PRI_USER_ROLE spur, stbl_pri_role_homemenu sprh, stbl_pri_menue spm
+		where spur.mgr_id = #{mgrId} and spur.role_id = sprh.role_id 
+		and sprh.menu_id = spm.menu_id
+	</select>
+  <select id="queryOrgAndChild" resultType="String">
+		select c.id from c_organization c
+			start with c.parent_id = #{parentId}
+			connect by prior c.id = c.parent_id
+	</select>
+</mapper>

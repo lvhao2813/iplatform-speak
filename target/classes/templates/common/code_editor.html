@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    <head>
+        <title>编辑软件</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" th:href="@{/css/html-complier.css}" />
+<!--         <script th:src="@{/js/jquery-1.7.2.min.js}"></script> -->
+         <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+        <link rel="stylesheet" th:href="@{/js/complier/codemirror/lib/codemirror.css}">
+        <script th:src="@{/js/complier/codemirror/lib/codemirror.js}"></script>
+        <script th:src="@{/js/complier/codemirror/xml.js}"></script>
+        <script th:src="@{/js/complier/codemirror/javascript.js}"></script>
+        <script th:src="@{/js/complier/codemirror/css.js}"></script>
+        <script th:src="@{/js/complier/codemirror/htmlmixed.js}"></script>
+        <script th:src="@{/js/complier/codemirror/htmlembedded.js}"></script>
+        <!-- 自动补全 -->
+        <script th:src="@{/js/complier/codemirror/show-hint.js}"></script>
+        <link rel="stylesheet" th:href="@{/js/complier/codemirror/show-hint.css}">
+        <script th:src="@{/js/complier/codemirror/anyword-hint.js}"></script>
+        <script th:src="@{/js/complier/codemirror/javascript-hint.js}"></script>
+        <script th:src="@{/js/complier/codemirror/html-hint.js}"></script>
+        <script th:src="@{/js/complier/codemirror/css-hint.js}"></script>
+        <script th:src="@{/js/complier/codemirror/xml-hint.js}"></script>
+        <!-- 自动收缩 -->
+        <link rel="stylesheet" th:href="@{/js/complier/codemirror/fold/foldgutter.css}"/>
+        <script th:src="@{/js/complier/codemirror/fold/foldcode.js}"></script>
+        <script th:src="@{/js/complier/codemirror/fold/foldgutter.js}"></script>
+        <script th:src="@{/js/complier/codemirror/fold/brace-fold.js}"></script>
+        <script th:src="@{/js/complier/codemirror/fold/comment-fold.js}"></script>
+        <script th:src="@{/js/complier/codemirror/fold/indent-fold.js}"></script>
+        <script th:src="@{/js/complier/codemirror/fold/markdown-fold.js}"></script>
+        <script th:src="@{/js/complier/codemirror/fold/xml-fold.js}"></script>
+        <!-- 引入括号匹配 -->
+        <script th:src="@{/js/complier/codemirror/matchbrackets.js}"></script>
+        <!-- java使用的js -->
+        <script th:src="@{/js/complier/codemirror/clike.js}"></script>
+        <style type="text/css">.CodeMirror {height: 98% !important;width: 96%!important;font-size: 16px;}</style>
+        <div th:fragment="scripts(scripts)">
+		        <script th:inline="javascript">
+		            window.CODE = [[${resultMap['CODE']}]];
+		            window.CATEGORIA = [[${resultMap['CATEGORIA']}]];
+		        </script>
+		</div>
+        <script th:src="@{/js/complier/html-complier.js}"></script>
+    </head>
+    <body>
+    	<input  type="text"  style="display:none" name="ID" th:value="${resultMap['ID']}" />
+        <div id="title">
+            <div class="runner-toolbar">
+                <select name="language" id="language" value onchange="typeChange()">
+                    <option value="html" th:selected="${resultMap['CATEGORIA']!='java'}">HTML</option>
+                    <option value="java" th:selected="${resultMap['CATEGORIA']=='java'}">JAVA</option>
+                </select>
+                <button id="save" th:if="${resultMap['CREATED_BY']==session.PRI_MANAGER.mgrName}"   class="runner-save" type="button" onclick='save()'>保存</button>
+                <button id="run" class="runner-run" type="button" onclick='submitTryit()'>运行</button>
+            </div>
+        </div>
+        <div id="container">
+            <div id="textareacontainer">
+                <div id="textarea">
+                    <div id="textareawrapper">
+                        <textarea autocomplete="off" id="textareaCode" wrap="logical" spellcheck="false" ></textarea>
+                    </div>
+                </div>
+            </div>
+            <form id="codeForm" autocomplete="off" style="margin:0px;display:none;">
+                <input type="hidden" name="code" id="code" />
+            </form>
+            <div id="iframecontainer">
+                <div id="iframe">
+                    <div  id="iframewrapper"></div>
+                    <textarea id="textResult" style='border:none;width:100%;height:99%;overflow: auto;background: #f7f7f7;display:none'></textarea>
+                </div>
+            </div>
+        </div>
+        <script >
+        	function save(){//位置要放在html-complier.js后面，不然无法获取到全局变量editor
+            	var ID = $("input[name='ID']").val();
+        	 	var index = parent.layer.getFrameIndex(window.name);
+        	 	$("#textareaCode").val(editor.getValue())//提交前将codemirror的值赋值给文本框
+        		$.ajax({
+                    url:'/api/v1/iplatformtools/saveFckDetail?ID='+ID,
+                    type:"POST",
+                    data:{
+                        CODE:$("#textareaCode").val()
+                    },
+                    dataType:'json',
+                    success:function(r){
+                    	parent.layer.close(index);//关闭弹框
+                    }
+                });
+                   parent.layer.close(index);
+        	}
+        </script>
+    </body>
+</html>

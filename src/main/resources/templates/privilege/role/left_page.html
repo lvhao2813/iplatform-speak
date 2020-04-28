@@ -1,0 +1,66 @@
+ <!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+</head>
+<body>
+ 	
+	<div class="fanye-new3">
+	  <div th:object="${pagination}">  
+		<input style="display:none" type="text" id="count" th:field="*{totalCount}"  th:value="${pagination.totalCount}" />
+ 		<input style="display:none" type="text" id="current" th:field="*{currentPageNum}"  th:value="${pagination.currentPageNum}" />
+	  
+	    	<ul>
+				<li th:onclick="'javascript:page(1)'"> << </li>
+			    <li th:onclick="'javascript:page(\''+${pagination.currentPageNum-1}+'\')'"> < </li>
+				<input name="index"  th:placeholder="${pagination.currentPageNum}" />
+			    <button th:onclick="'javascript:page(_queryForm.index.value)'">跳转</button>
+			    <li th:onclick="'javascript:page(\''+${pagination.currentPageNum+1}+'\')'"> > </li>
+			    <li th:onclick="'javascript:page(\''+${pagination.totalPageNum}+'\')'"> >> </li>
+    			 <span th:text="'共['+${pagination.totalCount}+']条'"></span>
+    			  <!-- <span th:text="'['+${pagination.totalPageNum}+']页'"></span> -->
+			</ul>
+    </div>
+    
+    <script th:inline="javascript" type="text/javascript">
+    
+	var _queryForm = document.queryRoleManager;
+    function changePageSize(){
+    	_queryForm.count.value="1";
+    	$('#queryRoleManagerSubmit').click();
+    }
+    
+    function page(index) {
+        /* if (index == "") {
+            alert("请输入跳转的页面数！");
+            return;
+        } */
+		if(index == 0 || index == ""){
+        	index = 1;
+        }
+        if (index > [[${(pagination.totalCount+pagination.pageCount-1)/pagination.pageCount}]] )
+       		_queryForm.current.value =  [[${(pagination.totalCount+pagination.pageCount-1)/pagination.pageCount}]];
+       	else
+       		_queryForm.current.value = index;
+        $('#queryRoleManagerSubmit').click();
+    }
+    
+    /* function checkInput() {
+        if (event.keyCode == 13) {
+            page(_queryForm.index.value);
+            return;
+        }
+		if ( (event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105) ||
+         event.keyCode == 8 || event.keyCode == 37 || event.keyCode == 39 || event.keyCode == 127) {    
+			
+		 }else{
+		 	_queryForm.index.value = "";
+		 }
+
+    } */
+</script>
+    
+</div>
+</body>
+ 

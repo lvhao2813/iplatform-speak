@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<meta charset="utf-8" />
+<link th:href="@{/css/common.css}" rel="stylesheet" />
+<link th:href="@{/css/syle.css}" rel="stylesheet" />
+<link th:href="@{/js/layer/skin/layer.css}" rel="stylesheet"/>
+
+<!--[if lt IE 9]>
+				<script src="https://apps.bdimg.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
+			<![endif]-->
+
+<script th:src="@{/js/jquery/jquery-1.7.2.js}"></script>
+<script th:src="@{/js/layer/layer.js}"></script>
+<script th:src="@{/js/jquery/jquery.ajaxform.js}"></script>
+
+</head>
+<body id="bg-white">
+	<form id="callForm" name="callForm" action="" th:method="post">
+		<input style="display:none" type="text" name="deleteIds"
+			th:value="${formMap['deleteIds']}" />
+		<div class="tc-del">
+			<img th:src="@{/images/img-tip.png}" /> <span
+				th:hidden="${formMap.deleteCount == '0'}?'true':'false'"
+				th:text="'是否删除所选的'+${formMap['deleteCount']}+'记录？'"></span> <span
+				th:hidden="${formMap.deleteCount == '0'}?'false':'true'"
+				th:text="请选择要删除的记录"></span>
+		</div>
+		<div class="tc-bottom">
+			<span th:hidden="${formMap.deleteCount == '0'}?'true':'false'">
+				<a th:onclick="'javascript:jqueryAjaxSubmit(\''+${formMap['deleteUrl']}+'\')'" id="submitBtn">确定</a>
+			</span> <a th:onclick="'javascript:closeCurrentLayer()'">取消</a>
+		</div>
+	</form>
+
+	<div th:include="/common/onload_layer_js :: loadJS"></div>
+</body>
+</html>

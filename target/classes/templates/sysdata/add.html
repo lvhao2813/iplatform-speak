@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<link th:href="@{/css/common.css}" rel="stylesheet" />
+<link th:href="@{/css/syle.css}" rel="stylesheet" />
+<link th:href="@{~/js/layer/skin/layer.css}" rel="stylesheet"/>
+
+<!--[if lt IE 9]>
+				<script src="https://apps.bdimg.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
+			<![endif]-->
+
+</head>
+<body id="bg-white">
+	<form id="callForm" name="callForm" action="" th:method="post">
+		<div class="p10">
+			<table width="100%" cellpadding="0" cellspacing="0" class="tc-edit">
+				<tr>
+					<th><span>*</span>类型代码：</th>
+					<td><input type="text" id="typeCode" name="TYPE_CODE" class="input1" /></td>
+					<th><span>*</span>类型名称：</th>
+					<td><input type="text" id="typeName" name="TYPE_NAME" class="input1" /></td>
+				</tr>
+				<tr>
+					<th><span>*</span>数据代码：</th>
+					<td><input type="text" id="code" name="CODE" class="input1" /></td>
+					<th><span>*</span>数据名称：</th>
+					<td><input type="text" id="name" name="NAME" class="input1" /></td>
+				</tr>
+				<tr>
+					<th><span>*</span>是否只读：</th>
+					<td><select name="ISREADONLY">
+							<option value="N">否</option>
+							<option value="Y">是</option>
+					</select></td>
+					<th><span>*</span>排序：</th>
+					<td><input type="text" id="ordNo" name="ORD_NO" class="input1" /></td>
+				</tr>
+				<tr>
+					<th>数据描述：</th>
+					<td colspan="3"><textarea rows="6" name="DESCRIPTION"></textarea>
+					</td>
+				</tr>
+			</table>
+		</div>
+		
+		<div class="tc-tip" id="tipsId" style="display:none"><img th:src="@{/images/icon-tip.png}"/>您还有必填项未填。</div>
+		<div class="tc-bottom">
+			<a onclick="submitUpdate()" id="submitBtn">确定</a>
+		    <a th:onclick="'javascript:closeCurrentLayer()'">取消</a>
+
+		</div>
+	</form>
+
+	<div th:include="/common/onload_layer_js :: loadJS"></div>
+</body>
+</html>
+<script type="text/javascript">
+	function submitUpdate(){
+		if($("input[id='typeCode']").val()==""||$("input[id='typeName']").val()==""
+			||$("input[id='code']").val()==""||$("input[id='name']").val()==""||$("input[id='ordNo']").val()==""){
+			$("#tipsId").css("display","block");
+			return;
+		}
+		jqueryAjaxSubmit('/privilege/sysdata/add');
+	}
+</script>

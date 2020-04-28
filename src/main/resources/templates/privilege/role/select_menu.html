@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<link th:href="@{~/css/common.css}" rel="stylesheet" />
+<link th:href="@{~/css/syle.css}" rel="stylesheet" />
+<link th:href="@{~/css/layer.css}" rel="stylesheet" />
+<link th:href="@{~/js/jquery/treetable/skin/jquery.treetable.css}" rel="stylesheet" />
+
+<style>
+.cdxz-table  a {
+	float: left;
+}
+</style>
+
+<!--[if lt IE 9]>
+<script src="https://apps.bdimg.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
+<![endif]-->
+
+<script type="text/javascript" th:inline="javascript">
+	function selectedAllCheckbox() {
+		var s = document.getElementById('mainCheckbox').checked;
+		for (var i = 0; i < window.callForm.elements.length; i++) {
+			if (window.callForm.elements[i].name == 'checkedMenuIds'
+					&& window.callForm.elements[i].type == 'checkbox') {
+				window.callForm.elements[i].checked = s;
+			}
+		}
+	}
+
+	function selectChdElement(id) {
+		var s = document.getElementById(id+'MENU').checked;
+		for (var i = 0; i < window.callForm.elements.length; i++) {
+			var ele = window.callForm.elements[i];
+			if (ele.name == 'checkedMenuIds' && ele.type == 'checkbox') {
+				if (ele.id.substr(0, id.length) == id) {
+					ele.checked = s;
+				}
+			}
+			if (ele.name == 'checkedOptIds' && ele.type == 'checkbox') {
+				if (ele.id.substr(0, id.length) == id) {
+					ele.checked = s;
+				}
+			}
+		}
+	}
+	
+	function selectMenuElement(id){
+		var s = document.getElementById(id+"OPT").checked;
+		for (var i = 0; i < window.callForm.elements.length; i++) {
+			var ele = window.callForm.elements[i];
+			if (ele.id == id+'MENU' && ele.type == 'checkbox') {
+					ele.checked = s;
+			}
+		}
+	}
+</script>
+</head>
+<body id="bg-white">
+
+	<div style="height: 420px; overflow: auto;">
+		<div class="tc-top-dw">
+		<!-- 	<div class="tc-search">
+				<input type="text" placeholder="菜单名称" /><a><img
+					th:src="@{~/images/img-search.png}" /></a>
+			</div> -->
+			<div class="operation"
+				style="margin-top: 4px; position: absolute; left: 50%; margin-left: -70px; width: 150px;">
+				<a href="#"
+					onclick="jQuery('#example-advanced').treetable('expandAll'); return false;"><img
+					th:src="@{~/images/icon-sq.png}" />展开</a> <a href="#"
+					onclick="jQuery('#example-advanced').treetable('collapseAll'); return false;"><img
+					th:src="@{~/images/icon-zk.png}" />收起</a>
+			</div>
+		</div>
+		
+	<form id="callForm"  name="callForm"  action=""  th:method="post">
+		
+		<input style="display:none" type="text" name="roleId" th:value="${formMap['ROLE_ID']}" />
+		<table id="example-advanced" style="margin-top: 31px;">
+			<thead>
+				<tr>
+					<th width="35%">菜单选择</th>
+					<th>操作选择</th>
+				</tr>
+			</thead>
+			<tbody>
+			
+
+				<tr data-tt-id='0'>
+					<td><input id="mainCheckbox" onclick="selectedAllCheckbox()" type="checkbox" /><span class='folder'>工作任务导航</span></td>
+					<td class="cdxz-table"></td>
+				</tr>
+				<div th:each="priMenuBean : ${resultList}">
+				<tr th:data-tt-id="${priMenuBean['treeId']}" th:data-tt-parent-id="${priMenuBean['treeParentsId']}">
+						<td>
+							<input th:onclick="'javascript:selectChdElement(\''+${priMenuBean['treeId']}+'\')'"  name="checkedMenuIds" th:value="${priMenuBean['menuId']}" th:checked="${priMenuBean['selectedMenu']=='0'}?'false':'true'" th:id="${priMenuBean['treeId']}+'MENU'" type="checkbox" />
+							<span th:class="${priMenuBean.childCount=='0'}?'file':'folder'" th:text="${priMenuBean['menuName']}"></span>
+						</td>
+						<td class="cdxz-table">
+							<div th:each="priOptBean : ${optList}" th:if="${priOptBean['MENU_ID']} == ${priMenuBean['menuId']}">
+									<a><input th:onclick="'javascript:selectMenuElement(\''+${priMenuBean['treeId']}+'\')'" name="checkedOptIds"  th:checked="${priOptBean['SELECT_OPT']=='N'}?'false':'true'"  th:id="${priMenuBean['treeId']}+'OPT'" th:value="${priOptBean['MENU_OPT_ID']}" type="checkbox" /><span th:text="${priOptBean.OPT_NAME}"></span></a>
+							</div>
+						</td>
+					</tr>
+				</div>
+			</tbody>
+		</table>
+	</form>
+
+	</div>
+	<div class="tc-bottom">
+		<a onclick="jqueryAjaxSubmit('/privilege/role/updateRoleMenuAndOpt')" id="submitBtn">确定</a> 
+		<a th:onclick="'javascript:closeCurrentLayer()'">取消</a>
+	</div>
+	
+	<div th:include="/common/onload_layer_js :: loadJS"></div>
+	
+	<script>
+		$("#example-basic").treetable({
+			expandable : true
+		});
+
+		$("#example-basic-static").treetable();
+
+		$("#example-basic-expandable").treetable({
+			expandable : true
+		});
+
+		$("#example-advanced").treetable({
+			expandable : true
+		});
+
+		// Highlight selected row
+		$("#example-advanced tbody").on("mousedown", "tr", function() {
+			$(".selected").not(this).removeClass("selected");
+			$(this).toggleClass("selected");
+		});
+
+		// Drag & Drop Example Code
+		$("#example-advanced .file, #example-advanced .folder").draggable({
+			helper : "clone",
+			opacity : .75,
+			refreshPositions : true, // Performance?
+			revert : "invalid",
+			revertDuration : 300,
+			scroll : true
+		});
+
+		$("#example-advanced .folder").each(
+				function() {
+					$(this).parents("#example-advanced tr").droppable(
+							{
+								accept : ".file, .folder",
+								drop : function(e, ui) {
+									var droppedEl = ui.draggable.parents("tr");
+									$("#example-advanced").treetable("move",
+											droppedEl.data("ttId"),
+											$(this).data("ttId"));
+								},
+								hoverClass : "accept",
+								over : function(e, ui) {
+									var droppedEl = ui.draggable.parents("tr");
+									if (this != droppedEl[0]
+											&& !$(this).is(".expanded")) {
+										$("#example-advanced").treetable(
+												"expandNode",
+												$(this).data("ttId"));
+									}
+								}
+							});
+				});
+
+		$("form#reveal").submit(function() {
+			var nodeId = $("#revealNodeId").val()
+
+			try {
+				$("#example-advanced").treetable("reveal", nodeId);
+			} catch (error) {
+				alert(error.message);
+			}
+
+			return false;
+		});
+	</script>
+
+
+</body>
+</html>

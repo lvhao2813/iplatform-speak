@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: iplatform-share
+  port: 8888
+  session:
+     timeout: 28800
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://192.168.12.121:8761/eureka/
+    registry-fetch-interval-seconds: 5
+  instance:
+    lease-expiration-duration-in-seconds: 15
+    lease-renewal-interval-in-seconds: 5
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${random.int}

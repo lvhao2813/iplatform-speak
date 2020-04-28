@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta charset="UTF-8">
+
+<title>登录</title>
+
+<link th:href="@{/css/login.css}" rel="stylesheet"/>
+
+<style>
+
+input:-webkit-autofill {
+
+    -webkit-box-shadow: 0 0 0px 1000px white inset;
+
+}
+
+</style>
+
+<script th:src="@{/js/jquery/jquery-1.7.2.js}"></script>
+
+<script th:src="@{/js/md5/md5.js}"></script>
+
+
+
+ <script th:inline="javascript" type="text/javascript">
+
+ 
+
+ $(function (){
+
+		var em =[[${loginMessage}]];
+
+		if(em){
+
+			$(".red").html(em);
+
+			$(".login_error").show();
+
+			$(".red").show();
+
+		}
+
+		//如果有用户名，直接定位到密码输入框；否则定位到用户输入框
+
+		if(!$("#j_username").val()){
+
+			$("#j_username").focus();
+
+		}else{
+
+			$("#j_password").focus();
+
+		}
+
+ });
+
+ 
+
+ </script>
+
+
+
+<script type="text/javascript">
+
+
+
+	//验证输入字符的长度
+
+	function charLength(str) {
+
+		if (str == null || str == "")
+
+			return 0;
+
+		var totalCount = 0;
+
+		for (var i = 0; i < str.length; i++) {
+
+			if (str.charCodeAt(i) > 127)
+
+				totalCount += 2;
+
+			else
+
+				totalCount++;
+
+		}
+
+		return totalCount;
+
+	}
+
+
+
+	//登录提交
+
+	function doSubmit() {
+
+		if (charLength($("#j_username").val()) == 0) {
+
+			$(".red").html("请输入用户名！");
+
+			$(".login_error").show();
+
+			$(".red").show();
+
+			$("#j_username").focus();
+
+			return;
+
+		}
+
+		if (charLength($("#j_username").val()) > 64) {
+
+			$(".red").html("用户名不能超过64个字节！");
+
+			$(".login_error").show();
+
+			$(".red").show();
+
+			$("#j_username").focus();
+
+			return;
+
+		}
+
+		if ($("#j_password").val().length == 0) {
+
+			$(".red").html("请输入密码！");
+
+			$(".login_error").show();
+
+			$(".red").show();
+
+			$("#j_password").focus();
+
+			return;
+
+		}
+
+		if ($("#j_password").val().length < 6
+
+				|| $("#j_password").val().length > 20) {
+
+			$(".red").html("密码长度请在6--20位之间！");
+
+			$(".login_error").show();
+
+			$(".red").show();
+
+			$("#j_password").focus();
+
+			return;
+
+		}
+
+
+
+		$(".login_error").hide();
+
+		$(".red").hide();
+
+		$("#j_login").attr("disabled", "true");
+
+		$("#j_password").val(md5($("#j_password").val()).toUpperCase());
+
+		var frm = document.loginForm;
+
+		frm.submit();
+
+	}
+
+</script>
+
+
+
+</head>
+
+
+
+<body class="login_bg">
+
+<div class="top">
+
+		<div class="logo l_con">
+
+			<img th:src="@{/images/login-logo.png}" width="43%"/>
+
+		</div>			
+
+	</div>
+
+	<div class="l_cont">
+
+	   <div class="l_bg l_con">
+
+	   	<img th:src="@{/images/login/bg.png}" width="1000px"/>
+
+	   	<div class="l_box">
+
+	   		<h2>用户登录</h2>
+
+	   	    <form name="loginForm" method="post"  th:action="@{/login}">
+
+	   	    <!-- <form name="loginForm" method="post"  th:action="@{/privilege/manager/login}"> -->
+
+	   	    	<input type="text" value="admin" id="j_username" name=username class="name">
+
+	   	    	<input type="password" id="j_password" value="111111" name="password" class="password" onkeydown="javascript:if(event.keyCode==0||event.keyCode==13) doSubmit();" >
+
+	   	    	<button type="button" class="login_but" onclick="doSubmit()">登 录</button>
+
+	   	    	<span style="margin-top:-20px; float:left;">
+
+	   	    		<img style="display: none;" th:src="@{/images/login/error.png}" width="14" height="14" class="login_error"/>
+
+	   	    		<span class="red"></span>
+
+	   	    	</span>
+
+	   	    	<span th:if="${param.error}">用户名或密码错误!</span>
+
+	   	    </form>
+
+	   	</div>
+
+	   </div>
+
+	 </div>
+
+
+
+</body>
+
+</html>
+

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<title>计划建设管理平台</title>
+<link th:href="@{/css/common.css}" REL="STYLESHEET" />
+<link th:href="@{/css/zzsc.css}" rel="stylesheet" />
+
+</head>
+<body>
+<div th:fragment="topic_head">
+	
+<script th:src="@{/js/jquery/jquery.base64.js}"></script>
+<script type="text/javascript">
+$.base64.utf8encode = true;
+function directMenuUrl1(url,targetName){
+	targetName = $.base64('encode',$.base64('encode',targetName));
+	if(url.indexOf("?") > 0 ){
+		url = url+"&targetName="+targetName;
+	}else{
+		url = url+"?targetName="+targetName;
+	}
+	directMenuUrl(url);
+}
+
+$(function() {
+	/*指标滚动JS*/
+	$('.flexslider').flexslider({
+		animation : "slide",
+		start : function(slider) {
+			$('body').removeClass('loading');
+		}
+	});
+
+});
+
+function openSelectTargetLayer(){
+	var menuId = $("input[id='MENU_ID']").val();
+	openCommonLayer('指标管理','850px','500px','/function/target/selectTargetPage?MENU_ID='+menuId);
+}
+
+</script>
+	
+		<div class="zt-menu">
+			当前位置：<a href="#" th:onclick="'javascript:directMenuUrl(\''+${session.homeUrl}+'\')'" >首页</a> > <a class="active" th:text="${session.MENU_NAME}"></a>
+		</div>
+		<div class="box">
+			<div class="title">
+
+					<a onclick="openSelectTargetLayer();" class="t-r-btn setzhibiao">
+						<img th:src="@{/images/icon-set3.png}" /> 自定义指标
+					</a>
+
+				<h2>
+					<a class="active">重点指标统计</a>
+				</h2>
+			</div>
+			<div class="pro-switch">
+				<div class="slider">
+					<div class="flexslider">
+						<ul class="slides">
+							<li th:each="i:${#numbers.sequence(0,#lists.size(resultList)==0?0:(#lists.size(resultList)-1)/8)}">
+								<div class="div-box">
+									<div th:if="${#lists.isEmpty(resultList)}" id="nodate">
+										<div class="nodate-text">
+											<img th:src="@{/images/img-sj.png}" /><br />
+											暂&nbsp;无&nbsp;数&nbsp;据
+										</div>
+									</div>
+									<div th:each="dwTargetBean,dwTargetBeanStat : ${resultList}" th:if="${dwTargetBeanStat.index >= i*8} and ${dwTargetBeanStat.index <= (i+1)*8-1}">
+										<div class="w-div" th:switch="${dwTargetBean['detailUrl']}" >
+											<div class="w-div-border" th:onclick="'javascript:directMenuUrl1(\''+${dwTargetBean['detailUrl']}+'\',\''+${dwTargetBean['targetName']}+'\')'">
+												<img th:src="${dwTargetBean['imageURL']}" />
+												<p>
+													<span th:case="null"
+														th:text="${dwTargetBean['targetName']}"></span> <a
+														th:case="*" th:text="${dwTargetBean['targetName']}"
+														href="#"
+														th:onclick="'javascript:directMenuUrl1(\''+${dwTargetBean['detailUrl']}+'\',\''+${dwTargetBean['targetName']}+'\')'"></a><br />
+													<b th:text="${dwTargetBean['targetValue']}"></b><br /> <span
+														th:text="${dwTargetBean['targetUnit']}"></span>
+												</p>
+											</div>
+										</div>
+									</div>
+								</div>
+
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div th:fragment="topic_foot">
+	<div class="clear"></div>
+		<div class="box"
+			th:unless="${#lists.isEmpty(resultList)} and ${session.lv == 0}">
+			<div class="title">
+				<div class="fr t-search"></div>
+				<h2>
+					<a class="active">关键指标</a>
+				</h2>
+			</div>
+			<table width="100%" cellpadding="0" cellspacing="0"
+				class="blue-listtable mt10">
+				<tr>
+					<th width="40%">指标名称</th>
+					<th width="20%">当前</th>
+					<th width="20%">环比</th>
+					<th width="20%">同比</th>
+				</tr>
+				<tr th:if="${#lists.isEmpty(resultList)}">
+					<td colspan="4" id="nodate">
+						<div class="nodate-text mt50">
+							<img th:src="@{/images/img-sj.png}" /><br/>
+							暂&nbsp;无&nbsp;数&nbsp;据
+						</div>
+					</td>
+				</tr>
+				<tr th:each="dwTargetBean : ${resultList}">
+					<td>
+						<div th:switch="${dwTargetBean['detailUrl']}">
+							<span th:case="null" th:text="${dwTargetBean['targetName']}"></span>
+							<a th:case="*" th:text="${dwTargetBean['targetName']}" href="#"
+								th:onclick="'javascript:directMenuUrl1(\''+${dwTargetBean['detailUrl']}+'\',\''+${dwTargetBean['targetName']}+'\')'"></a>
+						</div>
+					</td>
+					<td
+						th:text="${dwTargetBean['targetValue']}+${dwTargetBean['targetUnit']}"></td>
+					<td th:text="${dwTargetBean['monthOnMonth']}"></td>
+					<td th:text="${dwTargetBean['yearOnYear']}"></td>
+				</tr>
+			</table>
+
+		</div>
+	</div>
+	
+	<div th:fragment="topic_linkhead">
+	
+		<div class="zt-menu">
+			当前位置：<a href="#" th:onclick="'javascript:directMenuUrl(\''+${session.homeUrl}+'\')'" >首页</a> > 
+			<a class="active" onclick="javascript:directMenuUrl('/function/capitalplan/pool')" >资金池情况分析</a> > 
+			<a class="active">专业维度资金池分析</a>
+		</div>
+	</div>
+	
+	<div th:fragment="topic_linkhead2">
+	
+		<div class="zt-menu">
+			当前位置：<a href="#" th:onclick="'javascript:directMenuUrl(\''+${session.homeUrl}+'\')'" >首页</a> > 
+			<a class="active" onclick="javascript:directMenuUrl('/function/capitalplan/pool')" >资金池情况分析</a> > 
+			<a class="active" onclick="javascript:directMenuUrl('/function/capitalplan/specPool')" >专业维度资金池分析</a> >
+			<a class="active">项目投资执行情况</a>
+		</div>
+	</div>
+	
+	<div th:fragment="topic_linkhead3">
+	
+		<div class="zt-menu">
+			当前位置：<a href="#" th:onclick="'javascript:directMenuUrl(\''+${session.homeUrl}+'\')'" >首页</a> > 
+			<a class="active" onclick="javascript:directMenuUrl('/function/schedule/scheduleWarningTopic')" >项目进度及预警</a> > 
+			<a class="active">项目进度监控</a>
+		</div>
+	</div>
+	<div th:fragment="topic_linkhead4">
+	
+		<div class="zt-menu">
+			当前位置：<a href="#" th:onclick="'javascript:directMenuUrl(\''+${session.homeUrl}+'\')'" >首页</a> > 
+			<a class="active" onclick="javascript:directMenuUrl('/function/schedule/scheduleMajorTopic')" >重点项目监控</a> > 
+			<a class="active">项目进度监控</a>
+		</div>
+	</div>
+	
+	
+	<div th:fragment="topic_index">
+	
+		<div class="zt-menu">
+			当前位置：<a href="#" th:onclick="'javascript:directMenuUrl(\''+${session.homeUrl}+'\')'" >首页</a>
+		</div>
+	</div>
+	
+
+<script type="text/javascript">
+	
+</script>
+</body>
+</html>
+

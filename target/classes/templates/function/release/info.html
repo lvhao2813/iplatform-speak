@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<link th:href="@{/css/common.css}" rel="stylesheet" />
+<link th:href="@{/css/syle.css}" rel="stylesheet" />
+<link th:href="@{~/js/layer/skin/layer.css}" rel="stylesheet"/>
+
+<!--[if lt IE 9]>
+				<script src="https://apps.bdimg.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
+			<![endif]-->
+
+</head>
+<body id="bg-white">
+	<form id="callForm" name="callForm" th:object="${releaseDataBean}"
+		action="" th:method="post">
+		
+		
+		
+		<div class="p10">
+			<table width="100%" cellpadding="0" cellspacing="0" class="tc-edit">
+			     <tr>
+					<th><span>*</span>数据包名称：</th>
+					<td><input type="text" id="dataSetName" th:field="*{dataSetName}" class="input1" disabled="disabled"/></td>
+				 </tr>
+				 <tr>
+				 <th><span>*</span>数据包表名称：</th>
+					<td><input type="text" id="dataSetTableName" th:field="*{dataSetTableName}" class="input1"  disabled="disabled" /></td>
+				 </tr>
+				 <tr>
+					<th><span>*</span>发布名称：</th>
+					<td><input type="text" id="name" th:field="*{name}" class="input1" disabled="disabled" /></td>
+				</tr>
+				<tr>
+					<th><span>*</span>发布URL：</th>
+					<td><input type="text" id="url" th:field="*{url}" class="input1" disabled="disabled"/></td>
+				</tr>
+					<th>发布详情：</th>
+					<td colspan="3"><textarea rows="6" th:text="${info}"></textarea>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</form>
+
+	<div th:include="/common/onload_layer_js :: loadJS"></div>
+</body>
+</html>
+<script type="text/javascript">
+	function submitUpdate(){
+		if($("input[id='menuName']").val()==""||$("input[id='menuCode']").val()==""
+			||$("input[id='menuLink']").val()==""||$("input[id='menuOrd']").val()==""){
+			$("#tipsId").css("display","block");
+			return;
+		}
+		jqueryAjaxSubmit('/api/v1/release/info');
+	}
+</script>

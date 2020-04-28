@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<title></title>
+<script th:src="@{/js/jquery/jquery-1.7.2.js}"></script>
+<script th:src="@{/js/jquery/jquery.ajaxform.js}"></script>
+
+
+</head>
+<body>
+<a th:href="@{/swagger-ui.html}">swagger</a></br> 
+<a th:href="@{/api/v1/demo/websocket}">websocket</a></br> 
+<a th:href="@{/api/v1/javaCompiler/index}">javaCompiler</a></br> 
+
+ ----------------------------------------------
+<div id="mydiv">
+	<form id="callForm" th:action="@{/demo}" th:method="post"> 
+			<input type="text" value="111"/>
+	        <button type="button" onclick="toSubmit()">确认</button>
+	 </form>
+</div>
+
+</body>
+</html>

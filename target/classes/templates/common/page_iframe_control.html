@@ -1,0 +1,118 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+</head>
+<body>
+
+	<div class="fanye-new">
+		<div th:object="${pagination}">
+			<input style="display: none" type="text" id="count"
+				th:field="*{totalCount}" th:value="${pagination.totalCount}" /> <input
+				style="display: none" type="text" id="current"
+				th:field="*{currentPageNum}" th:value="${pagination.currentPageNum}" />
+
+			<ul>
+				<li th:onclick="'javascript:page(1)'">首页</li>
+				<li
+					th:onclick="'javascript:page(\''+${pagination.currentPageNum-1}+'\')'">上一页</li>
+				<li
+					th:hidden="${pagination.currentPageNum-4>0 and pagination.currentPageNum == pagination.totalPageNum}?'false':'true'"
+					th:onclick="'javascript:page(\''+${pagination.currentPageNum-4}+'\')'"
+					th:text="${pagination.currentPageNum-4}"></li>
+				<li
+					th:hidden="${pagination.currentPageNum-3>0 and (pagination.currentPageNum == pagination.totalPageNum or pagination.currentPageNum == pagination.totalPageNum-1)}?'false':'true'"
+					th:onclick="'javascript:page(\''+${pagination.currentPageNum-3}+'\')'"
+					th:text="${pagination.currentPageNum-3}"></li>
+				<li th:hidden="${pagination.currentPageNum-2>0}?'false':'true'"
+					th:onclick="'javascript:page(\''+${pagination.currentPageNum-2}+'\')'"
+					th:text="${pagination.currentPageNum-2}"></li>
+				<li th:hidden="${pagination.currentPageNum-1>0}?'false':'true'"
+					th:onclick="'javascript:page(\''+${pagination.currentPageNum-1}+'\')'"
+					th:text="${pagination.currentPageNum-1}"></li>
+				<li
+					th:onclick="'javascript:page(\''+${pagination.currentPageNum}+'\')'"
+					class="active" th:text="${pagination.currentPageNum}"></li>
+				<li
+					th:hidden="${pagination.currentPageNum+1<=pagination.totalPageNum}?'false':'true'"
+					th:onclick="'javascript:page(\''+${pagination.currentPageNum+1}+'\')'"
+					th:text="${pagination.currentPageNum+1}"></li>
+				<li
+					th:hidden="${pagination.currentPageNum+2<=pagination.totalPageNum}?'false':'true'"
+					th:onclick="'javascript:page(\''+${pagination.currentPageNum+2}+'\')'"
+					th:text="${pagination.currentPageNum+2}"></li>
+				<li
+					th:hidden="${pagination.currentPageNum+3<=pagination.totalPageNum and (pagination.currentPageNum == 1 or pagination.currentPageNum == 2)}?'false':'true'"
+					th:onclick="'javascript:page(\''+${pagination.currentPageNum+3}+'\')'"
+					th:text="${pagination.currentPageNum+3}"></li>
+				<li
+					th:hidden="${pagination.currentPageNum+4<=pagination.totalPageNum and pagination.currentPageNum == 1}?'false':'true'"
+					th:onclick="'javascript:page(\''+${pagination.currentPageNum+4}+'\')'"
+					th:text="${pagination.currentPageNum+4}"></li>
+				<li
+					th:onclick="'javascript:page(\''+${pagination.currentPageNum+1}+'\')'">下一页</li>
+				<li
+					th:onclick="'javascript:page(\''+${pagination.totalPageNum}+'\')'">尾页</li>
+				<input name="index" th:placeholder="${pagination.currentPageNum}" />
+				<button th:onclick="'javascript:page(_queryForm.index.value)'">跳转</button>
+				<span> 每页&nbsp; <select th:field="*{pageCount}"
+					th:onchange="'javascript:page(\''+${pagination.currentPageNum}+'\')'"
+					name="pagination.pageCount">
+						<option value="10" th:selected="${pagination.pageCount=='10'}">10</option>
+						<option value="20" th:selected="${pagination.pageCount=='20'}">20</option>
+						<option value="50" th:selected="${pagination.pageCount=='50'}">50</option>
+				</select>&nbsp;&nbsp;条
+				</span>
+				<span th:text="'共['+${pagination.totalCount}+']条'"></span>
+				<!-- <span th:text="'['+${pagination.totalPageNum}+']页'"></span> -->
+			</ul>
+		</div>
+
+		<script th:inline="javascript" type="text/javascript">
+    
+	var _queryForm = document.queryForm || document.mainForm || document.callForm;
+    function changePageSize(){
+    	_queryForm.count.value="1";
+        _queryForm.submit();
+    }
+    
+    function page(index) {
+    	if(index>0){
+	        if (index == "") {
+	            alert("请输入跳转的页面数！");
+	            return;
+	        }
+			if(index == 0){
+	        	index = 1;
+	        }
+			if (index > [[${(pagination.totalCount+pagination.pageCount-1)/pagination.pageCount}]] ){
+	       		_queryForm.current.value =  [[${(pagination.totalCount+pagination.pageCount-1)/pagination.pageCount}]];
+	       		if(_queryForm.current.value==0){
+	       			_queryForm.current.value=1;
+	       		}
+	        }else{
+	       		_queryForm.current.value = index;
+	        }
+	        callForm.submit();
+    	}
+    }
+    
+    function checkInput() {
+        if (event.keyCode == 13) {
+            page(_queryForm.index.value);
+            return;
+        }
+		if ( (event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105) ||
+         event.keyCode == 8 || event.keyCode == 37 || event.keyCode == 39 || event.keyCode == 127) {    
+			
+		 }else{
+		 	_queryForm.index.value = "";
+		 }
+
+    }
+</script>
+
+	</div>
+</body>

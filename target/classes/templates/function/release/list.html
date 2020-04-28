@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+	<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	
+<div th:insert="/common/common_css :: privilege"></div>
+
+	</head>
+	<body>
+<div th:insert="/common/common_index :: index_head"></div>
+<div th:include="/common/onload_list_js :: loadJS"></div>
+
+<form id="callForm" name="callForm" th:action="@{~/api/v1/release/query}" th:method="post">
+
+	<input style="display:none" name="deleteIds" id="deleteIds" value="">
+
+		<div id="main">
+			<div class="box">	            
+			<div class="title">	
+				    	<h2> <a class="active">发布列表</a></h2>	
+				    	<div class="operation">
+				    	  <!-- 	<a class="parentadd"  onclick="openCommonLayer('新增记录','600px','160px','/api/v1/iplatformtools/insertpage')"><img th:src="@{/images/icon-add.png}" />新增</a> -->	
+				    	  <!--   <a class="parentIframe" onclick="openBatchDeletePage()"><img th:src="@{/images/icon-del.png}" />删除</a> -->
+				    	</div>
+				    		
+			</div>	            
+	<div class="auto">
+			<table width="100%" cellpadding="0" cellspacing="0" class="user-list mt10">
+	       			<tr>
+			       	<!-- 		<th width="30">
+								<input type="checkbox" class="check-all" id="mainCheckbox" name="mainCheckbox"
+													onClick="selectedAllCheckbox()" />
+							</th> -->
+							<th>数据包名称</th>
+							<th>数据包表名称</th>
+							<th>发布名称</th>
+							<th>发布类型</th>
+							<th>url</th>
+							<th>操作人</th>
+							<th>发布时间</th>
+							<th>操作</th>
+	       			</tr>
+	       			<tr  th:each="releaseDataBean : ${resultList}">
+					   <!-- 	<td align="center" >
+							<input type="checkbox" id="checkboxId"  th:name="check"  th:value="${releaseDataBean['id']}" />
+						</td> -->
+						<td th:text="${releaseDataBean['dataSetName']}"></td>
+						<td th:text="${releaseDataBean['dataSetTableName']}"></td>
+						<td th:text="${releaseDataBean['name']}"></td>
+						<td th:text="${releaseDataBean['urlType']}"></td>
+						<td th:text="${releaseDataBean['url']}"></td>
+						<td th:text="${releaseDataBean['operator']}"></td>
+						<td th:text="${releaseDataBean['releaseDate']}"></td>
+						<td align="right">       	
+						<a th:onclick="'javascript:openEditLayer(\'/api/v1/release/info?id='+${releaseDataBean['id']}+'\')'">详情</a> 
+						<a th:onclick="'javascript:openEditLayer(\'/api/v1/release/log?id='+${releaseDataBean['id']}+'\')'">查看日志</a> 
+						</td>
+					</tr>
+	       		</table>
+		</div>
+	
+	    	<div th:include="/common/page_control"></div>
+	    
+			</div>
+		</div>
+	</form>
+	</body>
+</html>
+<script type="text/javascript" th:inline="javascript">
+function resetSearch(){
+	$("input[id='name']").val("");
+	$("input[id='classify']").val("");
+	callFormSubmit();
+}
+
+function openEditPage(url) {
+	openCommonLayer('修改记录', '600px', '160px', url)
+}
+
+function openFckPage(url) {
+	openCommonLayer('修改简介', '90%', '90%', url)
+}
+function openTabPage(url){
+    var text =event.target.parentElement.parentElement.children[1].innerHTML;
+    openTab(url, text)
+}
+
+function openCodePage(url) {
+	openCommonLayer('修改代码', '90%', '90%', url)
+}
+
+
+function openBatchDeletePage(){
+	deleteData('/api/v1/iplatformtools/batchDeletePage?deleteUrl=/api/v1/iplatformtools/batchDelete');
+}
+</script>
+

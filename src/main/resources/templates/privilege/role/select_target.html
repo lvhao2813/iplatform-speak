@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<meta charset="utf-8" />
+<title>计划建设管理平台</title>
+<link th:href="@{~/css/common.css}" rel="stylesheet" />
+<link th:href="@{~/css/syle.css}" rel="stylesheet" />
+
+<!--[if lt IE 9]>
+<script src="https://apps.bdimg.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
+<![endif]-->
+<script th:src="@{~/js/jquery/jquery-1.7.2.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+	function formSubmit() {
+		document.callForm.submit();
+	}
+
+	function resetSearch() {
+		$("input[id='targetName']").val("");
+		$("#targetTypeSelect option:first").prop("selected", 'selected')
+	}
+	
+	function selectedAllCheckbox() {
+		var s = document.getElementById('mainCheckbox').checked;
+		for (var i = 0; i < window.callForm.elements.length; i++) {
+			if (window.callForm.elements[i].name == 'check'
+					&& window.callForm.elements[i].type == 'checkbox') {
+				window.callForm.elements[i].checked = s;
+			}
+		}
+	}
+
+	function ajaxSelectTarget(targetId) {
+		var roleId = $("input[id='ROLE_ID']").val();
+		
+		$.ajax({
+			type : "POST",
+			url : "/privilege/role/selectTarget?targetId=" + targetId+"&roleId="+roleId,
+			cache : false,
+			async : false,
+			contentType : "application/x-www-form-urlencoded; charset=utf-8",
+			success : function(html) {
+				if (html == 'success') {
+				}
+			},
+			error : function(html) {
+			},
+			complete : function() {
+			}
+		});
+	}
+</script>  
+</head>
+
+<body id="bg-white">
+	<div id="mask" class="mask"></div>  
+	<form id="callForm" name="callForm" th:action="@{~/privilege/role/gotoSelectTargetPage}" th:method="post">
+	<input style="display:none" type="text" id="ROLE_ID" name="ROLE_ID" th:value="${formMap['ROLE_ID']}"/>
+
+		<table width="100%" cellpadding="0" cellspacing="0" class="text-table"
+			style="margin: 5px 0;">
+			<tr>
+				<th width="15%">名称：</th>
+				<td width="20%"><input id="targetName" name="TARGET_NAME" th:value="${formMap['TARGET_NAME']}" type="text" /></td>
+				<th width="15%">类别：</th>
+				<td width="20%">
+						<select id="targetTypeSelect" name="TARGET_TYPE">
+							<option value="">--请选择--</option> 	
+							<sysdata:select typeCode="TARGET_TYPE" th:value="${formMap['TARGET_TYPE']}"></sysdata:select>
+						</select>
+				</td>
+				<td><a onclick="formSubmit();">搜索</a><a th:onclick="'javascript:resetSearch()'" class="ml10">重置</a></td>
+			</tr>
+
+		</table>
+		<div class="auto">
+			<table width="100%" cellpadding="0" cellspacing="0" class="user-list">
+				<tr>
+
+					<th>	</th>
+					<th>指标名称</th>
+					<th>指标类别</th>
+					<th>指标说明</th>
+
+				</tr>
+				<tr th:each="dwTargetBean : ${resultList}">
+					<td>
+						<input th:type="checkbox" th:onclick="'javascript:ajaxSelectTarget(\''+${dwTargetBean['targetId']}+'\')'" th:checked="${dwTargetBean['slcRoleTargetCount']!='0'}?'true':'false'"  name="check"  th:value="${dwTargetBean['targetId']}" />
+					</td>
+					<td align="left" th:text="${dwTargetBean['targetName']}"></td>
+					<td align="left" th:text="${dwTargetBean['targetTypeName']}"></td>
+					<td align="left" th:text="${dwTargetBean['description']}"></td>
+				</tr>
+			</table>
+
+		</div>
+
+		<div th:include="/common/page_layer_control"></div>
+
+		<div class="tc-bottom">
+			<a onclick="closeLayerAndRefresh()" id="submitBtn">确定</a>
+			<a th:onclick="'javascript:closeCurrentLayer()'">取消</a>
+		</div>
+	</form>
+	
+	<div th:include="/common/onload_layer_js :: loadJS"></div>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<link th:href="@{/css/common.css}" rel="stylesheet" />
+<link th:href="@{/css/syle.css}" rel="stylesheet" />
+<link th:href="@{~/js/layer/skin/layer.css}" rel="stylesheet"/>
+
+<!--[if lt IE 9]>
+				<script src="https://apps.bdimg.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
+			<![endif]-->
+
+</head>
+<body id="bg-white">
+		<div style="height: 225px; " class="tc-radio-list">
+<ul>
+		<li th:each="priOrganizationBean : ${orgList}">
+		<input type="hidden" th:id="${priOrganizationBean.orgId}" th:value="${priOrganizationBean.orgName}" />
+			<label><input type="radio" name="check" th:value="${priOrganizationBean.orgId}" th:text="${priOrganizationBean.orgName}"/></label>
+		</li>
+	</ul>
+		
+
+</div>
+		<div class="tc-bottom">
+			<a onclick="setDepartDetail()">确定</a>
+			<a th:onclick="'javascript:closeCurrentLayer()'">取消</a>	
+		</div>
+
+	<div th:include="/common/onload_layer_js :: loadJS"></div>
+
+	<script type="text/javascript">
+		var index = parent.layer.getFrameIndex(window.name);
+		$.base64.utf8encode = true;
+
+		function setDepartDetail() {
+			var departId = $("input[name='check']:checked").val();
+			var departName = $.base64('encode', $("input[id='" + departId + "']").val());
+			parent.selectedDepart(departId, departName);
+			parent.layer.close(index);
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<title>计划建设管理平台</title>
+
+</head>
+<body>
+<div th:fragment="index_head">
+<script th:src="@{/js/jquery/jquery-1.7.2.js}"></script>
+<script th:src="@{/js/jquery/jquery.base64.js}"></script>
+<script type="text/javascript">
+$(function(){	
+	$("#map").mouseover(function(){	
+    	$(".nav").css({"display":"block"});
+    });	 //鼠标移上显示下拉   
+
+ $(".nav").mouseleave(function(){	
+	$(this).hide();//二级菜单默认隐藏
+ });	
+   
+})
+
+function directMenuUrl(url){
+/* 	 var pathName=window.document.location.pathname;
+	 var contextPath=pathName.substring(0,pathName.substr(1).indexOf('/')+1); */
+	 //setUrl(contextPath+url);
+	 window.location.href=url;
+}
+
+var lastUrl='';
+var currentUrl='';
+function setUrl(url){
+		lastUrl=currentUrl;
+		currentUrl=url;
+}
+
+</script>
+	
+	<!-- 
+		<div id="header">
+			<div class="div1"><a><img th:src="@{/images/logo.png}" /></a></div>
+
+		<p>您好！
+				<a><img th:src="@{/images/icon-set.png}" />设置</a>
+				<a><img th:src="@{/images/icon-help.png}" />帮助</a>
+				<a th:href="@{/privilege/manager/logout}"><img th:src="@{/images/icon-quit.png}" />退出</a>
+			</p>
+				<a href="#" class="map" id="map">网站地图</a>
+				
+	<div class="nav">
+	
+		<dl th:each="menuOptLevel1 : ${session.PRI_MENU_OPT}" th:if="${menuOptLevel1.menuLevel}==1">
+               <dt><a href="#" th:text="${menuOptLevel1.menuName}"></a></dt>	
+               <div th:each="menuOptLevel2: ${session.PRI_MENU_OPT}" th:switch="${menuOptLevel2.menuLevel}" th:if="${menuOptLevel2.parentId}==${menuOptLevel1.menuId}">	
+               		<dd th:case="'2'">
+               			<a href="#" th:onclick="'javascript:directMenuUrl(\''+${menuOptLevel2.menuLink}+'\')'" th:text="${menuOptLevel2.menuName}"></a>
+               		</dd>
+               </div>
+ 		</dl>	
+ 	</div>
+			
+		</div>
+		 -->
+	</div>
+	
+	
+	<div th:fragment="index_foot">
+		<footer><p>中国移动通信集团湖南有限公司 版权所有   技术支持：热线电话 028-8666666</p></footer>
+	</div>
+</body>
+</html>
+

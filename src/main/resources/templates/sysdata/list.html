@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+	<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	
+<div th:insert="/common/common_css :: privilege"></div>
+
+	</head>
+	<body>
+<div th:insert="/common/common_index :: index_head"></div>
+<div th:include="/common/onload_list_js :: loadJS"></div>
+
+<form id="callForm" name="callForm" th:action="@{~/privilege/sysdata/query}" th:method="post">
+
+	<input style="display:none" name="deleteIds" id="deleteIds" value="">
+
+		<div id="main">
+		<div class="box">
+			<div class="title">	
+				    	<h2>
+				    	<a class="active">字典查询</a>
+				    	</h2>				
+			</div>
+						<table width="100%" cellpadding="0" cellspacing="0" class="text-table mt10">
+				            <tr>
+					            <th width="8%">类型代码：</th>
+					            <td width="15%"><input type="text"  id="typeCode"  name="TYPE_CODE" th:value="${formMap['TYPE_CODE']}"></td>					
+					            <th width="8%">类型名称：</th>
+					           <td width="15%"><input type="text"  id="typeName"  name="TYPE_NAME" th:value="${formMap['TYPE_NAME']}"></td>		
+					           <td width="8%">
+						           <a th:onclick="'javascript:callFormSubmit()'">搜索</a>&nbsp;&nbsp;
+						           <a th:onclick="'javascript:resetSearch()'">重置</a>
+					           </td>
+					           <td width="28%"></td>					           
+				            </tr>
+				           
+			            </table>
+		</div>
+		
+	
+			<div class="box">	            
+			<div class="title">	
+				    	<h2> <a class="active">字典列表</a></h2>	
+				    	<div class="operation">
+				    		<a class="parentadd"  onclick="openCommonLayer('新增记录','600px','360px','/privilege/sysdata/insertpage')"><img th:src="@{/images/icon-add.png}" />新增</a>	
+				    	    <a class="parentIframe" onclick="openBatchDeletePage()"><img th:src="@{/images/icon-del.png}" />删除</a>
+				    	</div>
+				    		
+			</div>	            
+	<div class="auto">
+			<table width="100%" cellpadding="0" cellspacing="0" class="user-list mt10">
+	       			<tr>
+			       			<th width="30">
+								<input type="checkbox" class="check-all" id="mainCheckbox" name="mainCheckbox"
+													onClick="selectedAllCheckbox()" />
+							</th>
+	       					<th>类型代码</th>
+							<th>类型名称</th>
+							<th>数据代码</th>
+							<th>数据名称</th>
+							<th>权限状态</th>
+							<th>操作</th>
+	       			</tr>
+	       			<tr th:each="resultMap : ${sysdataList}">
+						<td align="center" th:swich="${resultMap['ISREADONLY']}">
+							<input th:type="${resultMap['ISREADONLY'] == 'Y'}?'hidden':'checkbox'" id="checkboxId"  th:name="${resultMap['ISREADONLY'] == 'Y'}?'':'check'"  th:value="${resultMap['ID']}" />
+						</td>
+						<td th:text="${resultMap['TYPE_CODE']}"></td>
+						<td th:text="${resultMap['TYPE_NAME']}"></td>
+						<td th:text="${resultMap['CODE']}"></td>
+						<td th:text="${resultMap['NAME']}"></td>
+						<td align="center">
+							<span th:text="${resultMap['ISREADONLY'] == 'Y'}? '系统':'功能'"></span>
+							<a href="#" th:class="${resultMap['ISREADONLY'] == 'Y'}? 'color-red':'c-blue'" th:onclick="'javascript:ajaxSetReadonly(\''+${resultMap['ID']}+'\')'" th:text="${resultMap['ISREADONLY'] == 'Y'}? '[ 功能 ]':'[ 系统 ]'"></a>
+						</td>
+						<td align="center">
+						<a href="#" class="c-green parentedit" th:onclick="'javascript:openEditPage(\'/privilege/sysdata/updatepage?ID='+${resultMap['ID']}+'\')'">编辑</a> 
+						<a href="#" class="color-red parentIframe" th:onclick="'javascript:openDeleteLayer(\'/privilege/sysdata/deletepage?deleteUrl=/privilege/sysdata/delete&deleteId='+${resultMap['ID']}+'\')'">删除</a> 
+						</td>
+					</tr>
+	       		
+	       		</table>
+		</div>
+	
+	    	<div th:include="/common/page_control"></div>
+	    
+			</div>
+		</div>
+	</form>
+	</body>
+</html>
+<script type="text/javascript" th:inline="javascript">
+function ajaxSetReadonly(id){
+	 $.ajax({
+	  	  type: "POST",
+		  url: "/privilege/sysdata/setReadOnly?id="+id,
+		  cache: false,
+		  async:false,
+		  contentType : "application/x-www-form-urlencoded; charset=utf-8",
+		  success: function(html){
+		   	if(html == 'success'){
+		   		callFormSubmit();
+		   	}
+		  },
+		  error:function(html){
+		  },
+		  complete:function(){
+		  }
+	 }); 
+}
+
+function resetSearch(){
+	$("input[id='typeName']").val("");
+	$("input[id='typeCode']").val("");
+	callFormSubmit();
+}
+
+function openEditPage(url) {
+	openCommonLayer('修改记录', '600px', '360px', url)
+}
+
+function openBatchDeletePage(){
+	deleteData('/privilege/sysdata/batchDeletePage?deleteUrl=/privilege/sysdata/batchDelete');
+}
+</script>
+

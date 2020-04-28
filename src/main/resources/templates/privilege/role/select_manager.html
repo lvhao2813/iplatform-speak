@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"	>
+<head>
+<link th:href="@{~/css/common.css}" rel="stylesheet" />
+<link th:href="@{~/css/syle.css}" rel="stylesheet" />
+<link th:href="@{~/js/layer/skin/layer.css}" rel="stylesheet"/>
+	<!-- busy-load -->
+	<link th:href="@{~/js/busyloading/dist/app.min.css}" rel="stylesheet" />
+	<link th:href="@{~/js/busyloading/app.css}" rel="stylesheet" />
+
+<script th:src="@{~/js/jquery/jquery-1.7.2.js}"></script>
+
+<script th:src="@{~/js/busyloading/dist/app.min.js}"></script>
+<script th:src="@{~/js/busyloading/app.js}"></script>
+<style>
+	.user-h{overflow-y: auto; height: 320px;}
+	.tr-width th:nth-child(1),.td-width td:nth-child(1){width: 40px;}
+	.tr-width th:nth-child(2),.td-width td:nth-child(2){width: 30%;}
+	
+</style>
+
+<style type="text/css">     
+    .mask {       
+            position: absolute; top: 0px; filter: alpha(opacity=60); background-color: #777;     
+            z-index: 1002; left: 0px;     
+            opacity:0.5; -moz-opacity:0.5;     
+        }     
+</style> 
+
+<script type="text/javascript">     
+    //兼容火狐、IE8   
+    //显示遮罩层    
+    function showMask(){     
+        $("#mask").css("height",$(document).height());     
+        $("#mask").css("width",$(document).width());     
+        $("#mask").show();     
+    }  
+    //隐藏遮罩层  
+    function hideMask(){     
+        $("#mask").hide();     
+    }  
+</script>  
+
+</head>
+<body id="bg-white">
+<div id="mask" class="mask"></div>  
+<div class="company-box">
+		<ul class="company" id="company">
+			<li th:each="org : ${orgGroup}" th:text="${org}" th:id="${org}"></li>
+		</ul>
+	</div>
+	<div class="check-people">
+<div class="tc-user-l">
+<form name="queryRoleManager" id="queryRoleManager" th:action="@{~/privilege/role/gotoSelectManagerPage}" th:method="post">
+	<div class="xz-search">
+	
+		<input style="display:none" type="text" name="ROLE_ID" id="ROLE_ID" th:value="${formMap['ROLE_ID']}" />
+		<input style="display:none" type="text" name="ORG_NAME" id="ORG_NAME" th:value="${formMap['ORG_NAME']}" />
+		<!--<input name='ecmsfrom' type='hidden' value='9'>
+		<input type="hidden" name="show" value="title,newstext">  -->
+		 <select name="classid" id="choose">
+			<option value="0">姓名</option>
+		</select>
+		<input class="inp_srh"  th:value="${formMap['OUT_ROLE_NAME']}" id="OUT_ROLE_NAME" name="OUT_ROLE_NAME"/>
+		<input class="btn_srh" id="queryRoleManagerSubmit" type="submit" name="submit" value="搜索">
+	
+</div>
+
+	
+		<table width="100%" cellpadding="0" cellspacing="0" class="user-list-title tr-width" >
+		<tr>
+			<th><input type="checkbox"  class="llistall"/></th>
+			<th>姓名</th>
+			<th>单位</th>			
+		</tr>	
+		</table>
+	<div class="user-h">
+		<table width="100%" cellpadding="0" cellspacing="0" class="user-list td-width" id="lList">
+		
+		<tr th:each="formMap : ${outRoleList}">
+			<input type="hidden"  th:value="${formMap.mgrId}" name="checkedIds" />
+			<td><input type="checkbox"/></td>
+			<td th:text="${formMap.mgrName}"></td>
+			<td th:text="${formMap.orgName}"></td>
+		</tr>
+		
+		</table>
+	</div>
+<div>
+	<div th:include="/privilege/role/left_page"></div>
+</div>
+</form>	
+</div>
+<div class="tc-user-btn">
+	<button type="button" class="tc-user-btnblue1" id="add"></button>
+	<button  type="button" class="tc-user-btnblue2"  id="remove"></button></div>
+
+<div class="tc-user-r">
+
+		<div class="xz-search">
+	<form name="queryForm" th:action="@{~/privilege/role/gotoSelectManagerPage}" th:method="post">
+		<select name="classid" id="choose">
+			<option value="0">姓名</option>
+			
+		</select> 
+		<input class="inp_srh" th:value="${formMap['IN_ROLE_NAME']}" name="IN_ROLE_NAME" />
+		<input class="btn_srh" type="submit" name="submit" value="搜索">
+	</form>
+</div>
+			<table width="100%" cellpadding="0" cellspacing="0" class="user-list-title tr-width" >
+		<tr>
+			<th><input type="checkbox" name="qx" class="rlistall"/></th>
+			<th>姓名</th>
+			<th>单位</th>
+		</tr>	
+			</table>
+			<div class="user-h">
+			<form id="callForm" name="callForm"  th:action="@{~/privilege/role/saveManagerRole}" th:method="post">
+			<input style="display:none" type="text" name="roleId" th:value="${formMap['ROLE_ID']}" />
+			<table width="100%" cellpadding="0" cellspacing="0" class="user-list td-width" id="rList">
+				<tr th:each="formMap : ${inRoleList}">
+							<input type="hidden"  th:value="${formMap.mgrId}" name="checkedIds" />
+							<td><input type="checkbox"/></td>
+							<td th:text="${formMap.mgrName}"></td>
+							<td th:text="${formMap.orgName}"></td>
+					</tr>
+			</table>
+			</form>
+	</div>
+ <div>
+	<!-- <div th:include="/privilege/role/right_page"></div> -->
+</div>
+</div>
+</div>	
+
+<div class="tc-bottom">
+	<a onclick="confirm();">确定</a>
+	<a onclick="cancel();">取消</a>
+	
+</div> 
+<script type="text/javascript" th:src="@{~/js/jquery/jquery.select.js}"></script>
+<script type="text/javascript">
+	$(function(){
+		/*<![CDATA[*/ 
+		 var orgName = '[[${formMap['ORG_NAME']}]]';
+		 /*]]>*/ 
+		
+		//刷新界面，判断左侧 公司，点击
+		$('#'+orgName).addClass("active");
+		
+		var lList = $("#lList");		
+		var rList = $("#rList");	
+		var items = $(".user-list tr");
+		//单击	
+		for(var i = 0;i<items.length;i++){
+			items[i].onclick = itemsclick;			
+		}		
+		function itemsclick(){				
+			$(this).find("input").attr({"checked":"checked"});	
+			var classname = this.className;			
+			if(classname === "selected"){
+				this.className = "";								
+			}else{
+				this.className="selected";				
+			}
+			
+		}
+		//全选
+	$(".llistall").click(function(){
+			if($(this).attr("checked")){
+				$("#lList tr").addClass("selected");
+		        lList.find("input").attr({"checked":"checked"});
+			}else{
+				$("#lList tr").removeClass("selected");
+		        lList.find("input").removeAttr("checked");
+			}
+		})
+	$(".rlistall").click(function(){
+			if($(this).attr("checked")){
+				$("#rList tr").addClass("selected");
+		        rList.find("input").attr({"checked":"checked"});
+			}else{
+				$("#rList tr").removeClass("selected");
+		        rList.find("input").removeAttr("checked");
+			}
+		})
+	
+		//移动
+		function itemsMove(){				
+			var items = $(".user-list tr.selected");
+			for(var i = 0;i<items.length;i++){
+				if(this.id === "add"){
+					rList.append(items[i]);
+					items[i].className = "";
+					$("input").removeAttr("checked");
+				}else{
+					lList.append(items[i]);
+					items[i].className = "";
+					$("input").removeAttr("checked");
+				}
+			}
+		}
+		
+		$("#add").on("click",itemsMove);
+		$("#remove").on("click",itemsMove);
+	});
+	
+	function confirm(){
+		$('#callForm').submit();
+	}
+	function cancel(){
+		var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+		parent.layer.close(index)
+	}
+</script>
+
+<script type="text/javascript">
+$("#company").find("li").each(
+	function(){
+		$(this).on("click",
+		function() {
+			$(this).addClass("active").siblings().removeClass(
+					"active");
+			$("#ORG_NAME").val($(this).text());
+			$('#queryRoleManagerSubmit').click();
+		});
+	}		
+);
+
+
+</script>
+
+</body>
+</html>

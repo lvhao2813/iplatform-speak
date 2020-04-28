@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.boco.share.privilege.dao.PriOrganizationMapper">
+
+<resultMap type="com.boco.share.privilege.bean.PriOrganizationBean" id="TblPriOrgResult">
+    <result column="ORG_ID" property="orgId" jdbcType="VARCHAR" />
+    <result column="ORG_NAME" property="orgName" jdbcType="VARCHAR" />
+    <result column="ORG_ABBREVIATION" property="orgAbbreviation" jdbcType="VARCHAR" />
+    <result column="CHILD_COUNT" property="childCount" jdbcType="VARCHAR" />
+    <result column="ALL_PARENTS_ID" property="allParentsId" jdbcType="VARCHAR" />
+    <result column="ORG_TYPE" property="orgType" jdbcType="VARCHAR" />
+    <result column="ORG_TYPE_NAME" property="orgTypeName" jdbcType="VARCHAR" />
+    <result column="ORG_LEVEL" property="orgLevel" jdbcType="DECIMAL" />
+    <result column="ORG_LEVEL_NAME" property="orgLevelName" jdbcType="VARCHAR" />
+    <result column="ORG_ORDER" property="orgOrder" jdbcType="DECIMAL" />
+    <result column="ORG_ORDER_NAME" property="orgOrderName" jdbcType="VARCHAR" />
+    <result column="PARENT_ID" property="parentId" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="UPDATED_DT" property="updatedDt" jdbcType="DATE" />
+    <result column="UPDATED_BY" property="updatedBy" jdbcType="VARCHAR" />
+    <result column="CREATED_DT" property="createdDt" jdbcType="DATE" />
+    <result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR" />
+  </resultMap>
+  
+ 
+ <select id="queryOrganization"
+		resultMap="TblPriOrgResult"
+		parameterType="java.util.Map">
+	  SELECT   TD.ORG_ID,
+                    TD.PARENT_ID,
+                    TD.ORG_NAME,
+                    TD.ORG_ABBREVIATION,
+                    TD.ORG_ORDER || '级部门' AS ORG_ORDER_NAME,
+                    (CASE PARENT_ID
+                        WHEN '0' THEN '0'
+                        ELSE UF_GETALLORGPARENTID (PARENT_ID)
+                     END) ALL_PARENTS_ID,
+                    (SELECT   COUNT (so.org_id)
+                       FROM   STBL_PRI_ORGANIZATION so
+                      WHERE   so.parent_id = TD.org_id
+                         AND so.is_deleted = 'N')
+                       	CHILD_COUNT,
+                    TD.ORG_ORDER,
+                    TD.ORG_LEVEL,
+                    LPAD ('　', LEVEL * 4, '　') || TD.ORG_NAME
+                       AS ORG_LEVEL_NAME,
+                    TD.ORG_TYPE,
+                    TD.REMARK,
+                    TD.CREATED_DT,
+                    TD.CREATED_BY,
+                    TD.UPDATED_DT,
+                    TD.UPDATED_BY,
+                    TD.IS_DELETED,
+                    TD.VERSION,
+                    (SELECT   NAME
+                       FROM   SYS_DATA
+                      WHERE   TYPE_CODE = 'ORG_TYPE'
+                              AND CODE = TD.ORG_TYPE)
+                       AS ORG_TYPE_NAME
+             FROM   STBL_PRI_ORGANIZATION TD
+            WHERE   TD.IS_DELETED = 'N'
+			 	<if test="ORG_ID!=NULL and ORG_ID!=''">
+					AND ORG_ID = #{ORG_ID}
+				</if>
+				<if test="PARENT_ID!=NULL and PARENT_ID!=''">
+					AND PARENT_ID = #{PARENT_ID}
+				</if>
+				 <if test="ORG_LEVEL!=NULL and ORG_LEVEL!=''">
+					AND ORG_LEVEL  =#{ORG_LEVEL}
+				</if>
+				<if test="ORG_TYPE==1">
+					AND ORG_TYPE  in(0,1,2,3)
+				</if>
+				<if test="ORG_TYPE==2">
+					AND ORG_TYPE  = 201
+				</if>
+				<if test="ORG_TYPE==3">
+					AND ORG_TYPE  = 202
+				</if>
+				<if test="ORG_TYPE==4">
+					AND ORG_TYPE  = 203
+				</if>
+				<if test="ORG_LEVEL!=null and ORG_LEVEL!=''">
+					AND ORG_LEVEL  =#{ORG_LEVEL}
+				</if>
+				<if test="ORG_NAME!=null and ORG_NAME!=''">
+					AND ORG_NAME  like '%'||#{ORG_NAME}||'%'
+				</if>
+	  	       CONNECT BY   TD.PARENT_ID = PRIOR TD.ORG_ID
+			    START WITH   TD.PARENT_ID = '-1'
+			ORDER SIBLINGS BY   ORG_ORDER
+ </select>
+ 
+ 
+ <select id="queryMaxOrder"
+		resultType="Integer"
+		parameterType="String">
+		SELECT   NVL(MAX (org_order),0) MAX_ORDER
+		  FROM   STBL_PRI_ORGANIZATION
+		 WHERE   PARENT_ID = #{parentId}
+</select>
+ 
+ <select id="queryDepartmentByOrgId"
+		resultMap="TblPriOrgResult"
+		parameterType="java.util.Map">
+	  SELECT   TD.ORG_ID,
+                    TD.PARENT_ID,
+                    TD.ORG_NAME,
+                    TD.ORG_ABBREVIATION,
+                    TD.ORG_ORDER,
+                    TD.ORG_LEVEL,
+                    LPAD ('　', LEVEL * 4, '　') || TD.ORG_NAME AS ORG_LEVEL_NAME,
+                    TD.ORG_TYPE
+             FROM   STBL_PRI_ORGANIZATION TD
+            WHERE   TD.IS_DELETED = 'N'
+       CONNECT BY   TD.PARENT_ID = PRIOR TD.ORG_ID
+       START WITH   TD.PARENT_ID = #{PARENT_ID}
+ORDER SIBLINGS BY   ORG_LEVEL
+</select>
+
+ <select id="queryOrgById"
+		resultMap="TblPriOrgResult"
+		parameterType="String">
+	  SELECT   TD.ORG_ID,
+                    TD.PARENT_ID,
+                    TD.ORG_NAME,
+                    TD.ORG_TYPE
+             FROM   STBL_PRI_ORGANIZATION TD
+            WHERE   TD.IS_DELETED = 'N'
+				AND TD.ORG_ID = #{orgId}
+</select>
+
+ <insert id="insertOrg" parameterType="com.boco.share.privilege.bean.PriOrganizationBean">
+	INSERT INTO STBL_PRI_ORGANIZATION 
+							   (ORG_ID,
+                                ORG_NAME,
+                                ORG_ABBREVIATION,
+                                ORG_TYPE,
+                                CREATED_BY,
+                                CREATED_DT,
+                                PARENT_ID,
+                                REMARK,
+                                ORG_ORDER,
+                                ORG_LEVEL)
+    VALUES (#{orgId}, #{orgName},#{orgAbbreviation}, #{orgType}, #{createdBy},
+      SYSDATE, #{parentId},#{remark}, #{orgOrder}, #{orgLevel})
+	</insert>
+	
+	<update id="updateOrg" parameterType="com.boco.share.privilege.bean.PriOrganizationBean">
+		UPDATE STBL_PRI_ORGANIZATION 
+			SET UPDATED_DT=SYSDATE,
+				  VERSION=VERSION+1
+			<if test="orgName!=null and orgName!=''">
+				, ORG_NAME = #{orgName}
+			</if>
+			<if test="parentId!=null and parentId!=''">
+				, PARENT_ID = #{parentId}
+			</if>
+			<if test="orgAbbreviation!=null and orgAbbreviation!=''">
+				, ORG_ABBREVIATION = #{orgAbbreviation}
+			</if>
+			<if test="orgLevel!=null and orgLevel!=''">
+				, ORG_LEVEL = #{orgLevel}
+			</if>
+			<if test="orgType!=null and orgType!=''">
+				, ORG_TYPE = #{orgType}
+			</if>
+			<if test="remark!=null and remark!=''">
+				, REMARK = #{remark}
+			</if>
+	        WHERE    ORG_ID=#{orgId}	
+	</update>
+	
+	<update id="delete" parameterType="String">
+		UPDATE STBL_PRI_ORGANIZATION set IS_DELETED = 'Y' 
+		WHERE ORG_ID = #{deleteId}		
+	</update>
+	
+	 <update id="batchDelete" parameterType="String">
+        UPDATE STBL_PRI_ORGANIZATION set IS_DELETED = 'Y' 
+         where ORG_ID in
+        <foreach item="deleteIds" collection="array" open="(" separator="," close=")">
+            	#{deleteIds}
+        </foreach>
+    </update>
+	
+
+</mapper>

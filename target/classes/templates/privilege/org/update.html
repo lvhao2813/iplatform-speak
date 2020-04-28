@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<link th:href="@{/css/common.css}" rel="stylesheet" />
+<link th:href="@{/css/syle.css}" rel="stylesheet" />
+<link th:href="@{~/js/layer/skin/layer.css}" rel="stylesheet"/>
+
+<!--[if lt IE 9]>
+				<script src="https://apps.bdimg.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
+			<![endif]-->
+
+</head>
+<body id="bg-white">
+	<form id="callForm" name="callForm" th:object="${priOrganizationBean}"
+		action="" th:method="post">
+		
+		<input style="display:none" type="text" name="orgId" th:value="${priOrganizationBean['orgId']}" />
+		
+		<div class="p10">
+			<table width="100%" cellpadding="0" cellspacing="0" class="tc-edit" >
+				<tr>
+					<th width="20%">名称：</th>
+					<td colspan="3"><input type="text"  id="orgName"  th:field="*{orgName}" class="input2"/></td>		
+				</tr>
+				<tr>
+					<th>简称：</th>
+					<td colspan="3"><input type="text"  id="orgAbbreviation"  th:field="*{orgAbbreviation}" class="input2"/></td>		
+				</tr>
+				<tr>
+					<th>上级：</th>
+					<td colspan="3">
+						<select th:field="*{parentId}">
+							<option value="0">--请选择--</option>
+							<option th:each="org : ${orgList}" 
+								th:selected="${priOrganizationBean['parentId']==org['orgId']}"
+								th:value="${org.orgId}"
+								th:text="${org.orgLevelName}"></option>
+						</select>
+					</td>		
+				</tr>
+				<tr>
+					<th>类型：</th>
+					<td colspan="3">
+						<select th:field="*{orgType}">
+								<option th:selected="${#strings.contains(priOrganizationBean['orgType'],0)}" value="0">公司</option>
+		                		<option th:selected="${#strings.contains(priOrganizationBean['orgType'],1)}" value="1">部门</option>
+						</select>
+					</td>		
+				</tr>				
+					<tr>
+					<th>描述：</th>
+					<td colspan="3">
+						<textarea rows="4"></textarea>
+					</td>		
+				</tr>
+			</table>
+		</div>
+		
+		<div class="tc-tip" id="tipsId" style="display:none"><img th:src="@{/images/icon-tip.png}"/>您还有必填项未填。</div>
+		<div class="tc-bottom">
+			<a onclick="submitUpdate()"
+				id="submitBtn">确定</a> <a
+				th:onclick="'javascript:closeCurrentLayer()'">取消</a>
+
+		</div>
+	</form>
+
+	<div th:include="/common/onload_layer_js :: loadJS"></div>
+</body>
+</html>
+<script type="text/javascript">
+	function submitUpdate(){
+		if($("input[id='orgName']").val()==""||$("input[id='orgAbbreviation']").val()==""){
+			$("#tipsId").css("display","block");
+			return;
+		}
+		jqueryAjaxSubmit('/privilege/org/update');
+	}
+</script>

@@ -1,0 +1,66 @@
+@charset "utf-8";
+
+#iframeWrapper {
+    width:100%;
+    height: 100%;
+    overflow: auto;
+}
+#iframeResult{
+    width: 100%;
+    height:100%;
+    overflow: auto;
+}
+.mytab {
+    position: fixed;
+    bottom: 40px;
+    width: 100%;
+    height: calc(100% - 42px );
+    box-sizing: border-box;
+}
+.layui-show{
+    height: 100%;
+}
+.CodeMirror {box-sizing: border-box;font-size: 16px;}
+#textareaCode {
+    background-color: #dedada;
+    font-family: consolas,"courier new",monospace;
+    font-size: 20px;
+    height: 100%;
+    width: 100%;
+    resize: none;
+    line-height: normal;
+    overflow: auto;
+    word-wrap: break-word;
+    border: none;
+}
+#textareawrapper {
+    width:100%;
+    height:100%;
+    background-color: #ffffff;
+    position:relative;
+}
+.CodeMirror.cm-s-default {
+    line-height:normal;
+    padding:4px;
+    height:100%;
+    width:100%;
+}
+.epMenu{
+    position: absolute;
+    border: solid 1px #c2c2c2;
+    background: #087df5;
+    padding: 4px;
+}
+.epMenu:hover{
+    cursor: pointer;
+}
+.epMenu>a{
+    color: #ffff
+}
+.sucsWarn{
+    position: absolute;
+    border: solid 1px #c2c2c2;
+    padding: 4px;
+    background: #009688;
+    color: #ffff
+}

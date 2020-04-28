@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.boco.share.privilege.dao.PriOptMapper">
+
+	<select id="queryOpt" resultType="java.util.Map" parameterType="java.util.Map" >
+		 SELECT   SPO.OPT_ID,
+			           SPO.OPT_CODE,
+			           SPO.OPT_NAME,
+			           SPO.DESCRIPTION,
+			           SPO.OPT_ORDER,
+			           SPO.STATUS
+		    FROM   STBL_PRI_OPT SPO
+		   WHERE   spo.is_deleted = 'N'
+		    <if test="OPT_NAME!=null and OPT_NAME!=''">
+				AND SPO.OPT_NAME like '%'||#{OPT_NAME}||'%'
+			</if>
+			<if test="OPT_ID!=null and OPT_ID!=''">
+				AND SPO.OPT_ID = #{OPT_ID}
+			</if>
+			<if test="STATUS!=NULL and STATUS!=''">
+				AND SPO.STATUS = #{STATUS}
+			</if>
+		ORDER BY   OPT_ORDER DESC
+	</select>
+	
+	<insert id="insert" parameterType="java.util.Map">
+		INSERT INTO STBL_PRI_OPT (OPT_ID,
+	                          OPT_CODE,
+	                          OPT_NAME,
+	                          DESCRIPTION,
+	                          OPT_ORDER,
+	                          CREATED_BY,
+	                          STATUS)
+			    VALUES (#{OPT_ID}, #{OPT_CODE}, #{OPT_NAME},
+			      #{DESCRIPTION},#{OPT_ORDER}, #{CREATED_BY}, #{STATUS})
+	</insert>
+	
+	<update id="update" parameterType="java.util.Map">
+		UPDATE STBL_PRI_OPT 
+			SET UPDATED_DT=SYSDATE,
+				  VERSION=VERSION+1
+			<if test="OPT_CODE!=null and OPT_CODE!=''">
+				, OPT_CODE = #{OPT_CODE}
+			</if>
+			<if test="OPT_NAME!=null and OPT_NAME!=''">
+				, OPT_NAME = #{OPT_NAME}
+			</if>
+			<if test="DESCRIPTION!=null and DESCRIPTION!=''">
+				, DESCRIPTION = #{DESCRIPTION}
+			</if>
+			<if test="OPT_ORDER!=null and OPT_ORDER!=''">
+				, OPT_ORDER = #{OPT_ORDER}
+			</if>
+	        WHERE    OPT_ID=#{OPT_ID}	
+	</update>
+	
+	<update id="delete" parameterType="String">
+		UPDATE STBL_PRI_OPT set IS_DELETED = 'Y' 
+		WHERE OPT_ID = #{deleteId}		
+	</update>
+	
+	 <update id="batchDelete" parameterType="String">
+        UPDATE STBL_PRI_OPT set IS_DELETED = 'Y' 
+         where OPT_ID in
+        <foreach item="deleteIds" collection="array" open="(" separator="," close=")">
+            	#{deleteIds}
+        </foreach>
+    </update>
+    
+     <update id="setIsStop" parameterType="String">
+		UPDATE   STBL_PRI_OPT
+		   SET   STATUS = (CASE STATUS WHEN 'N' THEN 'Y' ELSE 'N' END)
+		 WHERE   OPT_ID = #{optId} 
+	</update>
+	
+
+</mapper>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<div th:insert="/common/common_css :: privilege_tree"></div>
+<script th:src="@{/js/jquery/treetable/jquery.treetable.js}"></script>
+
+
+<script type="text/javascript" th:inline="javascript">
+function openEditPage(url) {
+	openCommonLayer('修改记录', '450px', '350px', url)
+}
+</script>
+</head>
+<body>
+<div th:insert="/common/common_css :: privilege"></div>
+	<div th:include="/common/onload_list_js :: loadJS"></div>
+
+	<form id="callForm" name="callForm" th:action="@{~/privilege/org/query}" th:method="post">
+
+		<input style="display:none" name="deleteIds" id="deleteIds" value="">
+
+		<div id="main">
+			<div class="box">
+				<div class="title">
+					<h2>
+						当前位置：<a th:href="${session.homeUrl}">首页</a> > <a>系统管理 </a> > <a
+							class="active">组织机构管理</a>
+					</h2>
+				</div>
+
+
+			</div>
+			<div class="box">
+				<div class="title">
+					<h2>
+						<a class="active">组织机构</a>
+					</h2>
+					<div class="operation">
+						<a class="parent-zzjgadd" onclick="openCommonLayer('新增记录','450px','350px','/privilege/org/insertpage')"><img
+							th:src="@{/images/icon-add.png}" />新增</a> <a href="#"
+							onclick="jQuery('#example-advanced').treetable('expandAll'); return false;"><img
+							th:src="@{/images/icon-sq.png}" />展开</a> <a href="#"
+							onclick="jQuery('#example-advanced').treetable('collapseAll'); return false;"><img
+							th:src="@{/images/icon-zk.png}" />收起</a>
+
+					</div>
+
+
+				</div>
+				<div class="auto">
+					<table id="example-advanced" class="tree">
+
+						<thead>
+							<tr>
+								<th>名称</th>
+								<th>简称</th>
+								<th width="20%">操作</th>
+							</tr>
+						</thead>
+						<tbody>
+							
+						<div th:each="priOrganizationBean : ${resultList}">
+								<tr th:data-tt-id="${priOrganizationBean['treeId']}" th:data-tt-parent-id="${priOrganizationBean['treeParentsId']}">
+								
+									<td><span th:class="${priOrganizationBean.childCount=='0'}?'file':'folder'" th:text="${priOrganizationBean['orgName']}"></span></td>
+										<td th:text="${priOrganizationBean['orgAbbreviation']}"></td>
+									<td align="center">
+										<a href="#" class="c-green parentedit" th:onclick="'javascript:openEditPage(\'/privilege/org/updatepage?ORG_ID='+${priOrganizationBean['orgId']}+'\')'">编辑</a> 
+										<a href="#" class="color-red parentIframe" th:onclick="'javascript:openDeleteLayer(\'/privilege/org/deletepage?deleteUrl=/privilege/org/delete&deleteId='+${priOrganizationBean['orgId']}+'\')'">删除</a> 
+									</td>
+								</tr>
+						</div>
+						</tbody>
+					</table>
+
+
+			</div>
+
+		</div>
+		<script>
+			$("#example-basic").treetable({
+				expandable : true
+			});
+
+			$("#example-basic-static").treetable();
+
+			$("#example-basic-expandable").treetable({
+				expandable : true
+			});
+
+			$("#example-advanced").treetable({
+				expandable : true
+			});
+
+			// Highlight selected row
+			$("#example-advanced tbody").on("mousedown", "tr", function() {
+				$(".selected").not(this).removeClass("selected");
+				$(this).toggleClass("selected");
+			});
+
+			// Drag & Drop Example Code
+			$("#example-advanced .file, #example-advanced .folder").draggable({
+				helper : "clone",
+				opacity : .75,
+				refreshPositions : true, // Performance?
+				revert : "invalid",
+				revertDuration : 300,
+				scroll : true
+			});
+
+			$("#example-advanced .folder").each(
+					function() {
+						$(this).parents("#example-advanced tr").droppable(
+								{
+									accept : ".file, .folder",
+									drop : function(e, ui) {
+										var droppedEl = ui.draggable
+												.parents("tr");
+										$("#example-advanced").treetable(
+												"move", droppedEl.data("ttId"),
+												$(this).data("ttId"));
+									},
+									hoverClass : "accept",
+									over : function(e, ui) {
+										var droppedEl = ui.draggable
+												.parents("tr");
+										if (this != droppedEl[0]
+												&& !$(this).is(".expanded")) {
+											$("#example-advanced").treetable(
+													"expandNode",
+													$(this).data("ttId"));
+										}
+									}
+								});
+					});
+
+			$("form#reveal").submit(function() {
+				var nodeId = $("#revealNodeId").val()
+
+				try {
+					$("#example-advanced").treetable("reveal", nodeId);
+				} catch (error) {
+					alert(error.message);
+				}
+
+				return false;
+			});
+		</script>
+	</form>
+</body>
+</html>
+

@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>使用demo</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+    <script type="text/javascript" charset="utf-8" src="./ueditor.config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./editor_api.js"> </script>
+    <!--建议手动加在语言，避免在ie下有时因为加载语言失败导致编辑器加载失败-->
+    <!--这里加载的语言文件会覆盖你在配置项目里添加的语言类型，比如你在配置项目里配置的是英文，这里加载的中文，那最后就是中文-->
+    <script type="text/javascript" charset="utf-8" src="./lang/zh-cn/zh-cn.js"></script>
+    <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+    </style>
+</head>
+<body>
+        <input class='btn-edit' style='float: right' type="button" onclick="render()" value="编辑页面">
+        <input class='btn-back' style='float: right;display: none' type="button" onclick="goback()" value="返回">
+        <div  id='content'  style='width: 70%;margin-left: 10%;float: left;'>
+                <h1 style="margin: 0px 0px 0px 25px; padding: 0px; border: 0px; font-size: 24px; color: rgb(63, 63, 63); font-family: 微软雅黑; white-space: normal; background-color: rgb(253, 252, 248);">
+                        XX 标题
+                    </h1>
+                    <hr/>
+                    <h2 style="margin: 0px; padding: 0px; border: 0px; font-size: 18px; color: rgb(63, 63, 63); font-family: 微软雅黑;">
+                        HTML 注释
+                    </h2>
+                    <p style="margin-top: 15px; margin-bottom: 0px; padding: 0px; border: 0px; line-height: 21px;">
+                        可以将注释插入 HTML 代码中，这样可以提高其可读性，使代码更易被人理解。浏览器会忽略注释，也不会显示它们。
+                    </p>
+                    <p style="margin-top: 15px; margin-bottom: 0px; padding: 0px; border: 0px; line-height: 21px;">
+                        注释是这样写的：
+                    </p>
+                    <h3 style="margin: 25px 0px 0px; padding: 0px; border: 0px; font-size: 15px;">
+                        实例
+                    </h3>
+                    <pre style="margin-top: 15px; margin-bottom: 0px; padding: 20px; border: 1px dotted rgb(119, 136, 85); font-family: Consolas; width: 765px; background-color: rgb(245, 245, 245); line-height: 1.4;">&lt;!-- This is a comment --&gt;</pre>
+                    <p class="tiy" style="margin-top: 15px; margin-bottom: 10px; padding: 8px 18px; border: none; line-height: 21px; display: inline-block; outline: 0px; vertical-align: middle; overflow: hidden; color: rgb(255, 255, 255); background-color: rgb(233, 104, 107); text-align: center; transition: all 0.2s ease-out 0s; cursor: pointer; white-space: nowrap; box-shadow: rgba(0, 0, 0, 0.12) 0px 2px 6px, rgba(0, 0, 0, 0.24) 0px 1px 2px; font-family: 微软雅黑; border-radius: 2px;">
+                        <a target="_blank" href="https://www.w3school.com.cn/tiy/t.asp?f=html_comment" style="margin: 0px; padding: 0px; border: 0px; text-decoration-line: none; color: rgb(255, 255, 255); background: transparent;">亲自试一试</a>
+                    </p>
+                    <p class="note" style="margin-top: 15px; margin-bottom: 0px; padding: 0px; border: 0px; line-height: 21px;">
+                        <span style="margin: 0px; padding: 0px; border: 0px; font-weight: bold;">注释：</span>开始括号之后（左边的括号）需要紧跟一个叹号，结束括号之前（右边的括号）不需要。
+                    </p>
+                    <p class="tip" style="margin-top: 15px; margin-bottom: 0px; padding: 0px; border: 0px; line-height: 21px;">
+                        <span style="margin: 0px; padding: 0px; border: 0px; font-weight: bold; color: rgb(255, 153, 85);">提示：</span>合理地使用注释可以对未来的代码编辑工作产生帮助。
+                    </p>
+                    <hr/>
+                    <h2 style="margin: 0px; padding: 0px; border: 0px; font-size: 18px; color: rgb(63, 63, 63); font-family: 微软雅黑;">
+                        <br/>
+                    </h2>
+        </div>
+        <br/>
+        <script type="text/javascript">
+        window.onload=function(){
+            
+        }
+        var editor;
+            function render(){
+                if(!editor){
+                    var ifr = document.createElement("textarea");//动态添加textarea标签
+                    ifr.setAttribute("id", "myEditor");//给textarea赋值
+                    $("#content").after(ifr);//在div后添加文本框
+                    $("#myEditor").css("width","1000px");
+                    $("#myEditor").css("float","left");
+                    $("#myEditor").css("margin-left","10%");
+                    $("#myEditor").css("height","400px");
+                    console.log($("#content").html().toString)
+                    $("#myEditor").val($("#content").html());//给文本框赋值页面元素
+                    editor=UE.getEditor('myEditor');//将文本框内容转成富文本
+                }else{
+                    editor.setShow();//显示富文本
+                }
+                $(".btn-edit").hide();
+                $(".btn-back").show();
+                $("#content").hide();//隐藏原有的页面元素
+            }
+            function goback(){
+                $("#content").show();//显示原有的页面元素
+                $("#content").html(editor.getContent())//将富文本修改后的值返回给页面
+                editor.setHide();//隐藏富文本
+                $(".btn-edit").show();
+                $(".btn-back").hide();
+            }
+        </script>
+</body>
+</html>

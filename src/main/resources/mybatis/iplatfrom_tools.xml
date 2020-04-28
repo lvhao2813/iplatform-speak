@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.boco.share.function.stock.dao.IplatFromToolsMapper">
+	
+	<select id="queryIplatFromTools" resultType="java.util.Map" databaseId="mysql">
+		SELECT
+		ID,
+		`NAME`,
+		CLASSIFY,
+		CATEGORIA,
+		`CODE`,
+		APPLICBLE_SCENE,
+		USING_DOCUMENT,
+		SVN_ADDRESS,
+		CREATED_BY
+		FROM
+		iplatform_tools WHERE IS_DELETED = 'N'
+		<if test="ID!=null and ID!=''">
+			AND ID =  #{ID}
+		</if>
+		<if test="NAME!=null and NAME!=''">
+			AND NAME like concat('%',#{NAME},'%')
+		</if>
+		<if test="CLASSIFY!=null and CLASSIFY!=''">
+			AND CLASSIFY like concat('%',#{CLASSIFY},'%')
+		</if>
+		<if test="TOOL_CREATED_BY!=null and TOOL_CREATED_BY!=''">
+			AND CREATED_BY like concat('%',#{TOOL_CREATED_BY},'%')
+		</if>
+		order by ID DESC
+	</select>
+	
+	<insert id="insertIplatFromTools" parameterType="java.util.Map">
+		INSERT INTO
+		iplatform_tools(`NAME`,CLASSIFY,CATEGORIA,`CODE`,APPLICBLE_SCENE,USING_DOCUMENT,SVN_ADDRESS,CREATED_BY,IS_DELETED)
+		VALUES(#{NAME},#{CLASSIFY},#{CATEGORIA},#{CODE},#{APPLICBLE_SCENE},#{USING_DOCUMENT},#{SVN_ADDRESS},#{CREATED_BY},'N')
+	</insert>
+	
+	<update id="updateIplatFromTools">
+		UPDATE iplatform_tools
+			SET 
+				IS_DELETED='N'
+			<if test="NAME != null and NAME !=''">,NAME = #{NAME}</if>
+			<if test="CLASSIFY != null and CLASSIFY !=''">,CLASSIFY = #{CLASSIFY}</if>
+			<if test="CATEGORIA != null and CATEGORIA !=''">,CATEGORIA = #{CATEGORIA}</if>
+			<if test="CODE != null and CODE !=''">,CODE = #{CODE}</if>
+			<if test="APPLICBLE_SCENE != null and APPLICBLE_SCENE !=''">,APPLICBLE_SCENE = #{APPLICBLE_SCENE}</if>
+			<if test="USING_DOCUMENT != null and USING_DOCUMENT !=''">,USING_DOCUMENT = #{USING_DOCUMENT}</if>
+			<if test="SVN_ADDRESS != null and SVN_ADDRESS !=''">,SVN_ADDRESS = #{SVN_ADDRESS}</if>
+		WHERE ID = #{ID}
+	</update>
+	
+	<update id="deleteIplatFromTools" parameterType="String">
+	UPDATE iplatform_tools SET IS_DELETED = 'Y'  
+		WHERE  ID = #{deleteId} 
+	</update>
+	
+	<update id="batchDeleteIplatFromTools">
+		UPDATE iplatform_tools
+		SET IS_DELETED='Y' WHERE ID IN
+		<foreach item="deleteIds" collection="array" open="(" separator="," close=")">
+            	#{deleteIds}
+        </foreach>
+	</update>
+</mapper>

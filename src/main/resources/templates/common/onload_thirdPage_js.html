@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<body>
+	<div th:fragment="loadJS">
+
+		<script th:src="@{/js/layer/layer.js}"></script>
+		<script th:src="@{/js/slider/slider.js}"></script>
+		<script th:src="@{/js/jquery/jquery.ajaxform.js}"></script>
+
+		<script type="text/javascript" th:inline="javascript">
+
+			$(document).ready(function() {
+				var options = {
+					target : '#thirdList',
+				};
+
+				$('#callForm').submit(function() {
+					$(this).ajaxSubmit(options);
+					return false;
+				});
+			});
+
+			function callFormSubmit() {
+				$("#callForm").submit();
+			}
+			
+		</script>
+	</div>
+</body>
+</html>

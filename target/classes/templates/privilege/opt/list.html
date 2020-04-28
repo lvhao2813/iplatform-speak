@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+	<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<div th:insert="/common/common_css :: privilege"></div>
+
+	</head>
+	<body>
+<div th:insert="/common/common_index :: index_head"></div>
+<div th:include="/common/onload_list_js :: loadJS"></div>
+
+<form id="callForm" name="callForm" th:action="@{~/privilege/opt/query}" th:method="post">
+
+	<input style="display:none" name="deleteIds" id="deleteIds" value="">
+
+		<div id="main">
+		<div class="box">
+			<div class="title">	
+				    	<h2>当前位置：<a th:href="${session.homeUrl}">首页</a> > <a>系统管理 </a>  > <a class="active">操作管理</a></h2>				
+			</div>
+						<table width="100%" cellpadding="0" cellspacing="0" class="text-table mt10">
+				            <tr>
+					            <th width="8%">操作名称：</th>
+					            <td width="15%"><input type="text"  id="optName"  name="OPT_NAME" th:value="${formMap['OPT_NAME']}"></td>					
+					           <td width="38%">
+						           <a th:onclick="'javascript:callFormSubmit()'">搜索</a>&nbsp;&nbsp;
+						           <a th:onclick="'javascript:resetSearch()'">重置</a>
+					           </td>
+					           <td width="28%"></td>					           
+				            </tr>
+				           
+			            </table>
+		</div>
+		
+	
+			<div class="box">	            
+			<div class="title">	
+				    	<h2> <a class="active">操作列表</a></h2>	
+				    	<div class="operation">
+				    		<a class="parentadd"  onclick="openCommonLayer('新增记录','600px','330px','/privilege/opt/insertpage')"><img th:src="@{/images/icon-add.png}" />新增</a>	
+				    	    <a class="parentIframe" onclick="openBatchDeletePage()"><img th:src="@{/images/icon-del.png}" />删除</a>
+				    	</div>
+				    		
+			</div>	            
+	<div class="auto">
+			<table width="100%" cellpadding="0" cellspacing="0" class="user-list mt10">
+	       			<tr>
+			       			<th width="30">
+								<input type="checkbox" class="check-all" id="mainCheckbox" name="mainCheckbox"
+													onClick="selectedAllCheckbox()" />
+							</th>
+	       							<th>操作名称</th>
+									<th>操作代码</th>
+									<th>操作排序</th>
+									<th>状态</th>
+									<th>操作</th>
+	       			</tr>
+	       			<tr th:each="resultMap : ${resultList}">
+						<td align="center">
+							<input type="checkbox" id="checkboxId"  th:name="check"  th:value="${resultMap['OPT_ID']}" />
+						</td>
+						<td align="left" th:text="${resultMap['OPT_NAME']}"></td>
+						<td align="left" th:text="${resultMap['OPT_CODE']}"></td>
+						<td th:text="${resultMap['OPT_ORDER']}"></td>
+						<td>
+							<span th:text="${resultMap['STATUS']== 'Y'}? '禁用':'可用'"></span>
+							<a href="#" th:class="${resultMap['STATUS']== 'Y'}? 'color-red':'c-blue'" th:onclick="'javascript:ajaxIsStop(\''+${resultMap['OPT_ID']}+'\')'" th:text="${resultMap['STATUS']== 'Y'}? '[ 可用 ]':'[ 禁用 ]'"></a>
+						</td>
+						<td align="center">
+						<a href="#" class="c-green parentedit" th:onclick="'javascript:openEditPage(\'/privilege/opt/updatepage?OPT_ID='+${resultMap['OPT_ID']}+'\')'">编辑</a> 
+						<a href="#" class="color-red parentIframe" th:onclick="'javascript:openDeleteLayer(\'/privilege/opt/deletepage?deleteUrl=/privilege/opt/delete&deleteId='+${resultMap['OPT_ID']}+'\')'">删除</a> 
+						</td>
+					</tr>
+	       		
+	       		</table>
+		</div>
+	
+	    	<div th:include="/common/page_control"></div>
+	    
+			</div>
+		</div>
+	</form>
+	<div th:insert="/common/common_index :: index_foot"></div>
+	</body>
+</html>
+<script type="text/javascript" th:inline="javascript">
+function ajaxIsStop(opt_Id){
+	 $.ajax({
+	  	  type: "POST",
+		  url: "/privilege/opt/setIsStop?optId="+opt_Id,
+		  cache: false,
+		  async:false,
+		  contentType : "application/x-www-form-urlencoded; charset=utf-8",
+		  success: function(html){
+		   	if(html == 'success'){
+		   		callFormSubmit();
+		   	}
+		  },
+		  error:function(html){
+		  },
+		  complete:function(){
+		  }
+	 }); 
+}
+
+function resetSearch(){
+	$("input[id='optName']").val("");
+	callFormSubmit();
+}
+
+function openEditPage(url) {
+	openCommonLayer('修改记录', '600px', '330px', url)
+}
+
+function openBatchDeletePage(){
+	deleteData('/privilege/opt/batchDeletePage?deleteUrl=/privilege/opt/batchDelete');
+}
+</script>
+

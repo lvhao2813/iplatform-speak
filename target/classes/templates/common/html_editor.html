@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    <head>
+        <title>编辑软件</title>
+        <meta charset="utf-8">
+         <script th:src="@{/js/jquery-1.7.2.js}"></script>
+        <link rel="stylesheet" th:href="@{/css/html-complier.css}" />
+<!--         <script th:src="@{/js/jquery-1.7.2.min.js}"></script> -->
+        <link rel="stylesheet" th:href="@{/js/complier/codemirror/lib/codemirror.css}">
+        <script th:src="@{/js/complier/codemirror/lib/codemirror.js}"></script>
+        <script th:src="@{/js/complier/codemirror/xml.js}"></script>
+        <script th:src="@{/js/complier/codemirror/javascript.js}"></script>
+        <script th:src="@{/js/complier/codemirror/css.js}"></script>
+        <script th:src="@{/js/complier/codemirror/htmlmixed.js}"></script>
+        <script th:src="@{/js/complier/codemirror/htmlembedded.js}"></script>
+        <!-- 自动补全 -->
+        <script th:src="@{/js/complier/codemirror/show-hint.js}"></script>
+        <link rel="stylesheet" th:href="@{/js/complier/codemirror/show-hint.css}">
+        <script th:src="@{/js/complier/codemirror/anyword-hint.js}"></script>
+        <script th:src="@{/js/complier/codemirror/javascript-hint.js}"></script>
+        <script th:src="@{/js/complier/codemirror/html-hint.js}"></script>
+        <script th:src="@{/js/complier/codemirror/css-hint.js}"></script>
+        <script th:src="@{/js/complier/codemirror/xml-hint.js}"></script>
+        <!-- 自动收缩 -->
+        <link rel="stylesheet" th:href="@{/js/complier/codemirror/fold/foldgutter.css}"/>
+        <script th:src="@{/js/complier/codemirror/fold/foldcode.js}"></script>
+        <script th:src="@{/js/complier/codemirror/fold/foldgutter.js}"></script>
+        <script th:src="@{/js/complier/codemirror/fold/brace-fold.js}"></script>
+        <script th:src="@{/js/complier/codemirror/fold/comment-fold.js}"></script>
+        <script th:src="@{/js/complier/codemirror/fold/indent-fold.js}"></script>
+        <script th:src="@{/js/complier/codemirror/fold/markdown-fold.js}"></script>
+        <script th:src="@{/js/complier/codemirror/fold/xml-fold.js}"></script>
+  	  	<!-- 引入括号匹配 -->
+        <script th:src="@{/js/complier/codemirror/matchbrackets.js}"></script>
+        <!-- java使用的js -->
+        <script th:src="@{/js/complier/codemirror/clike.js}"></script>
+        <style type="text/css">.CodeMirror {height: 100% !important;width: 100%!important;font-size: 16px;}</style>
+         <link rel="stylesheet"  th:href="@{/js/layui-v2.5.4/css/layui.css}"  media="all">
+         <script th:src="@{/js/layui-v2.5.4/layui.js}" charset="utf-8"></script>
+        <script th:src="@{/js/complier/html-editor.js}"></script>
+        <link rel="stylesheet" th:href="@{/css/html-editor.css}"/>
+        
+        
+         <div th:fragment="scripts(scripts)">
+		        <script th:inline="javascript">
+		            window.CODE = [[${resultMap['CODE']}]];
+		            window.USING_DOCUMENT = [[${resultMap['USING_DOCUMENT']}]];
+		        </script>
+		</div>
+    </head>
+    <body >
+        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+            <ul class="layui-tab-title" style='position: fixed;bottom:0px;'>
+                <li class="layui-this">预览</li>
+                <li>查看代码</li>
+                <li>帮助</li>
+            </ul>
+            <div class="layui-tab-content mytab" >
+                <div class="layui-tab-item layui-show">
+                    <div id="iframeWrapper"></div>
+                </div>
+                <div class="layui-tab-item">
+                    <div id="textareawrapper">
+                        <textarea autocomplete="off" id="textareaCode" wrap="logical" spellcheck="false" ></textarea>
+                    </div>
+                </div>
+                <div class="layui-tab-item" style='height: 100%;overflow: auto;background: #fdfcf8;width:100%;' >
+                		<div style='height: 100%;background: #fdfcf8;margin-left: 10%;float: left;    margin-top: 26px;'  id="USING_DOCUMENT"></div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

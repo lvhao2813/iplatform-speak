@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.boco.share.function.transport.dao.TransportMapper">
+	<select id="queryDataBySql"  resultType="java.util.LinkedHashMap" parameterType="String" >
+        ${sql}
+	</select>
+
+	<insert id="saveReleaseLog">
+    	INSERT INTO s_release_log(ID,release_id,operator,oper_date,data_count)
+		VALUES(
+           #{id,jdbcType=VARCHAR},#{releaseId,jdbcType=VARCHAR}, 
+           #{operator,jdbcType=VARCHAR},#{operDate,jdbcType=TIMESTAMP},#{count,jdbcType=VARCHAR}
+		)
+	</insert>
+
+
+
+</mapper>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<title>计划建设管理平台</title>
+
+</head>
+<body>
+<!-- 权限管理页面通用样式 -->
+<div th:fragment="privilege">
+	<link th:href="@{/css/common.css}" rel="stylesheet" /> 
+	<link th:href="@{/css/syle.css}" rel="stylesheet"/>
+	<link th:href="@{/js/layer/skin/layer.css}" rel="stylesheet"/>
+</div>
+
+<!-- 树形机构页面通用样式 -->
+<div th:fragment="privilege_tree">
+	<link th:href="@{/css/common.css}" rel="stylesheet" /> 
+	<link th:href="@{/css/syle.css}" rel="stylesheet"/>
+	<link th:href="@{/js/layer/skin/layer.css}" rel="stylesheet"/>
+	<link th:href="@{/js/jquery/treetable/skin/jquery.treetable.css}" rel="stylesheet" />
+</div>
+
+<!-- 树形机构页面通用样式 -->
+<div th:fragment="topic">
+	<link th:href="@{/css/common.css}" rel="stylesheet" />
+	<link th:href="@{/css/syle.css}" rel="stylesheet" />
+	<link th:href="@{/css/zzsc.css}" rel="stylesheet" />
+	<link th:href="@{/js/layer/skin/layer.css}" rel="stylesheet" />
+	<link th:href="@{/css/easyui.css}" rel="stylesheet" />
+</div>
+
+
+</body>
+</html>
+

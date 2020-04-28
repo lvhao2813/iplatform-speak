@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<link th:href="@{/css/common.css}" rel="stylesheet" />
+<link th:href="@{/css/syle.css}" rel="stylesheet" />
+<link th:href="@{~/js/layer/skin/layer.css}" rel="stylesheet"/>
+
+<!--[if lt IE 9]>
+				<script src="https://apps.bdimg.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
+			<![endif]-->
+
+</head>
+<body id="bg-white">
+	<form id="callForm" name="callForm" th:object="${priManagerBean}" action="" th:method="post">
+		<div class="p10">
+<table width="100%" cellpadding="0" cellspacing="0" class="tc-edit">
+<input type="hidden" id="parentOrgId"  th:field="*{topParentId}"  value="" />
+<input type="hidden" id="orgId" th:field="*{orgId}"  value="" />
+	<tr>
+		<th width="15%"><span>*</span>姓名：</th>
+		<td><input type="text" th:field="*{mgrName}"  class="input1"/></td>
+		<th width="15%"><span>*</span>账号：</th>
+		<td><input type="text" th:field="*{userCode}"  class="input1"/></td>
+	</tr>
+	<tr>
+		<th><span>*</span>电话：</th>
+		<td><input type="text" th:field="*{mobile}"  class="input1"/></td>
+		<th><span>*</span>邮箱：</th>
+		<td><input type="text" th:field="*{email}"  class="input1"/></td>
+	</tr>
+	<!-- 
+	<tr>
+		<th><span>*</span>单位：</th>
+		<td colspan="3"><input type="text" id="orgName" onclick="openSelectedOrgPage()"  class="input2 dw parentdw" /></td>		
+	</tr>
+		<tr>
+		<th><span>*</span>部门：</th>
+		<td colspan="3"><input type="text" id="orgDepart" onclick="openSelectedPartPage()" value="请选择单位" disabled  class="input2 bm parentbm"/></td>		
+	</tr>
+	 -->
+	<tr>
+		<th>描述：</th>
+		<td colspan="3">
+			<textarea th:field="*{remark}"  rows="6"></textarea>
+		</td>		
+	</tr>
+</table>
+</div>
+<div class="tc-tip" id="tipsId" style="display:none"><img th:src="@{/images/icon-tip.png}"/>您还有必填项未填。</div>
+		<div class="tc-bottom">
+			<a onclick="submitUpdate()"
+				id="submitBtn">确定</a> <a
+				th:onclick="'javascript:closeCurrentLayer()'">取消</a>
+
+		</div>
+	</form>
+
+	<div th:include="/common/onload_layer_js :: loadJS"></div>
+	<script type="text/javascript">
+	
+	function submitUpdate(){
+		jqueryAjaxSubmit('/privilege/manager/add');
+	}
+	
+	$.base64.utf8decode = true;
+	
+	function selectedOrg(orgId,orgName){
+		var orgName = $.base64('decode', orgName);
+		$("input[id='parentOrgId']").val(orgId);
+		$("input[id='orgName']").val(orgName);
+		$("input[id='orgDepart']").removeAttr("disabled").val("请选择所在部门");
+	}
+	
+	function selectedDepart(departId,departName){
+		var departName = $.base64('decode', departName);
+		$("input[id='orgId']").val(departId);
+		$("input[id='orgDepart']").val(departName);
+	}
+	
+	function openSelectedOrgPage(){
+		layer.open({
+			type : 2,
+			skin : 'layui-layer-lan',
+			title : '选择单位',
+			fix : false,
+			shadeClose : true,
+			maxmin : true,
+			area : [ '350px', '320px' ],
+			content : '/privilege/role/selectOrg',
+		});
+	}
+	
+	function openSelectedPartPage(){
+		var parentOrgId=$("input[id='parentOrgId']").val();
+		layer.open({
+			type : 2,
+			skin : 'layui-layer-lan',
+			title : '选择部门',
+			fix : false,
+			shadeClose : true,
+			maxmin : true,
+			area : [ '350px', '320px' ],
+			content : '/privilege/role/selectDepartment?PARENT_ID='+parentOrgId,
+		});
+	}
+	
+	
+	</script>
+</body>
+</html>
+	

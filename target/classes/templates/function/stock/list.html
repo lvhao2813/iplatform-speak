@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+	<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	
+<div th:insert="/common/common_css :: privilege"></div>
+
+	</head>
+	<body>
+<div th:insert="/common/common_index :: index_head"></div>
+<div th:include="/common/onload_list_js :: loadJS"></div>
+
+<form id="callForm" name="callForm" th:action="@{~/api/v1/iplatformtools/query}" th:method="post">
+
+	<input style="display:none" name="deleteIds" id="deleteIds" value="">
+
+		<div id="main">
+		<div class="box">
+			<div class="title">	
+				    	<h2>
+				    	<a class="active">工具查询</a>
+				    	</h2>				
+			</div>
+						<table width="100%" cellpadding="0" cellspacing="0" class="text-table mt10">
+				            <tr>
+					            <th width="8%">工具名称：</th>
+					            <td width="15%"><input type="text"  id="name"  name="NAME" th:value="${formMap['NAME']}"></td>					
+					            <th width="8%">工具分类：</th>
+					           <td width="15%"><input type="text"  id="classify"  name="CLASSIFY" th:value="${formMap['CLASSIFY']}"></td>		
+					           <th width="8%">作者：</th>
+					           <td width="15%"><input type="text"  id="classify"  name="TOOL_CREATED_BY" th:value="${formMap['TOOL_CREATED_BY']}"></td>		
+					           <td width="30px">
+						           <a th:onclick="'javascript:callFormSubmit()'">搜索</a>&nbsp;&nbsp;
+						           <a th:onclick="'javascript:resetSearch()'">重置</a>
+					           </td>
+					           <td width="18%"></td>					           
+				            </tr>
+				           
+			            </table>
+		</div>
+		
+	
+			<div class="box">	            
+			<div class="title">	
+				    	<h2> <a class="active">工具列表</a></h2>	
+				    	<div class="operation">
+				    		<a class="parentadd"  onclick="openCommonLayer('新增记录','600px','160px','/api/v1/iplatformtools/insertpage')"><img th:src="@{/images/icon-add.png}" />新增</a>	
+				    	  <!--   <a class="parentIframe" onclick="openBatchDeletePage()"><img th:src="@{/images/icon-del.png}" />删除</a> -->
+				    	</div>
+				    		
+			</div>	            
+	<div class="auto">
+			<table width="100%" cellpadding="0" cellspacing="0" class="user-list mt10">
+	       			<tr>
+			       	<!-- 		<th width="30">
+								<input type="checkbox" class="check-all" id="mainCheckbox" name="mainCheckbox"
+													onClick="selectedAllCheckbox()" />
+							</th> -->
+							<th>编号</th>
+							<th>工具名称</th>
+							<th>工具类别</th>
+							<th>工具分类</th>
+							<th>作者</th>
+							<th>操作</th>
+	       			</tr>
+	       			<tr  th:each="resultMap : ${resultList}">
+					<!-- 	<td align="center" >
+							<input type="checkbox" id="checkboxId"  th:name="check"  th:value="${resultMap['ID']}" />
+						</td> -->
+						<td th:text="${resultMap['ID']}"></td>
+						<td th:text="${resultMap['NAME']}"></td>
+						<td th:text="${resultMap['CATEGORIA']}"></td>
+						<td th:text="${resultMap['CLASSIFY']}"></td>
+						<td th:text="${resultMap['CREATED_BY']}"></td>
+						<td align="center">
+						<!-- 
+						<div th:switch="${resultMap['CREATED_BY']}">
+							  <p th:case="'admin'">User is an administrator</p>
+							  <p th:case="${session.PRI_MANAGER.mgrName}">User is a manager</p>
+							  <p th:case="*">User is some other thing</p>
+						</div>
+						 -->
+						<!--<a href="#"  th:if="${resultMap['CATEGORIA']=='html'}" class="c-green parentedit" th:onclick="'javascript:openFckPage(\'/htmlPage?isWrite=true&ID='+${resultMap['ID']}+'\')'">查看页面</a> -->
+						<a href="#"  th:if="${resultMap['CATEGORIA']=='html'}" class="c-green parentedit" th:onclick="'javascript:openTabPage(\'/htmlPage?ID='+${resultMap['ID']}+'\')'">查看页面</a>
+						<a href="#"  th:if="${resultMap['CATEGORIA']!='html'}" class="c-green parentedit" th:onclick="'javascript:openFckPage(\'/fckPage?isWrite=true&ID='+${resultMap['ID']}+'\')'">查看工具</a>
+						<a href="#" th:if="${resultMap['CREATED_BY']==session.PRI_MANAGER.mgrName}" class="c-green parentedit" th:onclick="'javascript:openFckPage(\'/fckPage?isWrite=true&ID='+${resultMap['ID']}+'\')'">编辑简介</a> 
+						<a href="#" th:if="${resultMap['CREATED_BY']==session.PRI_MANAGER.mgrName}" class="c-green parentedit" th:onclick="'javascript:openCodePage(\'/codePage?ID='+${resultMap['ID']}+'\')'">编辑代码</a>
+						<a href="#" th:if="${resultMap['CREATED_BY']==session.PRI_MANAGER.mgrName}"  class="c-green parentedit" th:onclick="'javascript:openEditPage(\'/api/v1/iplatformtools/updatepage?ID='+${resultMap['ID']}+'\')'">编辑</a> 
+						<a href="#" th:if="${resultMap['CREATED_BY']==session.PRI_MANAGER.mgrName}"  class="color-red parentIframe" th:onclick="'javascript:openDeleteLayer(\'/api/v1/iplatformtools/deletepage?deleteUrl=/api/v1/iplatformtools/delete&deleteId='+${resultMap['ID']}+'\')'">删除</a> 
+						</td>
+					</tr>
+	       		
+	       		</table>
+		</div>
+	
+	    	<div th:include="/common/page_control"></div>
+	    
+			</div>
+		</div>
+	</form>
+	</body>
+</html>
+<script type="text/javascript" th:inline="javascript">
+function resetSearch(){
+	$("input[id='name']").val("");
+	$("input[id='classify']").val("");
+	callFormSubmit();
+}
+
+function openEditPage(url) {
+	openCommonLayer('修改记录', '600px', '160px', url)
+}
+
+function openFckPage(url) {
+	openCommonLayer('修改简介', '90%', '90%', url)
+}
+function openTabPage(url){
+    var text =event.target.parentElement.parentElement.children[1].innerHTML;
+    openTab(url, text)
+}
+
+function openCodePage(url) {
+	openCommonLayer('修改代码', '90%', '90%', url)
+}
+
+
+function openBatchDeletePage(){
+	deleteData('/api/v1/iplatformtools/batchDeletePage?deleteUrl=/api/v1/iplatformtools/batchDelete');
+}
+</script>
+

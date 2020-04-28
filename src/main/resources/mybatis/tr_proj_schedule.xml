@@ -1,0 +1,1444 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.boco.share.function.transform.dao.TransformMapper">
+
+	<delete id="deleteMonthSchedule">
+		DELETE FROM dw_schedule_month
+	</delete>  
+	
+	<delete id="deleteWaitingSchedule" parameterType="java.util.Map">
+		DELETE FROM dw_schedule_month_waiting where 1=1
+		<if test="year!=null and year!=''">
+			AND year =  #{year}
+		</if>
+		<if test="month!=null and month!=''">
+			AND month =  #{month}
+		</if>
+	</delete>  
+	
+	<delete id="deleteMonthProject">
+		DELETE FROM dw_project_month
+	</delete>  
+
+	<insert id="saveCurrentMonthSchedule2Waiting"  databaseId="mysql" >
+  <![CDATA[ 
+		INSERT INTO dw_schedule_month_waiting
+		SELECT
+			id,
+			DATE_FORMAT(NOW(), '%Y'),
+			DATE_FORMAT(NOW(), '%m'),
+			last_day(NOW()),
+			NOW(),
+			PROJECT_ID,
+			SCHEDULE_TYPE_ID,
+			SCHEDULE_TYPE_CODE,
+			ENTITY_NAME,
+			PLAN_BEGIN_DATE,
+			PLAN_END_DATE,
+			BEGIN_DATE,
+			END_DATE,
+			ENTITY_STATUS
+		FROM
+			ods_schedule os
+		]]>
+	</insert>
+	
+	<insert id="insertBuildingStatus2Dw" parameterType="java.util.Map"  databaseId="mysql" >
+			insert into dw_schedule_month
+			SELECT
+				dsm.ID,
+				dsm. YEAR,
+				dsm. MONTH,
+				dsm.DATA_DATE,
+				dsm.ACQUISITION_DATE,
+				dsm.PROJECT_ID,
+				dsm.SCHEDULE_TYPE_ID,
+				dsm.SCHEDULE_TYPE_CODE,
+				dsm.SCHEDULE_NAME,
+				dsm.PLAN_BEGIN_DATE,
+				dsm.PLAN_END_DATE,
+				dsm.BEGIN_DATE,
+				dsm.END_DATE,
+				dsm.ENTITY_STATUS
+			FROM
+				dw_schedule_month_waiting dsm
+			WHERE
+				dsm. YEAR = #{year}
+			AND dsm. MONTH = #{month}
+	</insert>
+	
+	<insert id="saveMonthBuildingStatus" parameterType="java.util.Map"  databaseId="mysql" >
+	<![CDATA[ 
+			INSERT INTO dw_project_month (
+						project_id,
+						YEAR,
+						MONTH,
+						is_building,
+						current_sch_keynode_name,
+						current_sch_keynode_isdelay
+					)
+			SELECT
+						temp.PROJECT_ID,
+						temp. YEAR,
+						temp. MONTH,
+						temp.is_building,
+						temp.key_sch_name,
+						temp_delay.is_delay is_key_sch_delay
+					FROM
+						(
+							SELECT
+								op.PROJECT_ID,
+								#{year} YEAR,
+								#{month} MONTH,
+								CASE
+							WHEN os.end_date IS NOT NULL
+							AND os.end_date > last_day(STR_TO_DATE(#{currentTime},'%Y-%m')) THEN
+								'N'
+							WHEN (
+								ttpr.terminate_status = 'completed'
+								AND ttpr.terminate_date IS NULL
+							) THEN
+								'N'
+							WHEN ttpr.terminate_date < #{currentTime} THEN
+								'N'
+							WHEN op.END_DATE < #{currentTime} THEN
+								'N'
+							WHEN os.entity_status = 'completed'
+							AND tpp.PAUSE_DATE > os.end_date
+							AND (
+								tpr.return_date IS NULL
+								OR tpr.return_date < tpp.PAUSE_DATE
+							) THEN
+								'N'
+							WHEN os.entity_status = 'completed'
+							AND os.end_date IS NOT NULL
+							AND tpp.PAUSE_DATE > os.end_date
+							AND tpr.return_date > tpp.PAUSE_DATE THEN
+								'Y'
+							WHEN os.entity_status IS NULL THEN
+								'N'
+							WHEN os.entity_status = 'completed'
+							AND os.end_date IS NOT NULL
+							AND tpp.PAUSE_DATE IS NULL
+							AND ttpr.terminate_date IS NULL THEN
+								'Y'
+							ELSE
+								'N'
+							END is_building,
+							key_c.key_sch_name
+						FROM
+							ods_project op
+						LEFT JOIN ods_schedule os ON op.PROJECT_ID = os.PROJECT_ID
+						AND os.SCHEDULE_TYPE_CODE = 'PROJECTSTART'
+						LEFT JOIN (
+							SELECT
+								opp.PROJECT_ID,
+								max(opp.PAUSE_DATE) PAUSE_DATE
+							FROM
+								ods_project_pause opp
+							WHERE
+								opp.ENTITY_STATUS = 'completed'
+							AND DATE_FORMAT(opp.PAUSE_DATE, '%Y-%m') < #{currentTime}
+							GROUP BY
+								opp.project_id
+						) tpp ON OP.project_id = tpp.project_id
+						LEFT JOIN (
+							SELECT
+								opr.PROJECT_ID,
+								max(opr.return_date) return_date
+							FROM
+								ods_project_return opr
+							WHERE
+								opr.ENTITY_STATUS = 'completed'
+							AND DATE_FORMAT(opr.return_date, '%Y-%m') < #{currentTime}
+							GROUP BY
+								opr.project_id
+						) tpr ON OP.project_id = tpr.project_id
+						LEFT JOIN (
+							SELECT
+								opt.PROJECT_ID,
+								max(opt.FINISH_DATE) terminate_date,
+								opt.ENTITY_STATUS terminate_status
+							FROM
+								ods_project_terminate opt
+							WHERE
+								opt.ENTITY_STATUS = 'completed'
+							AND (
+								(
+									DATE_FORMAT(opt.FINISH_DATE, '%Y-%m') < #{currentTime}
+								)
+								OR (
+									opt.FINISH_DATE IS NULL
+									AND opt.ENTITY_STATUS = 'completed'
+								)
+							)
+							GROUP BY
+								opt.project_id,
+								opt.ENTITY_STATUS
+						) ttpr ON OP.project_id = ttpr.project_id
+						LEFT JOIN (
+							SELECT
+								project_id,
+								SCHEDULE_NAME key_sch_name
+							FROM
+								(
+									SELECT
+										dw.PROJECT_ID,
+										dw.SCHEDULE_NAME,
+										dw.SCHEDULE_TYPE_CODE,
+										dw.PLAN_BEGIN_DATE,
+										dw.PLAN_END_DATE,
+										dw.BEGIN_DATE,
+										dw.END_DATE,
+										dw.ENTITY_STATUS,
+										key_cursor.plan_end_date key_max_date
+									FROM
+										dw_schedule_month_waiting dw
+									LEFT JOIN (
+										SELECT
+											PROJECT_ID,
+											max(plan_end_date) plan_end_date
+										FROM
+											(
+												SELECT
+													dsmw.PROJECT_ID,
+													dsmw.SCHEDULE_NAME,
+													dsmw.SCHEDULE_TYPE_CODE,
+													dsmw.PLAN_BEGIN_DATE,
+													dsmw.PLAN_END_DATE,
+													dsmw.BEGIN_DATE,
+													dsmw.END_DATE,
+													dsmw.ENTITY_STATUS,
+													ifnull(dst.is_keynode, 0) is_keynode
+												FROM
+													dw_schedule_month_waiting dsmw
+												LEFT JOIN dw_schedule_type dst ON dsmw.SCHEDULE_TYPE_CODE = dst.type_code
+												WHERE
+													dsmw. YEAR = #{year} 
+												AND dsmw. MONTH = #{month}
+												AND dsmw.ENTITY_STATUS = 'in_process'
+												AND dst.is_keynode = 1
+												ORDER BY
+													dsmw.PLAN_END_DATE DESC
+											) temp
+										GROUP BY
+											temp.PROJECT_ID
+									) key_cursor ON dw.PROJECT_ID = key_cursor.PROJECT_ID
+									AND dw.PLAN_END_DATE = key_cursor.plan_end_date
+									WHERE
+										key_cursor.plan_end_date IS NOT NULL
+									AND key_cursor.plan_end_date = dw.PLAN_END_DATE
+									AND dw.ENTITY_STATUS = 'in_process'
+								) a
+							GROUP BY
+								a.project_id
+						) key_c ON key_c.project_id = op.project_id
+						) temp
+					LEFT JOIN (
+						SELECT
+							ds.project_id,
+							#{year},
+							#{month},
+							ds.SCHEDULE_NAME,
+							ds.PLAN_END_DATE,
+							ds.END_DATE,
+							CASE
+						WHEN ds.PLAN_END_DATE IS NULL THEN
+							0
+						WHEN MONTH = DATE_FORMAT(now(), '%m')
+						AND ds.end_date IS NULL
+						AND datediff(now(), ds.plan_end_date) <= 0 THEN
+							0
+						WHEN MONTH = DATE_FORMAT(now(), '%m')
+						AND ds.end_date IS NULL
+						AND datediff(now(), ds.plan_end_date) > 0 THEN
+							1
+						WHEN MONTH != DATE_FORMAT(now(), '%m')
+						AND ds.end_date IS NULL
+						AND LAST_DAY(STR_TO_DATE('2018-01', '%Y-%m'))<= ds.plan_end_date THEN
+							0
+						WHEN MONTH != DATE_FORMAT(now(), '%m')
+						AND ds.end_date IS NULL
+						AND LAST_DAY(STR_TO_DATE('2018-01', '%Y-%m')) > ds.plan_end_date THEN
+							1
+						WHEN datediff(
+							ds.END_DATE,
+							ds.plan_end_date
+						) <= 0 THEN
+							0
+						WHEN datediff(
+							ds.END_DATE,
+							ds.plan_end_date
+						) > 0 THEN
+							1
+						END is_delay
+						FROM
+							dw_schedule_month_waiting ds
+						WHERE
+							YEAR = #{year}
+						AND MONTH = #{month}
+					) temp_delay ON temp.PROJECT_ID = temp_delay.project_id
+					AND temp.key_sch_name = temp_delay.SCHEDULE_NAME
+		]]>
+	</insert>
+	
+	<insert id="saveCurrentMonthBuildingStatusByDW" parameterType="java.util.Map"  databaseId="mysql" >
+	<![CDATA[ 
+			INSERT INTO dw_project_month (
+						project_id,
+						YEAR,
+						MONTH,
+						is_building,
+						current_sch_keynode_name,
+						current_sch_keynode_isdelay,
+						current_sch_name,
+						last_sch_name
+					)
+			SELECT
+						temp.PROJECT_ID,
+						temp. YEAR,
+						temp. MONTH,
+						temp.is_building,
+						temp.key_sch_name,
+						temp_delay.is_delay is_key_sch_delay,
+						temp.cur_sch_name,
+						temp.last_sch_name
+					FROM
+						(
+							SELECT
+								op.PROJECT_ID,
+								#{year} YEAR,
+								#{month} MONTH,
+								cur_sch.cur_sch_name,
+								last_sch.last_sch_name,
+								CASE
+							WHEN os.end_date IS NOT NULL
+							AND os.end_date > last_day(STR_TO_DATE(#{currentTime},'%Y-%m')) THEN
+								'N'
+							WHEN (
+								ttpr.terminate_status = 'completed'
+								AND ttpr.terminate_date IS NULL
+							) THEN
+								'N'
+							WHEN ttpr.terminate_date < #{currentTime} THEN
+								'N'
+							WHEN op.END_DATE < #{currentTime} THEN
+								'N'
+							WHEN os.entity_status = 'completed'
+							AND tpp.PAUSE_DATE > os.end_date
+							AND (
+								tpr.return_date IS NULL
+								OR tpr.return_date < tpp.PAUSE_DATE
+							) THEN
+								'N'
+							WHEN os.entity_status = 'completed'
+							AND os.end_date IS NOT NULL
+							AND tpp.PAUSE_DATE > os.end_date
+							AND tpr.return_date > tpp.PAUSE_DATE THEN
+								'Y'
+							WHEN os.entity_status IS NULL THEN
+								'N'
+							WHEN os.entity_status = 'completed'
+							AND os.end_date IS NOT NULL
+							AND tpp.PAUSE_DATE IS NULL
+							AND ttpr.terminate_date IS NULL THEN
+								'Y'
+							ELSE
+								'N'
+							END is_building,
+							key_c.key_sch_name
+						FROM
+							ods_project op
+						LEFT JOIN ods_schedule os ON op.PROJECT_ID = os.PROJECT_ID
+						AND os.SCHEDULE_TYPE_CODE = 'PROJECTSTART'
+						LEFT JOIN (
+							SELECT
+								opp.PROJECT_ID,
+								max(opp.PAUSE_DATE) PAUSE_DATE
+							FROM
+								ods_project_pause opp
+							WHERE
+								opp.ENTITY_STATUS = 'completed'
+							AND opp.PAUSE_DATE <= last_day(str_to_date(#{currentTime},'%Y-%m'))
+							GROUP BY
+								opp.project_id
+						) tpp ON OP.project_id = tpp.project_id
+						LEFT JOIN (
+							SELECT
+								opr.PROJECT_ID,
+								max(opr.return_date) return_date
+							FROM
+								ods_project_return opr
+							WHERE
+								opr.ENTITY_STATUS = 'completed'
+							AND opr.return_date <= last_day(str_to_date(#{currentTime},'%Y-%m'))
+							GROUP BY
+								opr.project_id
+						) tpr ON OP.project_id = tpr.project_id
+						LEFT JOIN (
+							SELECT
+								opt.PROJECT_ID,
+								max(opt.FINISH_DATE) terminate_date,
+								opt.ENTITY_STATUS terminate_status
+							FROM
+								ods_project_terminate opt
+							WHERE
+								opt.ENTITY_STATUS = 'completed'
+							AND (
+								(
+									opt.FINISH_DATE <= last_day(str_to_date(#{currentTime},'%Y-%m'))
+								)
+								OR (
+									opt.FINISH_DATE IS NULL
+									AND opt.ENTITY_STATUS = 'completed'
+								)
+							)
+							GROUP BY
+								opt.project_id,
+								opt.ENTITY_STATUS
+						) ttpr ON OP.project_id = ttpr.project_id
+						LEFT JOIN (SELECT
+							a.project_id,
+							a.SCHEDULE_NAME cur_sch_name
+						FROM 
+							(
+								SELECT
+										dw.PROJECT_ID,
+										dw.SCHEDULE_NAME,
+										dw.SCHEDULE_TYPE_CODE,
+										dw.PLAN_BEGIN_DATE,
+										dw.PLAN_END_DATE,
+										dw.BEGIN_DATE,
+										dw.END_DATE,
+										dw.ENTITY_STATUS
+									FROM
+										dw_schedule_month dw,(
+										SELECT
+											dsmw.PROJECT_ID,
+											max(dsmw.plan_end_date) plan_end_date
+										FROM
+											dw_schedule_month dsmw
+										WHERE
+											dsmw. YEAR = #{year}
+										AND dsmw. MONTH = #{month}
+										AND dsmw.ENTITY_STATUS = 'in_process'
+										GROUP BY
+											dsmw.PROJECT_ID
+									) key_cursor 
+									WHERE dw.PROJECT_ID = key_cursor.PROJECT_ID
+									AND dw.PLAN_END_DATE = key_cursor.plan_end_date
+							) a
+						GROUP BY
+							a.project_id) cur_sch on cur_sch.project_id = op.project_id 
+						LEFT JOIN (
+						SELECT
+							a.project_id,
+							a.SCHEDULE_NAME last_sch_name
+						FROM 
+							(
+								SELECT
+									dw.PROJECT_ID,
+									dw.SCHEDULE_NAME,
+									dw.SCHEDULE_TYPE_CODE,
+									dw.PLAN_BEGIN_DATE,
+									dw.PLAN_END_DATE,
+									dw.BEGIN_DATE,
+									dw.END_DATE,
+									dw.ENTITY_STATUS
+								FROM
+									dw_schedule_month dw,(
+									SELECT
+										dsmw.PROJECT_ID,
+										max(dsmw.plan_end_date) plan_end_date
+									FROM
+										dw_schedule_month dsmw
+									WHERE
+										dsmw. YEAR = #{year}
+									AND dsmw. MONTH = #{month}
+									AND dsmw.ENTITY_STATUS = 'completed'
+									GROUP BY
+										dsmw.PROJECT_ID
+								) key_cursor WHERE dw.PROJECT_ID = key_cursor.PROJECT_ID
+								AND dw.PLAN_END_DATE = key_cursor.plan_end_date
+							) a
+						GROUP BY
+							a.project_id) last_sch on last_sch.project_id = op.project_id 
+						LEFT JOIN (
+							SELECT
+								project_id,
+								SCHEDULE_NAME key_sch_name
+							FROM
+								(
+									SELECT
+										dw.PROJECT_ID,
+										dw.SCHEDULE_NAME,
+										dw.SCHEDULE_TYPE_CODE,
+										dw.PLAN_BEGIN_DATE,
+										dw.PLAN_END_DATE,
+										dw.BEGIN_DATE,
+										dw.END_DATE,
+										dw.ENTITY_STATUS,
+										key_cursor.plan_end_date key_max_date
+									FROM
+										dw_schedule_month_waiting dw
+									LEFT JOIN (
+										SELECT
+											PROJECT_ID,
+											max(plan_end_date) plan_end_date
+										FROM
+											(
+												SELECT
+													dsmw.PROJECT_ID,
+													dsmw.SCHEDULE_NAME,
+													dsmw.SCHEDULE_TYPE_CODE,
+													dsmw.PLAN_BEGIN_DATE,
+													dsmw.PLAN_END_DATE,
+													dsmw.BEGIN_DATE,
+													dsmw.END_DATE,
+													dsmw.ENTITY_STATUS,
+													ifnull(dst.is_keynode, 0) is_keynode
+												FROM
+													dw_schedule_month_waiting dsmw
+												LEFT JOIN dw_schedule_type dst ON dsmw.SCHEDULE_TYPE_CODE = dst.type_code
+												WHERE
+													dsmw. YEAR = #{year} 
+												AND dsmw. MONTH = #{month}
+												AND dsmw.ENTITY_STATUS = 'in_process'
+												AND dst.is_keynode = 1
+												ORDER BY
+													dsmw.PLAN_END_DATE DESC
+											) temp
+										GROUP BY
+											temp.PROJECT_ID
+									) key_cursor ON dw.PROJECT_ID = key_cursor.PROJECT_ID
+									AND dw.PLAN_END_DATE = key_cursor.plan_end_date
+									WHERE
+										key_cursor.plan_end_date IS NOT NULL
+									AND key_cursor.plan_end_date = dw.PLAN_END_DATE
+									AND dw.ENTITY_STATUS = 'in_process'
+								) a
+							GROUP BY
+								a.project_id
+						) key_c ON key_c.project_id = op.project_id
+						) temp
+					LEFT JOIN (
+						SELECT
+							ds.project_id,
+							#{year},
+							#{month},
+							ds.SCHEDULE_NAME,
+							ds.PLAN_END_DATE,
+							ds.END_DATE,
+							CASE
+						WHEN ds.PLAN_END_DATE IS NULL THEN
+							0
+						WHEN MONTH = DATE_FORMAT(now(), '%m')
+						AND ds.end_date IS NULL
+						AND datediff(now(), ds.plan_end_date) <= 0 THEN
+							0
+						WHEN MONTH = DATE_FORMAT(now(), '%m')
+						AND ds.end_date IS NULL
+						AND datediff(now(), ds.plan_end_date) > 0 THEN
+							1
+						WHEN MONTH != DATE_FORMAT(now(), '%m')
+						AND ds.end_date IS NULL
+						AND LAST_DAY(STR_TO_DATE(#{currentTime}, '%Y-%m'))<= ds.plan_end_date THEN
+							0
+						WHEN MONTH != DATE_FORMAT(now(), '%m')
+						AND ds.end_date IS NULL
+						AND LAST_DAY(STR_TO_DATE(#{currentTime}, '%Y-%m')) > ds.plan_end_date THEN
+							1
+						WHEN ds.plan_end_date >=ds.END_DATE THEN
+							0
+						WHEN ds.plan_end_date < ds.END_DATE THEN
+							1
+						END is_delay
+						FROM
+							dw_schedule_month_waiting ds
+						WHERE
+							YEAR = #{year}
+						AND MONTH = #{month}
+					) temp_delay ON temp.PROJECT_ID = temp_delay.project_id
+					AND temp.key_sch_name = temp_delay.SCHEDULE_NAME
+		]]>
+	</insert>
+	
+		<insert id="saveMonthBuildingStatusByDw" parameterType="java.util.Map"  databaseId="mysql" >
+		<![CDATA[ 
+		INSERT INTO dw_project_month (
+							project_id,
+							YEAR,
+							MONTH,
+							is_building,
+							current_sch_keynode_name,
+							current_sch_keynode_isdelay
+						) SELECT
+							temp.PROJECT_ID,
+							#{year},
+							#{month},
+							temp.is_building,
+							temp.key_sch_name,
+							temp_delay.is_delay is_key_sch_delay
+						FROM
+							(
+								SELECT
+									op.PROJECT_ID PROJECT_ID,
+									op.ENTITY_STATUS,
+									key_c.key_sch_name,
+									#{currentTime} AS date,
+									CASE
+								WHEN (
+									os.end_date IS NOT NULL
+									AND DATE_FORMAT(os.end_date, '%Y-%m-%d') >= LAST_DAY(
+										STR_TO_DATE(#{currentTime}, '%Y-%m')
+									)
+								) THEN
+									'N'
+								WHEN (
+									ttpr.terminate_status = 'completed'
+									AND ttpr.terminate_date IS NULL
+								) THEN
+									'N'
+								WHEN DATE_FORMAT(
+									ttpr.terminate_date,
+									'%Y-%m-%d'
+								) <= LAST_DAY(
+									STR_TO_DATE(#{currentTime}, '%Y-%m')
+								) THEN
+									'N'
+								WHEN DATE_FORMAT(op.END_DATE, '%Y-%m-%d') <= LAST_DAY(
+									STR_TO_DATE(#{currentTime}, '%Y-%m')
+								) THEN
+									'N'
+								WHEN os.entity_status = 'completed'
+								AND tpp.PAUSE_DATE > os.end_date
+								AND (
+									tpr.return_date IS NULL
+									OR tpr.return_date < tpp.PAUSE_DATE
+								) THEN
+									'N'
+								WHEN os.entity_status IS NULL THEN
+									'N'
+								WHEN os.entity_status = 'completed'
+								AND tpp.PAUSE_DATE > os.end_date
+								AND tpr.return_date > tpp.PAUSE_DATE THEN
+									'Y'
+								WHEN os.entity_status = 'completed'
+								AND tpp.PAUSE_DATE IS NULL
+								AND ttpr.terminate_date IS NULL THEN
+									'Y'
+								ELSE
+									'N'
+								END is_building,
+								DATE_FORMAT(os.end_date, '%Y-%m-%d') projectstart_end_date,
+								os.entity_status projectstart_status,
+								DATE_FORMAT(op.END_DATE, '%Y-%m-%d') project_finish_date,
+								DATE_FORMAT(tpp.PAUSE_DATE, '%Y-%m-%d') pause_date,
+								DATE_FORMAT(tpr.return_date, '%Y-%m-%d') return_date,
+								DATE_FORMAT(
+									ttpr.terminate_date,
+									'%Y-%m-%d'
+								) terminate_date,
+								ttpr.terminate_status
+							FROM
+								ods_project op
+							LEFT JOIN ods_schedule os ON op.PROJECT_ID = os.PROJECT_ID
+							AND os.SCHEDULE_TYPE_CODE = 'PROJECTSTART'
+							LEFT JOIN (
+								SELECT
+									opp.PROJECT_ID,
+									max(opp.PAUSE_DATE) PAUSE_DATE
+								FROM
+									ods_project_pause opp
+								WHERE
+									opp.ENTITY_STATUS = 'completed'
+								AND DATE_FORMAT(opp.PAUSE_DATE, '%Y-%m-%d') <= LAST_DAY(
+									STR_TO_DATE(#{currentTime}, '%Y-%m-%d')
+								)
+								GROUP BY
+									opp.project_id
+							) tpp ON OP.project_id = tpp.project_id
+							LEFT JOIN (
+								SELECT
+									opr.PROJECT_ID,
+									max(opr.return_date) return_date
+								FROM
+									ods_project_return opr
+								WHERE
+									opr.ENTITY_STATUS = 'completed'
+								AND DATE_FORMAT(opr.return_date, '%Y-%m-%d') <= LAST_DAY(
+									STR_TO_DATE(#{currentTime}, '%Y-%m-%d')
+								)
+								GROUP BY
+									opr.project_id
+							) tpr ON OP.project_id = tpr.project_id
+							LEFT JOIN (
+								SELECT
+									opt.PROJECT_ID,
+									max(opt.FINISH_DATE) terminate_date,
+									opt.ENTITY_STATUS terminate_status
+								FROM
+									ods_project_terminate opt
+								WHERE
+									opt.ENTITY_STATUS = 'completed'
+								AND (
+									(
+										DATE_FORMAT(opt.FINISH_DATE, '%Y-%m-%d') <= LAST_DAY(
+											STR_TO_DATE(#{currentTime}, '%Y-%m-%d')
+										)
+									)
+									OR (
+										opt.FINISH_DATE IS NULL
+										AND opt.ENTITY_STATUS = 'completed'
+									)
+								)
+								GROUP BY
+									opt.project_id,
+									opt.ENTITY_STATUS
+							) ttpr ON OP.project_id = ttpr.project_id
+							LEFT JOIN (
+								SELECT
+									project_id,
+									SCHEDULE_NAME key_sch_name
+								FROM
+									(
+										SELECT
+											dw.PROJECT_ID,
+											dw.SCHEDULE_NAME,
+											dw.SCHEDULE_TYPE_CODE,
+											dw.PLAN_BEGIN_DATE,
+											dw.PLAN_END_DATE,
+											dw.BEGIN_DATE,
+											dw.END_DATE,
+											dw.ENTITY_STATUS,
+											key_cursor.plan_end_date key_max_date
+										FROM
+											dw_schedule_month_waiting dw
+										LEFT JOIN (
+											SELECT
+												PROJECT_ID,
+												max(plan_end_date) plan_end_date
+											FROM
+												(
+													SELECT
+														dsmw.PROJECT_ID,
+														dsmw.SCHEDULE_NAME,
+														dsmw.SCHEDULE_TYPE_CODE,
+														dsmw.PLAN_BEGIN_DATE,
+														dsmw.PLAN_END_DATE,
+														dsmw.BEGIN_DATE,
+														dsmw.END_DATE,
+														dsmw.ENTITY_STATUS,
+														ifnull(dst.is_keynode, 0) is_keynode
+													FROM
+														dw_schedule_month_waiting dsmw
+													LEFT JOIN dw_schedule_type dst ON dsmw.SCHEDULE_TYPE_CODE = dst.type_code
+													WHERE
+														dsmw. YEAR = #{year}
+													AND dsmw. MONTH = #{month}
+													AND dsmw.ENTITY_STATUS = 'in_process'
+													AND dst.is_keynode = 1
+													ORDER BY
+														dsmw.PLAN_END_DATE DESC
+												) temp
+											GROUP BY
+												temp.PROJECT_ID
+										) key_cursor ON dw.PROJECT_ID = key_cursor.PROJECT_ID
+										AND dw.PLAN_END_DATE = key_cursor.plan_end_date
+										WHERE
+											key_cursor.plan_end_date IS NOT NULL
+										AND key_cursor.plan_end_date = dw.PLAN_END_DATE
+										AND dw.ENTITY_STATUS = 'in_process'
+									) a
+								GROUP BY
+									a.project_id
+							) key_c ON key_c.project_id = op.project_id
+							) temp
+						LEFT JOIN (
+							SELECT
+								ds.project_id,
+								#{year},
+								#{month},
+								ds.SCHEDULE_NAME,
+								ds.PLAN_END_DATE,
+								ds.END_DATE,
+								CASE
+							WHEN ds.PLAN_END_DATE IS NULL THEN
+								0
+							WHEN MONTH = DATE_FORMAT(now(), '%m')
+							AND ds.end_date IS NULL
+							AND datediff(now(), ds.plan_end_date) <= 0 THEN
+								0
+							WHEN MONTH = DATE_FORMAT(now(), '%m')
+							AND ds.end_date IS NULL
+							AND datediff(now(), ds.plan_end_date) > 0 THEN
+								1
+							WHEN MONTH != DATE_FORMAT(now(), '%m')
+							AND ds.end_date IS NULL
+							AND LAST_DAY(
+								STR_TO_DATE(#{currentTime}, '%Y-%m')
+							) <= ds.plan_end_date THEN
+								0
+							WHEN MONTH != DATE_FORMAT(now(), '%m')
+							AND ds.end_date IS NULL
+							AND LAST_DAY(
+								STR_TO_DATE(#{currentTime}, '%Y-%m')
+							) > ds.plan_end_date THEN
+								1
+							WHEN ds.plan_end_date >= ds.END_DATE THEN
+								0
+							WHEN ds.plan_end_date < ds.END_DATE THEN
+								1
+							END is_delay
+							FROM
+								dw_schedule_month_waiting ds
+							WHERE
+								YEAR =#{year}
+							AND MONTH = #{month}
+						) temp_delay ON temp.PROJECT_ID = temp_delay.project_id
+						AND temp.key_sch_name = temp_delay.SCHEDULE_NAME
+				]]>
+		</insert>
+	
+	<insert id="saveMonthBuildingStatusByDwV1" parameterType="java.util.Map"  databaseId="mysql" >
+	<![CDATA[ 
+			INSERT INTO dw_project_month (
+						project_id,
+						YEAR,
+						MONTH,
+						is_building,
+						current_sch_keynode_name,
+						current_sch_keynode_isdelay,
+						current_sch_name
+					)
+			SELECT
+						temp.PROJECT_ID,
+						temp. YEAR,
+						temp. MONTH,
+						temp.is_building,
+						temp.key_sch_name,
+						temp_delay.is_delay is_key_sch_delay,
+						temp.cur_sch_name
+					FROM
+						(
+							SELECT
+								op.PROJECT_ID,
+								#{year} YEAR,
+								#{month} MONTH,
+								cur_sch.cur_sch_name,
+								CASE
+							WHEN (os.end_date IS NOT NULL
+							AND DATE_FORMAT(os.end_date,'%Y-%m-%d') >=LAST_DAY(STR_TO_DATE(#{currentTime}, '%Y-%m'))) THEN
+								'N'
+							WHEN (
+								ttpr.terminate_status = 'completed'
+								AND ttpr.terminate_date IS NULL
+							) THEN 'N'
+							WHEN DATE_FORMAT(ttpr.terminate_date,'%Y-%m-%d') <=LAST_DAY(STR_TO_DATE(#{currentTime}, '%Y-%m')) THEN  'N'
+							WHEN DATE_FORMAT(op.END_DATE,'%Y-%m-%d') <= LAST_DAY(STR_TO_DATE(#{currentTime}, '%Y-%m')) THEN 'N'
+							WHEN os.entity_status = 'completed'
+							AND tpp.PAUSE_DATE > os.end_date
+							AND (
+								tpr.return_date IS NULL
+								OR tpr.return_date < tpp.PAUSE_DATE
+							) THEN
+								'N'
+							WHEN os.entity_status = 'completed'
+							AND os.end_date IS NOT NULL
+							AND tpp.PAUSE_DATE > os.end_date
+							AND tpr.return_date > tpp.PAUSE_DATE THEN
+								'Y'
+							WHEN os.entity_status IS NULL THEN
+								'N'
+							WHEN os.entity_status = 'completed'
+							AND os.end_date IS NOT NULL
+							AND tpp.PAUSE_DATE IS NULL
+							AND ttpr.terminate_date IS NULL THEN
+								'Y'
+							ELSE
+								'N'
+							END is_building,
+							key_c.key_sch_name
+						FROM
+							ods_project op
+						LEFT JOIN ods_schedule os ON op.PROJECT_ID = os.PROJECT_ID
+						AND os.SCHEDULE_TYPE_CODE = 'PROJECTSTART'
+						LEFT JOIN (SELECT
+							a.project_id,
+							a.SCHEDULE_NAME cur_sch_name
+						FROM 
+							(
+								SELECT
+										dw.PROJECT_ID,
+										dw.SCHEDULE_NAME,
+										dw.SCHEDULE_TYPE_CODE,
+										dw.PLAN_BEGIN_DATE,
+										dw.PLAN_END_DATE,
+										dw.BEGIN_DATE,
+										dw.END_DATE,
+										dw.ENTITY_STATUS
+									FROM
+										dw_schedule_month dw,(
+										SELECT
+											dsmw.PROJECT_ID,
+											max(dsmw.plan_end_date) plan_end_date
+										FROM
+											dw_schedule_month dsmw
+										WHERE
+											dsmw. YEAR = #{year}
+										AND dsmw. MONTH = #{month}
+										AND dsmw.ENTITY_STATUS = 'in_process'
+										GROUP BY
+											dsmw.PROJECT_ID
+									) key_cursor 
+									WHERE dw.PROJECT_ID = key_cursor.PROJECT_ID
+									AND dw.PLAN_END_DATE = key_cursor.plan_end_date
+							) a
+						GROUP BY
+							a.project_id) cur_sch on cur_sch.project_id = op.project_id 
+						LEFT JOIN (
+							SELECT
+								opp.PROJECT_ID,
+								max(opp.PAUSE_DATE) PAUSE_DATE
+							FROM
+								ods_project_pause opp
+							WHERE
+								opp.ENTITY_STATUS = 'completed'
+							AND 	DATE_FORMAT(opp.PAUSE_DATE,'%Y-%m-%d') <= LAST_DAY(STR_TO_DATE(#{currentTime},'%Y-%m-%d'))
+							GROUP BY
+								opp.project_id
+						) tpp ON OP.project_id = tpp.project_id
+						LEFT JOIN (
+							SELECT
+								opr.PROJECT_ID,
+								max(opr.return_date) return_date
+							FROM
+								ods_project_return opr
+							WHERE
+								opr.ENTITY_STATUS = 'completed'
+							AND  DATE_FORMAT(opr.return_date,'%Y-%m-%d') <= LAST_DAY(STR_TO_DATE(#{currentTime},'%Y-%m-%d'))
+							GROUP BY
+								opr.project_id
+						) tpr ON OP.project_id = tpr.project_id
+						LEFT JOIN (
+							SELECT
+								opt.PROJECT_ID,
+								max(opt.FINISH_DATE) terminate_date,
+								opt.ENTITY_STATUS terminate_status
+							FROM
+								ods_project_terminate opt
+							WHERE
+								opt.ENTITY_STATUS = 'completed'
+							AND (
+								(
+									DATE_FORMAT(opt.FINISH_DATE,'%Y-%m-%d') <= LAST_DAY(STR_TO_DATE(#{currentTime},'%Y-%m-%d')))
+								)
+								OR (
+									opt.FINISH_DATE IS NULL
+									AND opt.ENTITY_STATUS = 'completed'
+								)
+							)
+							GROUP BY
+								opt.project_id,
+								opt.ENTITY_STATUS
+						) ttpr ON OP.project_id = ttpr.project_id
+						LEFT JOIN (
+							SELECT
+								project_id,
+								SCHEDULE_NAME key_sch_name
+							FROM
+								(
+									SELECT
+										dw.PROJECT_ID,
+										dw.SCHEDULE_NAME,
+										dw.SCHEDULE_TYPE_CODE,
+										dw.PLAN_BEGIN_DATE,
+										dw.PLAN_END_DATE,
+										dw.BEGIN_DATE,
+										dw.END_DATE,
+										dw.ENTITY_STATUS,
+										key_cursor.plan_end_date key_max_date
+									FROM
+										dw_schedule_month dw
+									LEFT JOIN (
+										SELECT
+											PROJECT_ID,
+											max(plan_end_date) plan_end_date
+										FROM
+											(
+												SELECT
+													dsmw.PROJECT_ID,
+													dsmw.SCHEDULE_NAME,
+													dsmw.SCHEDULE_TYPE_CODE,
+													dsmw.PLAN_BEGIN_DATE,
+													dsmw.PLAN_END_DATE,
+													dsmw.BEGIN_DATE,
+													dsmw.END_DATE,
+													dsmw.ENTITY_STATUS,
+													ifnull(dst.is_keynode, 0) is_keynode
+												FROM
+													dw_schedule_month dsmw
+												LEFT JOIN dw_schedule_type dst ON dsmw.SCHEDULE_TYPE_CODE = dst.type_code
+												WHERE
+													dsmw. YEAR = #{year} 
+												AND dsmw. MONTH = #{month}
+												AND dsmw.ENTITY_STATUS = 'in_process'
+												AND dst.is_keynode = 1
+												ORDER BY
+													dsmw.PLAN_END_DATE DESC
+											) temp
+										GROUP BY
+											temp.PROJECT_ID
+									) key_cursor ON dw.PROJECT_ID = key_cursor.PROJECT_ID
+									AND dw.PLAN_END_DATE = key_cursor.plan_end_date
+									WHERE
+										key_cursor.plan_end_date IS NOT NULL
+									AND key_cursor.plan_end_date = dw.PLAN_END_DATE
+									AND dw.ENTITY_STATUS = 'in_process'
+								) a
+							GROUP BY
+								a.project_id
+						) key_c ON key_c.project_id = op.project_id
+						) temp
+					LEFT JOIN (
+						SELECT
+							ds.project_id,
+							#{year},
+							#{month},
+							ds.SCHEDULE_NAME,
+							ds.PLAN_END_DATE,
+							ds.END_DATE,
+							CASE
+						WHEN ds.PLAN_END_DATE IS NULL THEN
+							0
+						WHEN MONTH = DATE_FORMAT(now(), '%m')
+						AND ds.end_date IS NULL
+						AND datediff(now(), ds.plan_end_date) <= 0 THEN
+							0
+						WHEN MONTH = DATE_FORMAT(now(), '%m')
+						AND ds.end_date IS NULL
+						AND datediff(now(), ds.plan_end_date) > 0 THEN
+							1
+						WHEN MONTH != DATE_FORMAT(now(), '%m')
+						AND ds.end_date IS NULL
+						AND LAST_DAY(STR_TO_DATE(#{currentTime}, '%Y-%m'))<= ds.plan_end_date THEN
+							0
+						WHEN MONTH != DATE_FORMAT(now(), '%m')
+						AND ds.end_date IS NULL
+						AND LAST_DAY(STR_TO_DATE(#{currentTime}, '%Y-%m')) > ds.plan_end_date THEN
+							1
+						WHEN datediff(
+							ds.END_DATE,
+							ds.plan_end_date
+						) <= 0 THEN
+							0
+						WHEN datediff(
+							ds.END_DATE,
+							ds.plan_end_date
+						) > 0 THEN
+							1
+						END is_delay
+						FROM
+							dw_schedule_month ds
+						WHERE
+							YEAR = #{year}
+						AND MONTH = #{month}
+					) temp_delay ON temp.PROJECT_ID = temp_delay.project_id
+					AND temp.key_sch_name = temp_delay.SCHEDULE_NAME
+		]]>
+	</insert>
+	
+	<insert id="saveHistoryMonthBuildingStatus" parameterType="java.util.Map"  databaseId="mysql" >
+	<![CDATA[ 
+		INSERT INTO dw_project_month (project_id,year,month,is_building) 
+				select PROJECT_ID,year,month,is_building from (
+				SELECT
+					op.PROJECT_ID,
+					#{year} year,
+					#{month} month,
+					CASE
+				WHEN (ttpr.terminate_status = 'completed' AND ttpr.terminate_date IS NULL) THEN 'N'
+				WHEN ttpr.terminate_date < #{currentTime} THEN 'N'
+				WHEN op.END_DATE < #{currentTime} THEN 'N'
+				WHEN os.entity_status ='completed' and tpp.PAUSE_DATE>os.end_date and (tpr.return_date is null or tpr.return_date <tpp.PAUSE_DATE) then 'N'
+				WHEN os.entity_status ='completed' and os.end_date is not null and tpp.PAUSE_DATE>os.end_date and tpr.return_date >tpp.PAUSE_DATE then 'Y'
+				WHEN os.entity_status is null then 'N'
+				WHEN os.entity_status ='completed' and os.end_date is not null and tpp.PAUSE_DATE is null and ttpr.terminate_date is null THEN 'Y'
+				ELSE 'N'
+				END is_building
+				FROM
+					ods_project op
+				LEFT JOIN ods_schedule os ON op.PROJECT_ID = os.PROJECT_ID
+				AND os.SCHEDULE_TYPE_CODE = 'PROJECTSTART'
+				LEFT JOIN (
+					SELECT
+						opp.PROJECT_ID,
+						max(opp.PAUSE_DATE) PAUSE_DATE
+					FROM
+						ods_project_pause opp
+					WHERE
+						opp.ENTITY_STATUS = 'completed'
+					AND DATE_FORMAT(opp.PAUSE_DATE, '%Y-%m') < #{currentTime}
+					GROUP BY
+						opp.project_id
+				) tpp ON OP.project_id = tpp.project_id
+				LEFT JOIN (
+					SELECT
+						opr.PROJECT_ID,
+						max(opr.return_date) return_date
+					FROM
+						ods_project_return opr
+					WHERE
+						opr.ENTITY_STATUS = 'completed'
+					AND DATE_FORMAT(opr.return_date, '%Y-%m') < #{currentTime}
+					GROUP BY
+						opr.project_id
+				) tpr ON OP.project_id = tpr.project_id
+				LEFT JOIN (
+					SELECT
+						opt.PROJECT_ID,
+						max(opt.FINISH_DATE) terminate_date,
+						opt.ENTITY_STATUS terminate_status
+					FROM
+						ods_project_terminate opt
+					WHERE
+						opt.ENTITY_STATUS = 'completed'
+					AND (
+						(
+							DATE_FORMAT(opt.FINISH_DATE, '%Y-%m') < #{currentTime}
+						)
+						OR (
+							opt.FINISH_DATE IS NULL
+							AND opt.ENTITY_STATUS = 'completed'
+						)
+					)
+					GROUP BY
+						opt.project_id,
+						opt.ENTITY_STATUS
+				) ttpr ON OP.project_id = ttpr.project_id
+				) temp
+		]]>
+	</insert>
+	
+	<insert id="saveHistoryMonthSchedule2Waiting" parameterType="java.util.Map"  databaseId="mysql" >
+		  <![CDATA[ 
+			INSERT INTO dw_schedule_month_waiting (
+				id,
+				YEAR,
+				MONTH,
+				DATA_DATE,
+				ACQUISITION_DATE,
+				PROJECT_ID,
+				SCHEDULE_TYPE_ID,
+				SCHEDULE_TYPE_CODE,
+				SCHEDULE_NAME,
+				PLAN_BEGIN_DATE,
+				PLAN_END_DATE,
+				BEGIN_DATE,
+				END_DATE,
+				ENTITY_STATUS
+			) SELECT
+				id,
+				#{year},
+				#{month},
+				last_day(
+					STR_TO_DATE(#{currentTime}, '%Y-%m')
+				),
+				now(),
+				dsm.PROJECT_ID,
+				dsm.SCHEDULE_TYPE_ID,
+				dsm.SCHEDULE_TYPE_CODE,
+				dsm.SCHEDULE_NAME,
+				IFNULL(temp.PLAN_BEGIN_DATE,dsm.PLAN_BEGIN_DATE) PLAN_BEGIN_DATE,
+				IFNULL(temp.PLAN_END_DATE,dsm.PLAN_END_DATE) PLAN_END_DATE,
+				CASE
+			WHEN DATE_FORMAT(dsm.BEGIN_DATE, '%Y-%m') <= DATE_FORMAT(
+				str_to_date(#{currentTime}, '%Y-%m'),
+				'%Y-%m'
+			) THEN
+				dsm.BEGIN_DATE
+			END BEGIN_DATE,
+			 CASE
+			WHEN DATE_FORMAT(dsm.END_DATE, '%Y-%m') <= DATE_FORMAT(
+				str_to_date(#{currentTime}, '%Y-%m'),
+				'%Y-%m'
+			) THEN
+				dsm.END_DATE
+			END END_DATE,
+			 IFNULL(temp.ENTITY_STATUS,dsm.ENTITY_STATUS) ENTITY_STATUS
+			FROM
+				dw_schedule_month_waiting dsm
+			LEFT JOIN (
+				SELECT
+					oas.ADJUST_ID,
+					opat.PROJECT_ID,
+					oas.SCHEDULE_TYPE_CODE,
+					oas.ENTITY_NAME,
+					oas.ENTITY_STATUS,
+					oas.OLD_PLAN_BEGIN_DATE PLAN_BEGIN_DATE,
+					oas.OLD_PLAN_END_DATE PLAN_END_DATE,
+					opat.FINISH_DATE modify_date
+				FROM
+					ODS_ADJUST_SCHEDULE oas,
+					(
+						SELECT
+								opa.id adjust_id,
+								opa.project_id,
+								opa.FINISH_DATE
+							FROM
+								ODS_PROGRESS_ADJUST opa
+							JOIN (
+								SELECT
+									c.project_id,
+									min(c.FINISH_DATE) FINISH_DATE
+								FROM
+									ODS_PROGRESS_ADJUST c
+								WHERE
+									c.FINISH_DATE IS NOT NULL
+								AND DATE_FORMAT(c.FINISH_DATE, '%Y-%m') > #{currentTime}
+								GROUP BY
+									c.project_id
+							) b ON opa.project_id = b.project_id
+							AND opa.FINISH_DATE = b.FINISH_DATE
+							WHERE
+								1 = 1
+					) opat
+				WHERE
+					oas.ADJUST_ID = opat.adjust_id
+				ORDER BY
+					opat.FINISH_DATE DESC
+			) temp ON dsm.PROJECT_ID = temp.PROJECT_ID
+			AND dsm.SCHEDULE_TYPE_CODE = temp.SCHEDULE_TYPE_CODE
+			WHERE
+				dsm. YEAR = #{referenceYear}
+			AND dsm. MONTH = #{referenceMonth}
+			]]>
+		</insert>
+	
+	<insert id="oldSaveHistoryMonthSchedule" parameterType="java.util.Map"  databaseId="mysql" >
+	  <![CDATA[ 
+		INSERT INTO dw_schedule_month (
+			id,
+			YEAR,
+			MONTH,
+			DATA_DATE,
+			ACQUISITION_DATE,
+			PROJECT_ID,
+			SCHEDULE_TYPE_ID,
+			SCHEDULE_TYPE_CODE,
+			SCHEDULE_NAME,
+			PLAN_BEGIN_DATE,
+			PLAN_END_DATE,
+			BEGIN_DATE,
+			END_DATE,
+			ENTITY_STATUS,
+			IS_DELAY,
+			OVER_DAY
+		) SELECT
+			id,
+			#{year},
+			#{month},
+			last_day(
+				STR_TO_DATE(#{currentTime}, '%Y-%m')
+			),
+			now(),
+			dsm.PROJECT_ID,
+			dsm.SCHEDULE_TYPE_ID,
+			dsm.SCHEDULE_TYPE_CODE,
+			dsm.SCHEDULE_NAME,
+			IFNULL(temp.PLAN_BEGIN_DATE,dsm.PLAN_BEGIN_DATE) PLAN_BEGIN_DATE,
+			IFNULL(temp.PLAN_END_DATE,dsm.PLAN_END_DATE) PLAN_END_DATE,
+			CASE
+		WHEN DATE_FORMAT(dsm.BEGIN_DATE, '%Y-%m') <= DATE_FORMAT(
+			str_to_date(#{currentTime}, '%Y-%m'),
+			'%Y-%m'
+		) THEN
+			dsm.BEGIN_DATE
+		END BEGIN_DATE,
+		 CASE
+		WHEN DATE_FORMAT(dsm.END_DATE, '%Y-%m') <= DATE_FORMAT(
+			str_to_date(#{currentTime}, '%Y-%m'),
+			'%Y-%m'
+		) THEN
+			dsm.END_DATE
+		END END_DATE,
+		 IFNULL(temp.ENTITY_STATUS,dsm.ENTITY_STATUS) ENTITY_STATUS,
+		 CASE
+			WHEN (
+				dsm.PLAN_END_DATE IS NULL
+				AND dsm.ENTITY_STATUS = 'completed'
+			) THEN
+				0
+			WHEN dsm.PLAN_END_DATE IS NOT NULL THEN
+				IFNULL(
+					dsm.PLAN_END_DATE < IFNULL(
+						dsm.END_DATE,
+						DATE_FORMAT(
+							LAST_DAY(
+								str_to_date(
+									CONCAT(dsm. YEAR, '-', dsm. MONTH),
+									'%Y-%m'
+								)
+							),
+							'%Y-%m-%d'
+						)
+					),
+					0
+				)
+			END IS_DELAY,
+			TIMESTAMPDIFF(
+				DAY,
+				dsm.PLAN_END_DATE,
+				IFNULL(
+					dsm.END_DATE,
+					DATE_FORMAT(
+						LAST_DAY(
+							str_to_date(
+								CONCAT(dsm. YEAR, '-', dsm. MONTH),
+								'%Y-%m'
+							)
+						),
+						'%Y-%m-%d'
+					)
+				)
+			) OVER_DAY
+		FROM
+			dw_schedule_month dsm
+		LEFT JOIN (
+			SELECT
+				oas.ADJUST_ID,
+				opat.PROJECT_ID,
+				oas.SCHEDULE_TYPE_CODE,
+				oas.ENTITY_NAME,
+				oas.ENTITY_STATUS,
+				oas.OLD_PLAN_BEGIN_DATE PLAN_BEGIN_DATE,
+				oas.OLD_PLAN_END_DATE PLAN_END_DATE,
+				opat.FINISH_DATE modify_date
+			FROM
+				ODS_ADJUST_SCHEDULE oas,
+				(
+					SELECT
+							opa.id adjust_id,
+							opa.project_id,
+							opa.FINISH_DATE
+						FROM
+							ODS_PROGRESS_ADJUST opa
+						JOIN (
+							SELECT
+								c.project_id,
+								min(c.FINISH_DATE) FINISH_DATE
+							FROM
+								ODS_PROGRESS_ADJUST c
+							WHERE
+								c.FINISH_DATE IS NOT NULL
+							AND DATE_FORMAT(c.FINISH_DATE, '%Y-%m') > #{currentTime}
+							GROUP BY
+								c.project_id
+						) b ON opa.project_id = b.project_id
+						AND opa.FINISH_DATE = b.FINISH_DATE
+						WHERE
+							1 = 1
+				) opat
+			WHERE
+				oas.ADJUST_ID = opat.adjust_id
+			ORDER BY
+				opat.FINISH_DATE DESC
+		) temp ON dsm.PROJECT_ID = temp.PROJECT_ID
+		AND dsm.SCHEDULE_TYPE_CODE = temp.SCHEDULE_TYPE_CODE
+		WHERE
+			dsm. YEAR = #{referenceYear}
+		AND dsm. MONTH = #{referenceMonth}
+		]]>
+	</insert>
+	
+	<!-- v1.1废弃 数据量超过1300W，无法更新成功 -->
+	<update id="updateHistoryDelayInfo" parameterType="java.util.Map" databaseId="mysql">
+	  <![CDATA[ 
+		UPDATE dw_schedule_month td
+			INNER JOIN (
+				SELECT
+					dsm.ID,
+					dsm.PROJECT_ID,
+					r.PROJECT_CODE,
+					dsm.SCHEDULE_NAME,
+					dsm.PLAN_BEGIN_DATE,
+					dsm.PLAN_END_DATE,
+					dsm.BEGIN_DATE,
+					dsm.END_DATE,
+					dsm.ENTITY_STATUS,
+					CASE
+				WHEN (
+					dsm.PLAN_END_DATE IS NULL
+					AND dsm.ENTITY_STATUS = 'completed'
+				) THEN
+					0
+				WHEN dsm.PLAN_END_DATE IS NOT NULL THEN
+					IFNULL(
+						dsm.PLAN_END_DATE < IFNULL(
+							dsm.END_DATE,
+							DATE_FORMAT(
+								LAST_DAY(
+									str_to_date(
+										CONCAT(dsm. YEAR, '-', dsm. MONTH),
+										'%Y-%m'
+									)
+								),
+								'%Y-%m-%d'
+							)
+						),
+						0
+					)
+				END IS_DELAY,
+				TIMESTAMPDIFF(
+					DAY,
+					dsm.PLAN_END_DATE,
+					IFNULL(
+						dsm.END_DATE,
+						DATE_FORMAT(
+							LAST_DAY(
+								str_to_date(
+									CONCAT(dsm. YEAR, '-', dsm. MONTH),
+									'%Y-%m'
+								)
+							),
+							'%Y-%m-%d'
+						)
+					)
+				) OVER_DAY,
+				LAST_DAY(
+					STR_TO_DATE(
+						CONCAT(dsm. YEAR, '-', dsm. MONTH),
+						'%Y-%m'
+					)
+				) TO_DAY
+			FROM
+				dw_schedule_month dsm,
+				tdw_project_relationship r
+			WHERE
+				dsm.PROJECT_ID = r.PROJECT_ID
+				and dsm.year = #{year}
+				and dsm.month = #{month}
+			ORDER BY
+				dsm.END_DATE DESC
+			) rs ON td.id = rs.id
+			SET td.IS_DELAY = rs.IS_DELAY,
+			 td.OVER_DAY = rs.OVER_DAY
+			 where 	td.year = #{year}
+				and td.month = #{month}
+		]]>
+	</update>
+	
+	<!-- v1.1废弃 运算年份接口决定，不再使用数据库默认时间 -->
+	<select id="loadHistoryTime" resultType="java.util.Map">
+		SELECT DISTINCT
+				YEAR,
+				MONTH
+			FROM
+				dw_schedule_month
+			ORDER BY
+				YEAR DESC,
+				MONTH DESC
+	</select>
+	
+</mapper>

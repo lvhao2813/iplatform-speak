@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+	<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<div th:insert="/common/common_css :: privilege_tree"></div>
+
+<script type="text/javascript" th:inline="javascript">
+function resetSearch(){
+	$("input[id='orgName']").val("");
+}
+
+function openBatchDeletePage(){
+	deleteData('/privilege/org/batchDeletePage?deleteUrl=/privilege/org/batchDelete');
+}
+</script>
+
+
+
+	</head>
+	<body>
+<div th:insert="/common/common_index :: index_head"></div>
+<div th:include="/common/onload_list_js :: loadJS"></div>
+
+<form id="callForm" name="callForm" th:action="@{/privilege/org/query}" th:method="post">
+
+	<input style="display:none" name="deleteIds" id="deleteIds" value="">
+
+		<div id="main">
+		<div class="box">
+			<div class="title">	
+				    	<h2>当前位置：<a th:href="${session.homeUrl}">首页</a> > <a>系统管理 </a>  > <a class="active">组织管理</a></h2>				
+			</div>
+						<table width="100%" cellpadding="0" cellspacing="0" class="text-table mt10">
+				            <tr>
+					            <th width="8%">组织名称：</th>
+					            <td width="15%"><input type="text"  id="orgName"  name="ORG_NAME" th:value="${formMap['ORG_NAME']}"></td>					
+					           	<th width="8%">机构类型：</th>
+								<td width="15%"><select id="orgType" name="ORG_TYPE">
+										<option value="1" th:selected="${formMap['ORG_TYPE']==1}">组织机构</option>
+										<option value="2" th:selected="${formMap['ORG_TYPE']==2}">设计单位</option>
+										<option value="3" th:selected="${formMap['ORG_TYPE']==3}">监理单位</option>
+										<option value="4" th:selected="${formMap['ORG_TYPE']==4}">施工单位</option>
+								</select></td>
+					           <td width="38%">
+						           <a th:onclick="'javascript:callFormSubmit()'">搜索</a>&nbsp;&nbsp;
+						           <a th:onclick="'javascript:resetSearch()'">重置</a>
+					           </td>
+					           <td width="28%"></td>					           
+				            </tr>
+				           
+			            </table>
+		</div>
+		
+	
+			<div class="box">	            
+			<div class="title">	
+				    	<h2> <a class="active">组织列表</a></h2>	
+				    	<div class="operation">
+				    		<a class="parentadd"  onclick="openAddLayer('/privilege/org/insertpage')"><img th:src="@{/images/icon-add.png}" />新增</a>	
+				    	    <a class="parentIframe" onclick="openBatchDeletePage()"><img th:src="@{/images/icon-del.png}" />删除</a>
+				    	</div>
+				    		
+			</div>	            
+	<div class="auto">
+			<table width="100%" cellpadding="0" cellspacing="0" class="user-list mt10">
+	       			<tr>
+			       			<th width="30">
+								<input type="checkbox" class="check-all" id="mainCheckbox" name="mainCheckbox"
+													onClick="selectedAllCheckbox()" />
+							</th>
+      						<th>名称</th>
+							<th>简称</th>
+							<th>操作</th>
+	       			</tr>
+	       			<tr th:each="priOrganizationBean : ${resultList}">
+						<td align="center">
+							<input type="checkbox" id="checkboxId"  th:name="check"  th:value="${priOrganizationBean['orgId']}" />
+						</td>
+						<td align="left" th:class="file" th:text="${priOrganizationBean['orgLevelName']}"></td>
+						<td align="left" th:text="${priOrganizationBean['orgAbbreviation']}"></td>
+						<td align="center">
+						<a href="#" class="c-green parentedit" th:onclick="'javascript:openEditLayer(\'/privilege/org/updatepage?ORG_ID='+${priOrganizationBean['orgId']}+'\')'">编辑</a> 
+						<a href="#" class="color-red parentIframe" th:onclick="'javascript:openDeleteLayer(\'/privilege/org/deletepage?deleteUrl=/privilege/org/delete&deleteId='+${priOrganizationBean['orgId']}+'\')'">删除</a> 
+						</td>
+					</tr>
+	       		
+	       		</table>
+		</div>
+	
+	    	<div th:include="/common/page_control"></div>
+	    
+			</div>
+		</div>
+	</form>
+	<div th:insert="/common/common_index :: index_foot"></div>
+	</body>
+</html>
+

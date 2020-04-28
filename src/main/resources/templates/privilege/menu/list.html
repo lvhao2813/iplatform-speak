@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	
+	<div th:insert="/common/common_css :: privilege"></div>
+
+
+<script type="text/javascript" th:inline="javascript">
+function resetSearch(){
+	$("input[id='menuName']").val("");
+}
+
+function openSelectOptLayer(id){
+	openCommonLayer('权限分配','400px','300px','/privilege/menu/gotoSelectOptPage?MENU_ID='+id);
+}
+
+function openBatchDeletePage(){
+	deleteData('/privilege/menu/batchDeletePage?deleteUrl=/privilege/menu/batchDelete');
+}
+
+function openSelectManagerLayer(url){
+	openCommonLayer('角色首页绑定','800px','420px',url+"&"+Math.random());
+}
+</script>
+
+
+
+	</head>
+	<body>
+<div th:insert="/common/common_index :: index_head"></div>
+<div th:include="/common/onload_list_js :: loadJS"></div>
+
+<form id="callForm" name="callForm" th:action="@{~/privilege/menu/query}" th:method="post">
+
+	<input style="display:none" name="deleteIds" id="deleteIds" value="">
+
+		<div id="main">
+		<div class="box">
+			<div class="title">	
+				    	<h2>当前位置：<a th:href="${session.homeUrl}">首页</a> > <a>系统管理 </a>  > <a class="active">地图管理</a></h2>				
+			</div>
+						<table width="100%" cellpadding="0" cellspacing="0" class="text-table mt10">
+				            <tr>
+					            <th width="8%">地图名称：</th>
+					            <td width="15%"><input type="text"  id="menuName"  name="MENU_NAME" th:value="${formMap['MENU_NAME']}"></td>					
+					           <td width="38%">
+						           <a th:onclick="'javascript:callFormSubmit()'">搜索</a>&nbsp;&nbsp;
+						           <a th:onclick="'javascript:resetSearch()'">重置</a>
+					           </td>
+					           <td width="28%"></td>					           
+				            </tr>
+				           
+			            </table>
+		</div>
+		
+	
+			<div class="box">	            
+			<div class="title">	
+				    	<h2> <a class="active">地图列表</a></h2>	
+				    	<div class="operation">
+				    		<a class="parentadd"  onclick="openCommonLayer('新增记录','600px','380px','/privilege/menu/insertpage')"><img th:src="@{~/images/icon-add.png}" />新增</a>	
+				    	    <a class="parentIframe" onclick="openBatchDeletePage();"><img th:src="@{~/images/icon-del.png}" />删除</a>
+				    	</div>
+				    		
+			</div>	            
+	<div class="auto">
+			<table width="100%" cellpadding="0" cellspacing="0" class="user-list mt10">
+	       			<tr>
+			       			<th width="30">
+								<input type="checkbox" class="check-all" id="mainCheckbox" name="mainCheckbox"
+													onClick="selectedAllCheckbox()" />
+							</th>
+	       							<th>地图名称</th>
+									<th>地图链接</th>
+									<th>地图排序</th>
+									<th>维护时间</th>
+									<th>操作</th>
+	       			</tr>
+	       			<tr th:each="priMenuBean : ${resultList}">
+						<td align="center">
+							<input type="checkbox" id="checkboxId"  th:name="check"  th:value="${priMenuBean['menuId']}" />
+						</td>
+						<td align="left" th:text="${priMenuBean['lpadMenuName']}"></td>
+						<td align="left" th:text="${priMenuBean['menuLink']}"></td>
+						<td th:text="${priMenuBean['treeId']}"></td>
+						<td th:text="${priMenuBean['updatedDt']}"></td>
+						<td align="right">
+						<a href="#" class="c-blue parentyh" th:if="${priMenuBean['menuLink'] != '#'}" th:onclick="'javascript:openSelectManagerLayer(\'/privilege/menu/gotoSelectRolePage?MENU_ID='+${priMenuBean['menuId']}+'\')'" >角色首页绑定</a>	       	
+						<a class="c-blue parent-bdgn"  th:onclick="'javascript:openSelectOptLayer(\''+${priMenuBean['menuId']}+'\')'">绑定功能</a>	       	
+						<a href="#" class="c-green parentedit" th:onclick="'javascript:openEditLayer(\'/privilege/menu/updatepage?MENU_ID='+${priMenuBean['menuId']}+'\')'">编辑</a> 
+						<a href="#" class="color-red parentIframe" th:onclick="'javascript:openDeleteLayer(\'/privilege/menu/deletepage?deleteUrl=/privilege/menu/delete&deleteId='+${priMenuBean['menuId']}+'\')'">删除</a> 
+						</td>
+					</tr>
+	       		
+	       		</table>
+		</div>
+	
+	    	<div th:include="/common/page_control"></div>
+	    
+			</div>
+		</div>
+	</form>
+	<div th:insert="/common/common_index :: index_foot"></div>
+	</body>
+</html>
+

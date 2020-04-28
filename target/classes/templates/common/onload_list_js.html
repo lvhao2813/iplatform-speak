@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<body>
+	<div th:fragment="loadJS">
+
+		<script th:src="@{/js/layui-v2.5.4/layui.js}"></script>
+		<script th:src="@{/js/layer/layer.js}"></script>
+		<script th:src="@{/js/slider/slider.js}"></script>
+		<script th:src="@{/js/jquery/jquery.ajaxform.js}"></script>
+
+		<script type="text/javascript" th:inline="javascript">
+           // layui.use(['element'], function(){
+             //   var $ = layui.jquery;
+           //     var element = layui.element;
+		    var pathName=window.document.location.pathname;
+		    //  var contextPath=pathName.substring(0,pathName.substr(1).indexOf('/')+1);
+		    var contextPath='';
+		
+			function selectedAllCheckbox() {
+				var s = document.getElementById('mainCheckbox').checked;
+				for (var i = 0; i < window.callForm.elements.length; i++) {
+					if (window.callForm.elements[i].name == 'check'
+							&& window.callForm.elements[i].type == 'checkbox') {
+						window.callForm.elements[i].checked = s;
+					}
+				}
+			}
+			
+			function deleteData(url) {
+				var deleteIds = "";
+				var deleteCount = 0;
+				for (var i = 0; i < window.callForm.elements.length; i++) {
+					if (window.callForm.elements[i].name == 'check'
+							&& window.callForm.elements[i].checked == true) {
+						if (deleteIds == "")
+							deleteIds += window.callForm.elements[i].value;
+						else
+							deleteIds += ","
+									+ window.callForm.elements[i].value;
+
+						deleteCount++;
+					}
+				}
+				var deleteUrl = url + '&deleteIds=' + deleteIds + '&deleteCount=' + deleteCount;
+				openBatchDeleteLayer(deleteUrl)
+			}
+			
+			function openCommonLayer(title,width,height,url) {
+				layer.open({
+					type : 2,
+					skin : 'layui-layer-lan',
+					title : title,
+					fix : false,
+					shadeClose : true,
+					maxmin : true,
+					area : [width, height ],
+					content : contextPath+url,
+				});
+			}
+
+			function openTab(url, testTitle){
+                var testId = url;
+                var mpi = '';
+                var ifIfrm;
+
+                //判断是否有已经打开的tab
+                var checkFlg = false;
+                ifIfrm = !$('.layui-tab-title') || !$('.layui-tab-title').length;
+                var tabLis = ifIfrm ? parent.layui.$('.layui-tab-title li') : $('.layui-tab-title li');
+                if(ifIfrm){
+                    element = parent.layui.element;
+                }
+                var tabId;
+                var title;
+                for(var m =0, mlen = tabLis.length; m<mlen;m++){
+                    var li = tabLis[m];
+                    var layId = tabLis[m].getAttribute('lay-id');               
+                 	 if(layId.match(/ID=\d/) && layId.match(/ID=\d/)[0] === testId.match(/ID=\d/)[0]){
+                        checkFlg = true;
+                        tabId = layId;
+                        title = li.innerHTML;
+                        break;
+                    }
+                }
+                if(checkFlg){//已有：切换
+                    element.tabChange('layuiminiTab', tabId);
+                }else{//没有：新增
+                    //加上mpi
+                    var hrefListInLeftNav = [];
+                    var hrefInLeftNav;
+                    if(ifIfrm){
+                        hrefListInLeftNav = parent.layui.$('#currency').find('.layui-left-nav')
+                    }else{
+                        hrefListInLeftNav = $('#currency').find('.layui-left-nav');
+                    }
+                    for(var i = 0,len = hrefListInLeftNav.length;i<len;i++){
+                        var text = hrefListInLeftNav[i].innerText.trim();
+                        if(text === testTitle.trim()){
+                            hrefInLeftNav = hrefListInLeftNav[i].parentElement;
+                            break;
+                        }
+                    }
+                    mpi  = hrefInLeftNav.getAttribute('data-tab-mpi');
+                    var layuiminiTabInfo = JSON.parse(sessionStorage.getItem("layuiminiTabInfo"));
+                    if (layuiminiTabInfo == null) {
+                        layuiminiTabInfo = {};
+                    }
+                    layuiminiTabInfo[testId] = {href: testId, title: testTitle}
+                    sessionStorage.setItem("layuiminiTabInfo", JSON.stringify(layuiminiTabInfo));
+                    //加mpi,如果已有mpi，则不再加
+                    if(testId.indexOf('mpi=') < 0) {//小于0即可，因为Mpi不可能为第一位
+                        if (testId.indexOf('?') > -1) {
+                            testId = testId + '&mpi=' + mpi;
+                        } else {
+                            testId = testId + '?mpi=' + mpi;
+                        }
+                    }
+                    element.tabAdd('layuiminiTab', {
+                        title: testTitle + '<i data-tab-close="" class="layui-icon layui-unselect layui-tab-close">ဆ</i>', //用于演示,
+                        content: '<iframe width="100%" height="100%" frameborder="0"  src="' + testId + '"></iframe>',
+                        id: testId
+                    });
+                    element.tabChange('layuiminiTab', testId);
+                }
+			}
+
+			function openAddLayer(url) {
+				layer.open({
+					type : 2,
+					skin : 'layui-layer-lan',
+					title : '新增记录',
+					fix : false,
+					shadeClose : true,
+					maxmin : true,
+					area : [ '600px', '300px' ],
+					content : contextPath+url,
+				});
+			}
+			
+			function openAddOrgLayer(url) {
+				layer.open({
+					type : 2,
+					skin : 'layui-layer-lan',
+					title : '新增记录',
+					fix : false,
+					shadeClose : true,
+					maxmin : true,
+					area : [ '400px', '300px' ],
+					content : contextPath+url,
+				});
+			}
+
+			function openEditLayer(url) {
+				layer.open({
+					type : 2,
+					skin : 'layui-layer-lan',
+					title : '编辑记录',
+					fix : false,
+					shadeClose : true,
+					maxmin : true,
+					area : [ '600px', '300px' ],
+					content : contextPath+url,
+				});
+			}
+
+			function openDeleteLayer(url) {
+				layer.open({
+					type : 2,
+					skin : 'layui-layer-lan',
+					title : '删除记录',
+					fix : false,
+					shadeClose : true,
+					maxmin : true,
+					area : [ '300px', '200px' ],
+					content : contextPath+url,
+				});
+			}
+
+			function openBatchDeleteLayer(url) {
+				layer.open({
+					type : 2,
+					skin : 'layui-layer-lan',
+					title : '批量删除记录',
+					fix : false,
+					shadeClose : true,
+					maxmin : true,
+					area : [ '300px', '200px' ],
+					content : contextPath+url,
+				});
+			}
+			
+			function openSelectDepartment(url){
+				 layer.open({
+				        type: 2,
+				        skin: 'layui-layer-lan',
+				        title: '选择部门',
+				        fix: false,
+				        shadeClose: true,
+				        maxmin: true,
+				        area: ['350px', '320px'],
+				        content: contextPath+url,
+				       
+				    });
+			}
+			
+			function openSelectOrg(url){
+				 layer.open({
+				        type: 2,
+				        skin: 'layui-layer-lan',
+				        title: '选择单位',
+				        fix: false,
+				        shadeClose: true,
+				        maxmin: true,
+				        area: ['350px', '320px'],
+				        content: contextPath+url,
+				       
+				    });
+			}
+
+			/*$(document).ready(function() {
+				var options = {
+					target : '#indexIframe',
+				};
+
+				$('#callForm').submit(function() {
+					$(this).ajaxSubmit(options);
+					return false;
+				});
+			}); */
+
+			function callFormSubmit() {
+				$("#callForm").submit();
+			}
+			
+			//load加载页面到DIV
+			function loadurlwithdata(url,data,tag) {
+				htmlobj=$.ajax({
+					url:contextPath+url,
+					data:data,
+					type: "post", 
+					async:false,
+					cache: false,
+					contentType:"application/x-www-form-urlencoded; charset=UTF-8"});
+				$('#'+tag).html(htmlobj.responseText);
+				return false;
+			}
+         //   });
+		</script>
+	</div>
+</body>
+</html>

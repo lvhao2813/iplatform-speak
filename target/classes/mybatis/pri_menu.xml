@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.boco.share.privilege.dao.PriMenuMapper">
+
+<resultMap type="com.boco.share.privilege.bean.PriMenuBean" id="TblPriMenuResult">
+    <result column="MENU_ID" property="menuId" jdbcType="VARCHAR" />
+    <result column="PARENT_ID" property="parentId" jdbcType="VARCHAR" />
+    <result column="MENU_CODE" property="menuCode" jdbcType="VARCHAR" />
+    <result column="MENU_NAME" property="menuName" jdbcType="VARCHAR" />
+    <result column="LPAD_MENU_NAME" property="lpadMenuName" jdbcType="VARCHAR" />
+    <result column="OPT_COUNT" property="optCount" jdbcType="VARCHAR" />
+    <result column="ALL_PARENTS_ID" property="allParentsId" jdbcType="VARCHAR" />
+    <result column="CHILD_COUNT" property="childCount" jdbcType="VARCHAR" />
+    <result column="SELECTED_MENU" property="selectedMenu" jdbcType="VARCHAR" />
+    <result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
+    <result column="MENU_LINK" property="menuLink" jdbcType="VARCHAR" />
+    <result column="IS_LEAF" property="isLeaf" jdbcType="DECIMAL" />
+    <result column="MENU_LEVEL" property="menuLevel" jdbcType="DECIMAL" />
+    <result column="MENU_ORD" property="menuOrd" jdbcType="DECIMAL" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="UPDATED_DT" property="updatedDt" jdbcType="VARCHAR" />
+    <result column="UPDATED_BY" property="updatedBy" jdbcType="VARCHAR" />
+    <result column="CREATED_DT" property="createdDt" jdbcType="DATE" />
+    <result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR" />
+    <result column="IS_DELETED" property="isDeleted" jdbcType="VARCHAR" />
+    <result column="VERSION" property="version" jdbcType="DECIMAL" />
+    <result column="IS_HOME" property="isHome" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <select id="queryMenu" resultMap="TblPriMenuResult" parameterType="java.util.Map">
+	   SELECT   MENU_ID,
+			         PARENT_ID,
+			         MENU_CODE,
+			         MENU_NAME,
+			         DESCRIPTION,
+			         MENU_LINK,
+			         IS_LEAF,
+			         MENU_LEVEL,
+			         MENU_ORD,
+			         STATUS,
+			         REMARK,
+			         UPDATED_DT,
+			         UPDATED_BY,
+			         CREATED_DT,
+			         CREATED_BY,
+			         IS_DELETED,
+			         VERSION,
+			         IS_HOME
+			  FROM   STBL_PRI_MENUE
+			 WHERE   IS_DELETED = 'N'
+			 	<if test="MENU_ID!=null and MENU_ID!=''">
+					AND MENU_ID =#{MENU_ID}
+				</if>
+				<if test="MENU_LINK!=null and MENU_LINK!=''">
+					AND MENU_LINK =#{MENU_LINK}
+				</if>
+				<if test="MENU_NAME!=null and MENU_NAME!=''">
+					AND MENU_NAME like '%'||#{MENU_NAME}||'%'
+				</if>
+				 <if test="MENU_CODE!=null and MENU_CODE!=''">
+					AND MENU_CODE  =#{MENU_CODE}
+				</if>
+		  	order by  MENU_LEVEL,MENU_ORD 
+ </select>
+ 
+ <select id="getMenuIdByLink" resultType="String" parameterType="String">
+	   	    SELECT   MENU_ID
+			  FROM   STBL_PRI_MENUE
+			 WHERE   IS_DELETED = 'N'
+			       AND MENU_LINK =#{menuLink}
+ </select>
+
+	<select id="queryMenuListByLevel"
+		resultType="com.boco.share.privilege.bean.PriMenuBean"
+		resultMap="TblPriMenuResult" parameterType="java.util.Map">
+		 SELECT   MENU_ID,
+                    PARENT_ID,
+                    MENU_CODE,
+                    MENU_NAME,
+                    LPAD ('　', LEVEL * 4, '　') || MENU_NAME AS LPAD_MENU_NAME,
+                     (CASE PARENT_ID
+                        WHEN '0' THEN '0'
+                        ELSE UF_GETALLMENUPARENTID (PARENT_ID)
+                     END) ALL_PARENTS_ID,
+                    (SELECT   COUNT (sp.menu_id)
+                       FROM   STBL_PRI_MENUE sp
+                      WHERE   sp.parent_id = spm.menu_id AND sp.is_deleted = 'N')
+                       CHILD_COUNT,
+               <if test="ROLE_ID!=null and ROLE_ID!=''">
+                    (SELECT   COUNT (1)
+                       FROM   STBL_PRI_ROLE_MENU sprm
+                      WHERE   sprm.ROLE_ID = #{ROLE_ID} AND sprm.MENU_ID = spm.MENU_ID)
+                       SELECTED_MENU,
+              </if>
+                    DESCRIPTION,
+                    MENU_LINK,
+                    IS_LEAF,
+                    MENU_LEVEL,
+                    MENU_ORD,
+                    STATUS,
+                    REMARK,
+                    TO_CHAR (UPDATED_DT, 'yyyy-MM-dd hh24:mi') UPDATED_DT,
+                    UPDATED_BY,
+                    CREATED_DT,
+                    CREATED_BY,
+                    IS_DELETED,
+                    IS_HOME,
+                    VERSION,
+                    (SELECT   COUNT (1)
+                       FROM   STBL_PRI_MENU_OPT spmo
+                      WHERE   spmo.MENU_ID = spm.Menu_id)
+                       OPT_COUNT
+		    	from STBL_PRI_MENUE spm
+		     	WHERE is_deleted = 'N' 
+		     	 <if test="LOGIN_MGR_ID!=null and LOGIN_MGR_ID!=''">
+		     		     AND spm.menu_id IN
+                             (SELECT   menu_id
+                                FROM   STBL_PRI_USER_ROLE spur, STBL_PRI_ROLE_MENU sprm
+                               WHERE   spur.role_id = sprm.ROLE_ID AND spur.mgr_id = #{LOGIN_MGR_ID})
+                 </if>              
+		     	 <if test="MENU_ID!=null and MENU_ID!=''">
+					AND MENU_ID =#{MENU_ID}
+				</if>
+				<if test="MENU_NAME!=null and MENU_NAME!=''">
+					AND MENU_NAME like '%'||#{MENU_NAME}||'%'
+				</if>
+				<if test="MENU_LEVEL!=null and MENU_LEVEL!=''">
+					AND MENU_LEVEL  =#{MENU_LEVEL}
+				</if>
+				 <if test="MENU_CODE!=null and MENU_CODE!=''">
+					AND MENU_CODE  =#{MENU_CODE}
+				</if>
+				 connect by parent_id =prior MENU_ID start with parent_id ='0'
+				 ORDER SIBLINGS BY   MENU_ORD
+	</select>
+ 
+ <insert id="insertMenu" parameterType="com.boco.share.privilege.bean.PriMenuBean">
+	insert into STBL_PRI_MENUE (MENU_ID, PARENT_ID, MENU_CODE, MENU_NAME, DESCRIPTION, MENU_LINK,
+      IS_LEAF, MENU_LEVEL, MENU_ORD,   CREATED_DT, CREATED_BY,UPDATED_DT, UPDATED_BY,
+      IS_DELETED, VERSION)
+    values (#{menuId}, #{parentId}, #{menuCode}, #{menuName},
+      #{description}, #{menuLink}, #{isLeaf}, #{menuLevel},
+      #{menuOrd},  sysdate, #{createdBy}, sysdate, #{updatedBy}, 'N', 1)
+	</insert>
+	
+	<update id="updateMenu" parameterType="com.boco.share.privilege.bean.PriMenuBean">
+		  update STBL_PRI_MENUE
+		    set 
+				UPDATED_DT=SYSDATE,
+				VERSION=VERSION+1
+			<if test="parentId!=null and parentId!=''">
+				, PARENT_ID = #{parentId}
+			</if>
+			<if test="menuCode!=null and menuCode!=''">
+				, MENU_CODE = #{menuCode}
+			</if>
+			<if test="menuName!=null and menuName!=''">
+				, MENU_NAME = #{menuName}
+			</if>
+			<if test="description!=null and description!=''">
+				, DESCRIPTION = #{description}
+			</if>
+			<if test="menuLink!=null and menuLink!=''">
+				, MENU_LINK = #{menuLink}
+			</if>
+			<if test="menuLevel!=null and menuLevel!=''">
+				, MENU_LEVEL = #{menuLevel}
+			</if>
+			<if test="isLeaf!=null and isLeaf!=''">
+				, IS_LEAF = #{isLeaf}
+			</if>
+			<if test="menuOrd!=null and menuOrd!=''">
+				, MENU_ORD = #{menuOrd}
+			</if>
+			<if test="status!=null and status!=''">
+				, STATUS = #{status}
+			</if>
+			<if test="updatedBy!=null and updatedBy!=''">
+				, UPDATED_BY = #{updatedBy}
+			</if>
+		    where MENU_ID = #{menuId}
+	</update>
+	
+	<update id="deleteMenu" parameterType="String">
+		UPDATE STBL_PRI_MENUE set IS_DELETED = 'Y' 
+		WHERE MENU_ID = #{deleteId}		
+	</update>
+	
+	 <update id="batchDeleteMenu" parameterType="String">
+        UPDATE STBL_PRI_MENUE set IS_DELETED = 'Y' 
+         where MENU_ID in
+        <foreach item="deleteIds" collection="array" open="(" separator="," close=")">
+            	#{deleteIds}
+        </foreach>
+    </update>
+    
+    <insert id="insertSelectedOpt" parameterType="java.util.Map">
+		INSERT INTO STBL_PRI_MENU_OPT (
+							   MENU_OPT_ID,
+                               MENU_ID,
+                               OPT_ID,
+                               CREATED_BY)
+			    VALUES (#{MENU_OPT_ID}, #{MENU_ID}, #{OPT_ID}, #{CREATED_BY})
+	</insert>
+	
+	<select id="querySelectOptByMenuId" resultType="java.util.Map" parameterType="String" >
+	 SELECT   SPO.OPT_ID,
+		           SPO.OPT_CODE,
+		           SPO.OPT_NAME,
+		           SPO.DESCRIPTION,
+		           SPO.OPT_ORDER,
+		           SPO.STATUS,
+		          (SELECT   COUNT (1)
+		            FROM   STBL_PRI_MENU_OPT spmo
+		           WHERE   SPMO.MENU_ID = #{menuId}
+		                   AND SPMO.OPT_ID = SPO.OPT_ID)
+		            COUNT
+		    FROM   STBL_PRI_OPT SPO
+		   WHERE   SPO.IS_DELETED = 'N'
+			AND      SPO.STATUS = 'N'
+	</select>
+	
+	<delete id="deleteSelectedOpt" parameterType="String">  
+        DELETE FROM STBL_PRI_MENU_OPT WHERE MENU_ID = #{menuId}  
+	</delete>  
+	
+	<select id="getParentMenuMaxOrder" resultType="Integer" parameterType="String">
+		SELECT   NVL(MAX (menu_ord),0) MAX_ORDER
+		  FROM   STBL_PRI_MENUE
+		 WHERE   PARENT_ID = #{parentId}
+	</select>
+	
+	<update id="cancelAllHomePage" parameterType="String">
+		UPDATE   STBL_PRI_MENUE
+			SET IS_HOME = 'N'
+	</update>
+	
+	<update id="setupOrCancelHomePageByMenuId" parameterType="String">
+		UPDATE   STBL_PRI_MENUE
+		   SET   IS_HOME = (CASE IS_HOME WHEN 'N' THEN 'Y' ELSE 'N' END)
+		 WHERE   MENU_ID = #{menuId}
+	</update>
+	
+	<select id="listSelectWithOutRole" resultType="java.util.Map" parameterType="java.util.Map" >
+		SELECT   spr.ROLE_ID,
+		         spr.ROLE_NAME,
+		         SPOZ.ORG_NAME ORG_NAME
+		  FROM   stbl_pri_role spr
+		  left join STBL_PRI_ORGANIZATION SPOZ on SPOZ.ORG_ID = spr.ORG_ID
+		  WHERE spr.IS_DELETED = 'N' 
+		  AND spr.role_id not in 
+		  	(SELECT sprh.role_id FROM STBL_PRI_ROLE_HOMEMENU sprh 
+		  		where sprh.menu_id = #{MENU_ID})
+          <if test="ROLE_NAME!=NULL and ROLE_NAME!=''">
+			AND spr.ROLE_NAME LIKE '%'||#{ROLE_NAME}||'%'
+		  </if>
+	</select>
+	
+	<select id="listSelectWithInRole" resultType="java.util.Map" parameterType="java.util.Map" >
+		SELECT   spr.ROLE_ID,
+		         spr.ROLE_NAME,
+		         SPOZ.ORG_NAME ORG_NAME
+		  FROM   stbl_pri_role spr
+		  left join STBL_PRI_ORGANIZATION SPOZ on SPOZ.ORG_ID = spr.ORG_ID
+		  WHERE spr.IS_DELETED = 'N' 
+		  AND spr.role_id in 
+		  	(SELECT sprh.role_id FROM STBL_PRI_ROLE_HOMEMENU sprh 
+		  		where sprh.menu_id = #{MENU_ID})
+          <if test="ROLE_NAME!=NULL and ROLE_NAME!=''">
+			AND spr.ROLE_NAME LIKE '%'||#{ROLE_NAME}||'%'
+		  </if>
+	</select>
+	
+	<delete id="deleteHomeWithRoleId">
+		DELETE FROM STBL_PRI_ROLE_HOMEMENU WHERE MENU_ID= #{menuId}
+	</delete>
+	
+	 <insert id="updateHomeRole" parameterType="java.util.Map">
+		INSERT INTO STBL_PRI_ROLE_HOMEMENU (
+								ROLE_ID,
+                                MENU_ID)
+			    VALUES (#{ROLE_ID}, #{MENU_ID})
+	</insert>
+	
+</mapper>

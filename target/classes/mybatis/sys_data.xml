@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.boco.share.privilege.dao.SysdataMapper">
+
+	<select id="loadData" resultType="java.util.Map">
+		SELECT 
+		ID,
+		TYPE_CODE,
+		TYPE_NAME,
+		CODE,
+		NAME,
+		DESCRIPTION
+		FROM SYS_DATA
+	</select>
+	
+	<select id="queryCodeAndName" resultType="java.util.Map">
+		SELECT
+				TYPE_CODE "typeCode",
+				TYPE_NAME "typeName"
+		FROM 	SYS_DATA
+		GROUP BY TYPE_CODE,TYPE_NAME
+	</select>
+
+	<select id="querySysData" parameterType="java.util.Map" resultType="java.util.Map" databaseId="oracle">
+		SELECT
+				ID,
+				TYPE_CODE,
+				TYPE_NAME,
+				CODE,
+				NAME,
+				DESCRIPTION,
+				ORD_NO,
+				REMARK,
+				ISREADONLY,
+				MIN_VAL,
+				MAX_VAL,
+				ISDEFAULT,
+				ISEXPIRED,
+				TO_CHAR(CREATED_DT,'YYYY-MM-DD HH:MM') CREATED_DT,
+		        CREATED_BY,
+				TO_CHAR(UPDATED_DT,'YYYY-MM-DD HH:MM') UPDATED_DT,
+				UPDATED_BY UPDATED_BY,
+				IS_DELETED IS_DELETED,
+				VERSION  VERSION
+		FROM 	SYS_DATA
+        WHERE 	IS_DELETED = 'N'
+        	<if test="ID!=null and ID!=''">
+			AND ID =  #{ID}
+		</if>
+		<if test="typeCode!=null and typeCode!=''">
+			AND TYPE_CODE like  '%'||#{typeCode}||'%'
+		</if>
+		<if test="typeName!=null and typeName!=''">
+			AND TYPE_NAME like  '%'||#{typeName}||'%'
+		</if>
+		<if test="code!=null and code!=''">
+			AND CODE = #{code}
+		</if>
+		<if test="name!=null and name!=''">
+			AND NAME like  '%'||#{name}||'%'
+		</if>
+		<if test="description!=null and description!=''">
+			AND DESCRIPTION like  '%'||#{description}||'%'
+		</if>
+		<if test="ordNo!=null and ordNo!=''">
+			AND ORD_NO like  '%'||#{ordNo}||'%'
+		</if>
+		<if test="remark!=null and remark!=''">
+			AND REMARK like  '%'||#{remark}||'%'
+		</if>
+		<if test="isReadOnly!=null and isReadOnly!=''">
+			AND ISREADONLY like  '%'||#{isReadOnly}||'%'
+		</if>
+		<if test="minVal!=null and minVal!=''">
+			AND MIN_VAL like  '%'||#{minVal}||'%'
+		</if>
+		<if test="maxVal!=null and maxVal!=''">
+			AND MAX_VAL like  '%'||#{maxVal}||'%'
+		</if>
+		<if test="isExpired!=null and isExpired!=''">
+			AND ISEXPIRED like  '%'||#{isExpired}||'%'
+		</if>
+		ORDER BY TYPE_CODE , ORD_NO ASC
+	</select>
+	
+	<select id="querySysData" parameterType="java.util.Map" resultType="java.util.Map" databaseId="mysql">
+		SELECT
+				ID,
+				TYPE_CODE,
+				TYPE_NAME,
+				CODE,
+				NAME,
+				DESCRIPTION,
+				ORD_NO,
+				REMARK,
+				ISREADONLY,
+				MIN_VAL,
+				MAX_VAL,
+				ISDEFAULT,
+				ISEXPIRED,
+				date_format(CREATED_DT,'%y-%m-%d %H:%i:%s') CREATED_DT,
+		        CREATED_BY CREATED_BY,
+				date_format(UPDATED_DT,'%y-%m-%d %H:%i:%s') UPDATED_DT,
+				UPDATED_BY UPDATED_BY,
+				IS_DELETED IS_DELETED,
+				VERSION VERSION
+		FROM 	SYS_DATA
+        WHERE 	IS_DELETED = 'N'
+        	<if test="ID!=null and ID!=''">
+			AND ID =  #{ID}
+		</if>
+		<if test="TYPE_CODE!=null and TYPE_CODE!=''">
+			AND TYPE_CODE like concat('%',#{TYPE_CODE},'%')
+		</if>
+		<if test="TYPE_NAME!=null and TYPE_NAME!=''">
+			AND TYPE_NAME like concat('%',#{TYPE_NAME},'%')
+		</if>
+		<if test="CODE!=null and CODE!=''">
+			AND CODE = #{CODE}
+		</if>
+		<if test="NAME!=null and NAME!=''">
+			AND NAME like  concat('%',#{NAME},'%')
+		</if>
+		<if test="description!=null and description!=''">
+			AND DESCRIPTION like  concat('%',#{DESCRIPTION},'%')
+		</if>
+		<if test="ordNo!=null and ordNo!=''">
+			AND ORD_NO like  concat('%',#{ORD_NO},'%')
+		</if>
+		<if test="remark!=null and remark!=''">
+			AND REMARK like concat('%',#{REMARK},'%') 
+		</if>
+		<if test="isReadOnly!=null and isReadOnly!=''">
+			AND ISREADONLY like concat('%',#{ISREADONLY},'%')
+		</if>
+		<if test="minVal!=null and minVal!=''">
+			AND MIN_VAL like concat('%',#{MIN_VAL},'%')
+		</if>
+		<if test="maxVal!=null and maxVal!=''">
+			AND MAX_VAL like concat('%',#{MAX_VAL},'%') 
+		</if>
+		<if test="isExpired!=null and isExpired!=''">
+			AND ISEXPIRED like concat('%',#{ISEXPIRED},'%')
+		</if>
+		ORDER BY TYPE_CODE , ORD_NO ASC
+	</select>
+	
+	
+	
+	<insert id="insertSysData" parameterType="java.util.Map" databaseId="oracle">
+			INSERT INTO SYS_DATA
+		(	
+								ID,
+   						        TYPE_CODE,
+								TYPE_NAME,
+								CODE,
+								NAME,
+								DESCRIPTION,
+								ORD_NO,
+								ISREADONLY,
+								CREATED_DT,
+								CREATED_BY
+		 ) 
+		 VALUES 
+		(
+								#{ID},
+								#{TYPECODE},
+								#{TYPENAME},
+								#{CODE},
+								#{NAME},
+								#{DESCRIPTION},
+								#{ORDNO},
+								#{ISREADONLY},
+								SYSDATE,
+								#{CREATEDBY}
+		)
+	</insert>
+	
+	<insert id="insertSysData" parameterType="java.util.Map" databaseId="mysql">
+			INSERT INTO SYS_DATA
+		(	
+								ID,
+   						        TYPE_CODE,
+								TYPE_NAME,
+								CODE,
+								NAME,
+								DESCRIPTION,
+								ORD_NO,
+								ISREADONLY,
+								CREATED_DT,
+								CREATED_BY
+		 ) 
+		 VALUES 
+		(
+								#{ID},
+								#{TYPE_CODE},
+								#{TYPE_NAME},
+								#{CODE},
+								#{NAME},
+								#{DESCRIPTION},
+								#{ORD_NO},
+								#{ISREADONLY},
+								NOW(),
+								#{CREATED_BY}
+		)
+	</insert>
+	
+	
+	<update id="updateSysData" parameterType="java.util.Map" databaseId="oracle">
+		UPDATE SYS_DATA SET 
+				UPDATED_DT=SYSDATE,
+				UPDATED_BY = #{UPDATED_BY},
+				VERSION=VERSION+1
+			<if test="TYPE_NAME!=null and TYPE_NAME!=''">
+				, TYPE_NAME = #{TYPE_NAME}
+			</if>
+			<if test="NAME!=null and NAME!=''">
+				, NAME = #{NAME}
+			</if>
+			<if test="DESCRIPTION!=null and DESCRIPTION!=''">
+				, DESCRIPTION = #{DESCRIPTION}
+			</if>
+			<if test="ORD_NO!=null and ORD_NO!=''">
+				, ORD_NO = #{ORD_NO}
+			</if>
+			<if test="REMARK!=null and REMARK!=''">
+				, REMARK = #{REMARK}
+			</if>
+			<if test="ISREADONLY!=null and ISREADONLY!=''">
+				, ISREADONLY = #{ISREADONLY}
+			</if>
+			<if test="TYPE_CODE!=null and TYPE_CODE!=''">
+				, TYPE_CODE = #{TYPE_CODE}
+			</if>
+			<if test="CODE!=null and CODE!=''">
+				, CODE = #{CODE}
+			</if>
+	            WHERE ID = #{ID}
+	</update>
+	
+	<update id="updateSysData" parameterType="java.util.Map" databaseId="mysql">
+				UPDATE SYS_DATA SET 
+				UPDATED_DT=now(),
+				UPDATED_BY = #{UPDATED_BY},
+				VERSION=VERSION+1
+			<if test="TYPE_NAME!=null and TYPE_NAME!=''">
+				, TYPE_NAME = #{TYPE_NAME}
+			</if>
+			<if test="NAME!=null and NAME!=''">
+				, NAME = #{NAME}
+			</if>
+			<if test="DESCRIPTION!=null and DESCRIPTION!=''">
+				, DESCRIPTION = #{DESCRIPTION}
+			</if>
+			<if test="ORD_NO!=null and ORD_NO!=''">
+				, ORD_NO = #{ORD_NO}
+			</if>
+			<if test="REMARK!=null and REMARK!=''">
+				, REMARK = #{REMARK}
+			</if>
+			<if test="ISREADONLY!=null and ISREADONLY!=''">
+				, ISREADONLY = #{isReadOnly}
+			</if>
+			<if test="TYPE_CODE!=null and TYPE_CODE!=''">
+				, TYPE_CODE = #{TYPE_CODE}
+			</if>
+			<if test="CODE!=null and CODE!=''">
+				, CODE = #{CODE}
+			</if>
+	            WHERE ID = #{ID}
+	</update>
+	
+	<update id="deleteSysData" parameterType="String">
+		UPDATE SYS_DATA SET IS_DELETED = 'Y'  
+		WHERE  ID = #{DELETEID} 	
+	</update>
+	
+	 <update id="batchDeleteSysData" parameterType="String" databaseId="oracle">
+        UPDATE SYS_DATA SET IS_DELETED = 'Y'  
+         where ID in
+        <foreach item="deleteIds" collection="array" open="(" separator="," close=")">
+            	#{deleteIds}
+        </foreach>
+    </update>
+    
+    <update id="batchDeleteSysData" parameterType="String" databaseId="mysql">
+        UPDATE SYS_DATA SET IS_DELETED = 'Y'  
+         where ID in
+        <foreach item="deleteIds" collection="array" open="(" separator="," close=")">
+            	#{deleteIds}
+        </foreach>
+    </update>
+    
+    <update id="setReadOnlyStatus" parameterType="String" databaseId="oracle">
+		UPDATE   SYS_DATA
+		   SET   ISREADONLY = (CASE ISREADONLY WHEN 'N' THEN 'Y' ELSE 'N' END)
+		 WHERE   id = #{ID} 
+	</update>
+	
+	<update id="setReadOnlyStatus" parameterType="String" databaseId="mysql">
+		UPDATE   SYS_DATA
+		   SET   ISREADONLY = (CASE ISREADONLY WHEN 'N' THEN 'Y' ELSE 'N' END)
+		 WHERE   id = #{ID} 
+	</update>
+	
+	    
+    <select id="querySysDataByType" parameterType="java.util.Map" resultType="String" databaseId="oracle">
+		select t.code from sys_data t where 1=1 
+		<if test="typeCode!=null and typeCode!=''">
+			and t.type_code = #{typeCode}
+		</if>
+		<if test="code!=null and code!=''">
+			 and t.code=#{code} 
+		</if>
+		and t.is_deleted = 'N'
+	</select>
+	
+	<select id="querySysDataByType" parameterType="java.util.Map" resultType="String" databaseId="mysql">
+		select t.code from sys_data t where 1=1 
+		<if test="TYPECODE!=null and TYPECODE!=''">
+			and t.type_code = #{TYPECODE}
+		</if>
+		<if test="CODE!=null and CODE!=''">
+			 and t.code=#{CODE} 
+		</if>
+		and t.is_deleted = 'N'
+	</select>
+	
+		<select id="loadSycDate" resultType="java.util.Map">
+			SELECT
+				IFNULL(DATE_FORMAT(syc.syc_date,'%Y-%m-%d %H:%i'),'') syc_date
+			FROM
+				(
+					SELECT
+						Max(osl.end_date) syc_date
+					FROM
+						ods_syc_log osl
+					WHERE
+						osl.syc_status = 'Y'
+				) syc
+	</select>
+	
+</mapper>

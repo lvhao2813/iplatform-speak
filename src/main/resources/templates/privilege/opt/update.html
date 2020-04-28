@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<link th:href="@{/css/common.css}" rel="stylesheet" />
+<link th:href="@{/css/syle.css}" rel="stylesheet" />
+<link th:href="@{~/js/layer/skin/layer.css}" rel="stylesheet"/>
+
+<!--[if lt IE 9]>
+				<script src="https://apps.bdimg.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
+			<![endif]-->
+
+</head>
+<body id="bg-white">
+	<form id="callForm" name="callForm" th:object="${resultMap}"
+		action="" th:method="post">
+		
+		<input style="display:none" type="text" name="OPT_ID" th:value="${resultMap['OPT_ID']}" />
+		
+		<div class="p10">
+			<table width="100%" cellpadding="0" cellspacing="0" class="tc-edit">
+				<tr>
+					<th><span>*</span>操作名称：</th>
+					<td><input type="text" id="optName" name="OPT_NAME" th:value="${resultMap['OPT_NAME']}" class="input1" /></td>
+					<th><span>*</span>操作代码：</th>
+					<td><input type="text" id="optCode" name="OPT_CODE" th:value="${resultMap['OPT_CODE']}" class="input1" /></td>
+				</tr>
+				<tr>
+					<th><span>*</span>排序：</th>
+					<td><input type="text" id="optOrder" name="OPT_ORDER" th:value="${resultMap['OPT_ORDER']}" class="input1" /></td>
+					<th><span>*</span>是否停用：</th>
+					<td><select name="STATUS" >
+							<option value="N" th:selected="${resultMap['STATUS']=='N'}">否</option>
+							<option value="Y" th:selected="${resultMap['STATUS']=='Y'}">是</option>
+					</select></td>
+				</tr>
+				<tr>
+					<th>描述：</th>
+					<td colspan="3">
+						<textarea name="DESCRIPTION" th:value="${resultMap['DESCRIPTION']}" rows="6"></textarea>
+					</td>		
+				</tr>
+			</table>
+		</div>
+		
+		<div class="tc-tip" id="tipsId" style="display:none"><img th:src="@{/images/icon-tip.png}"/>您还有必填项未填。</div>
+		<div class="tc-bottom">
+			<a onclick="submitUpdate()" id="submitBtn">确定</a> 
+			<a th:onclick="'javascript:closeCurrentLayer()'">取消</a>
+
+		</div>
+	</form>
+
+	<div th:include="/common/onload_layer_js :: loadJS"></div>
+</body>
+</html>
+<script type="text/javascript">
+	function submitUpdate(){
+		if($("input[id='optName']").val()==""||$("input[id='optCode']").val()==""||$("input[id='optOrder']").val()==""){
+			$("#tipsId").css("display","block");
+			return;
+		}
+		jqueryAjaxSubmit('/privilege/opt/add');
+	}
+</script>

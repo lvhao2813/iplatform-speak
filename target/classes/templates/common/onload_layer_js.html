@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<body>
+	<div th:fragment="loadJS">
+
+		<script th:src="@{/js/jquery/jquery-1.7.2.js}"></script>
+		<script th:src="@{/js/layer/layer.js}"></script>
+		<script th:src="@{/js/jquery/jquery.ajaxform.js}"></script>
+		<script th:src="@{/js/jquery/jquery.base64.js}"></script>
+		<script th:src="@{/js/jquery/treetable/jquery.treetable.js}"></script>
+
+		<script type="text/javascript" th:inline="javascript">
+			 var index = parent.layer.getFrameIndex(window.name);
+			 var pathName=window.document.location.pathname;
+   			// var contextPath=pathName.substring(0,pathName.substr(1).indexOf('/')+1);
+			 var contextPath='';
+			function closeCurrentLayer() {
+				parent.layer.close(index);
+			}
+			
+			function closeLayerAndRefresh() {
+				parent.callFormSubmit();
+				parent.layer.close(index);
+			}
+
+			function jqueryAjaxSubmit(url) {
+				$('#callForm').ajaxSubmit( //ajax方式提交表单  
+				{
+					url : contextPath+url,
+					type : 'post',
+					beforeSubmit : function() {
+					},
+					success : function(data) {
+						closeLayerAndRefresh();
+					},
+					clearForm : false,//禁止清楚表单  
+					resetForm : false
+				//禁止重置表单  
+				});
+			}
+			
+			function jqueryAjaxSelectedManager(url) {
+				$('#callForm').ajaxSubmit( //ajax方式提交表单  
+				{
+					url : contextPath+url,
+					type : 'post',
+					beforeSubmit : function() {
+					},
+					success : function(data) {
+						hideMask();
+					},
+					clearForm : false,//禁止清楚表单  
+					resetForm : false
+				//禁止重置表单  
+				});
+			}
+		</script>
+	</div>
+</body>
+</html>

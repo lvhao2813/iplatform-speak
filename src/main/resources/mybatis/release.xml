@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.boco.share.function.release.dao.ReleaseMapper">
+	<resultMap
+		type="com.boco.share.function.release.bean.ReleaseDataBean"
+		id="releaseDataBean">
+		<result column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="DATASETABLENAME" property="dataSetTableName"
+			jdbcType="VARCHAR" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="URLTYPE" property="urlType" jdbcType="VARCHAR" />
+		<result column="REQUESTYPE" property="requestType"
+			jdbcType="VARCHAR" />
+		<result column="OPERATOR" property="operator"
+			jdbcType="VARCHAR" />
+		<result column="RELEASE_DATE" property="releaseDate"
+			jdbcType="VARCHAR" />
+		<result column="DATASETNAME" property="dataSetName"
+			jdbcType="VARCHAR" />
+		<result column="URL" property="url" jdbcType="VARCHAR" />
+		<result column="TOKEN" property="token" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap
+		type="com.boco.share.function.release.bean.DataSetBean"
+		id="dataSetBean">
+		<result column="tableName" property="tableName"
+			jdbcType="VARCHAR" />
+		<result column="columnCode" property="code"
+			jdbcType="VARCHAR" />
+		<result column="columnName" property="comments"
+			jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap
+		type="com.boco.share.function.release.bean.ReleaseDetailBean"
+		id="releaseDetailBean">
+		<result column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="RELEASE_ID" property="releaseId"
+			jdbcType="VARCHAR" />
+		<result column="COLUMN_COMMENTS" property="comments"
+			jdbcType="VARCHAR" />
+		<result column="COLUMN_CODE" property="code" jdbcType="VARCHAR" />
+		<result column="CONDITION" property="condition"
+			jdbcType="VARCHAR" />
+		<result column="VALUE" property="value" jdbcType="VARCHAR" />
+	</resultMap>
+
+
+	<resultMap
+		type="com.boco.share.function.release.bean.ReleaseLog" id="releaseLog">
+		<result column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="RELEASE_ID" property="releaseId"
+			jdbcType="VARCHAR" />
+		<result column="OPERATOR" property="operator"
+			jdbcType="VARCHAR" />
+		<result column="OPER_DATE" property="operDate"
+			jdbcType="VARCHAR" />
+		<result column="OPER_COUNT" property="count" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="queryReleaseDataBeanList"
+		resultMap="releaseDataBean">
+		SELECT * from S_RELEASE_DATA
+	</select>
+
+	<select id="queryDetail" resultMap="releaseDetailBean">
+		SELECT * from
+		S_RELEASE_DETAIL where 1=1
+		<if test="id!=null and id!=''">
+			AND RELEASE_ID = #{id}
+		</if>
+	</select>
+
+
+	<select id="queryReleaseById" resultMap="releaseDataBean">
+		SELECT ID, DATASETABLENAME, NAME, URLTYPE, REQUESTYPE
+		OPERATOR,
+		RELEASE_DATE, DATASETNAME, URL, TOKEN
+		from S_RELEASE_DATA where 1 = 1
+		<if test="id!=null and id!=''">
+			AND ID = #{id}
+		</if>
+	</select>
+
+	<select id="queryDataSetColumnList" parameterType="java.util.HashMap" resultMap="dataSetBean">
+		select table_name tableName,field_name columnCode,field_comment columnName from
+		meta_field a where Table_Name = #{dataSetTableName}
+	</select>
+
+	<select id="queryReleaseLogs" resultMap="releaseLog">
+		SELECT
+		ID,
+		RELEASE_ID,
+		OPERATOR,
+		OPER_DATE,
+		DATA_COUNT
+		FROM S_RELEASE_LOG
+		WHERE 1=1
+		<if test="id!=null and id!=''">
+			AND RELEASE_ID = #{id}
+		</if>
+	</select>
+	<insert id="saveReleaseDataBean"
+		parameterType="com.boco.share.function.release.bean.ReleaseDataBean">
+		INSERT INTO S_RELEASE_DATA
+		(ID,DATASETABLENAME,NAME,URLTYPE,REQUESTYPE,OPERATOR,RELEASE_DATE,DATASETNAME,URL,TOKEN)
+		VALUES(#{id}, #{dataSetTableName}, #{name},
+		#{urlType},
+		#{requestType}, #{operator}, SYSDATE,#{dataSetName},#{url},#{token})
+	</insert>
+
+	<insert id="saveReleaseDataDetailBean"
+		parameterType="com.boco.share.function.release.bean.ReleaseDetailBean">
+		INSERT INTO
+		S_RELEASE_DETAIL(ID,RELEASE_ID,COLUMN_COMMENTS,COLUMN_CODE,CONDITION,VALUE)
+		VALUES(#{id}, #{releaseId}, #{comments},
+		#{code}, #{condition},
+		#{value})
+	</insert>
+
+
+</mapper>

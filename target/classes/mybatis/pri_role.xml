@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.boco.share.privilege.dao.PriRoleMapper">
+
+<resultMap type="com.boco.share.privilege.bean.PriRoleBean" id="priRoleResult">
+		<result column="ROLE_ID" jdbcType="VARCHAR" property="roleId" />
+		<result column="ROLE_NAME" jdbcType="VARCHAR" property="roleName" />
+		<result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
+		<result column="STATUS" jdbcType="VARCHAR" property="status" />
+		<result column="REMARK" jdbcType="VARCHAR" property="remark" />
+		<result column="UPDATED_DT" jdbcType="DATE" property="updatedDt" />
+		<result column="UPDATED_BY" jdbcType="VARCHAR" property="updatedBy" />
+		<result column="CREATED_DT" jdbcType="DATE" property="createdDt" />
+		<result column="CREATED_BY" jdbcType="VARCHAR" property="createdBy" />
+		<result column="IS_DELETED" jdbcType="VARCHAR" property="isDeleted" />
+		<result column="VERSION" jdbcType="DECIMAL" property="version" />
+		<result column="PARENT_ID" jdbcType="VARCHAR" property="parentId" />
+		<result column="TOP_PARENT_ID" jdbcType="VARCHAR" property="topParentId" />
+		<result column="TOP_PARENT_NAME" jdbcType="VARCHAR" property="topParentName" />
+		<result column="ORG_ID" jdbcType="VARCHAR" property="orgId" />
+		<result column="ORG_NAME" jdbcType="VARCHAR" property="orgName" />
+		<result column="ROLE_LEVEL" jdbcType="VARCHAR" property="roleLevel" />
+	</resultMap>
+
+	<select id="findRoleIdByMrgId" resultType="String" parameterType="String">
+		SELECT   ROLE_ID
+		  FROM   STBL_PRI_USER_ROLE
+		 WHERE   IS_DELETED = 'N' AND MGR_ID = #{mgrId}
+	</select>
+	
+	<select id="queryRole" resultMap="priRoleResult" parameterType="java.util.Map" >
+		SELECT   SPR.ROLE_ID,
+		         SPR.ORG_ID,
+		         SPR.ROLE_NAME,
+		         SPR.DESCRIPTION,
+		         SPR.STATUS,
+		         SPR.REMARK,
+		         SPR.UPDATED_DT,
+		         SPR.UPDATED_BY,
+		         SPR.CREATED_DT,
+		         SPR.CREATED_BY,
+		         SPR.IS_DELETED,
+		         SPR.VERSION,
+		         SPR.PARENT_ID,
+		         TD.ORG_NAME,
+		         SPR.ROLE_LEVEL
+		  FROM         STBL_PRI_ROLE SPR
+		         LEFT JOIN
+		            STBL_PRI_ORGANIZATION TD
+		         ON SPR.ORG_ID = TD.ORG_ID
+		         AND TD.IS_DELETED = 'N'
+		 WHERE   SPR.IS_DELETED = 'N' AND SPR.IS_MGR = 'N'
+		 <if test="ROLE_ID!=null and ROLE_ID!=''">
+			AND SPR.ROLE_ID = #{ROLE_ID}
+		</if>
+		<if test="ORG_NAME!=NULL and ORG_NAME!=''">
+			AND TD.ORG_NAME LIKE '%'||#{ORG_NAME}||'%'
+		</if>
+		<if test="ORG_ID!=NULL and ORG_ID!=''">
+			AND SPR.ORG_ID = #{ORG_ID}
+		</if>
+		<if test="ROLE_NAME!=NULL and ROLE_NAME!=''">
+			AND SPR.ROLE_NAME like  '%'||#{ROLE_NAME}||'%' 
+		</if>
+		<if test="PARENT_ID!=NULL and PARENT_ID!=''">
+			AND SPR.PARENT_ID = #{PARENT_ID}
+		</if>
+		ORDER BY SPR.CREATED_DT DESC
+	</select>
+	
+	<select id="loadRole" resultMap="priRoleResult" parameterType="java.util.Map" >
+		SELECT   SPR.ROLE_ID,
+		         SPR.ORG_ID,
+		         SPR.ROLE_NAME,
+		         SPR.DESCRIPTION,
+		         SPR.STATUS,
+		         SPR.REMARK,
+		         SPR.UPDATED_DT,
+		         SPR.UPDATED_BY,
+		         SPR.CREATED_DT,
+		         SPR.CREATED_BY,
+		         SPR.IS_DELETED,
+		         SPR.VERSION,
+		         SPR.PARENT_ID,
+		         TD.ORG_NAME,
+		         (select spoz.ORG_NAME from STBL_PRI_ORGANIZATION spoz where spoz.org_id= SPR.TOP_PARENT_ID ) TOP_PARENT_NAME,
+		         SPR.TOP_PARENT_ID,
+		         SPR.ROLE_LEVEL
+		 FROM         STBL_PRI_ROLE SPR
+		         LEFT JOIN
+		            STBL_PRI_ORGANIZATION TD
+		         ON SPR.ORG_ID = TD.ORG_ID
+		         AND TD.IS_DELETED = 'N'
+		 WHERE   SPR.IS_DELETED = 'N' AND SPR.IS_MGR = 'N'
+		 <if test="ROLE_ID!=null and ROLE_ID!=''">
+			AND SPR.ROLE_ID = #{ROLE_ID}
+		</if>
+		<if test="ORG_NAME!=NULL and ORG_NAME!=''">
+			AND TD.ORG_NAME LIKE '%'||#{ORG_NAME}||'%'
+		</if>
+		<if test="ORG_ID!=NULL and ORG_ID!=''">
+			AND SPR.ORG_ID = #{ORG_ID}
+		</if>
+		<if test="ROLE_NAME!=NULL and ROLE_NAME!=''">
+			AND SPR.ROLE_NAME like '%'||#{ROLE_NAME}||'%'
+		</if>
+		<if test="PARENT_ID!=NULL and PARENT_ID!=''">
+			AND SPR.PARENT_ID = #{PARENT_ID}
+		</if>
+		ORDER BY SPR.CREATED_DT DESC
+	</select>
+	
+	<insert id="insert" parameterType="com.boco.share.privilege.bean.PriRoleBean">
+	 insert into STBL_PRI_ROLE (ROLE_ID, ROLE_NAME, DESCRIPTION,CREATED_BY)
+			    values (#{roleId}, #{roleName}, #{description},#{createdBy})
+	</insert>
+	
+	<update id="update" parameterType="com.boco.share.privilege.bean.PriRoleBean">
+		UPDATE STBL_PRI_ROLE 
+			SET UPDATED_DT=SYSDATE,
+				  VERSION=VERSION+1
+			<if test="roleName!=null and roleName!=''">
+				, ROLE_NAME = #{roleName}
+			</if>
+			<if test="description!=null and description!=''">
+				, DESCRIPTION = #{description}
+			</if>
+			<if test="topParentId!=null and topParentId!=''">
+				, TOP_PARENT_ID = #{topParentId}
+			</if>
+			<if test="orgId!=null and orgId!=''">
+				, ORG_ID = #{orgId}
+			</if>
+	        WHERE    ROLE_ID=#{roleId}	
+	</update>
+	
+	<update id="delete" parameterType="String">
+		UPDATE STBL_PRI_ROLE set IS_DELETED = 'Y' 
+		WHERE ROLE_ID = #{deleteId}		
+	</update>
+	
+	 <update id="batchDelete" parameterType="String">
+        UPDATE STBL_PRI_ROLE set IS_DELETED = 'Y' 
+         where ROLE_ID in
+        <foreach item="deleteIds" collection="array" open="(" separator="," close=")">
+            	#{deleteIds}
+        </foreach>
+    </update>
+    
+     <update id="setIsUse" parameterType="String">
+		UPDATE   STBL_PRI_ROLE
+		   SET   STATUS = (CASE STATUS WHEN 'N' THEN 'Y' ELSE 'N' END)
+		 WHERE   ROLE_ID = #{roleId} 
+	</update>
+	
+	<select id="querySelectManagerWithOutRoleId" resultType="com.boco.share.privilege.bean.PriManagerBean" parameterType="java.util.Map" >
+		SELECT   SPM.MGR_ID mgrId,
+		         SPM.USER_CODE userCode,
+		         SPM.MGR_NAME mgrName,
+		         o.PARTY_NAME orgName,
+		         TOP_PARENT_ID topParentId,
+		         '' topParentName
+		  FROM   STBL_PRI_MANAGER spm
+		  left join C_ORGANIZATION o on spm.org_id = o.ID
+		  --left join STBL_PRI_ORGANIZATION o2 on spm.TOP_PARENT_ID = o2.ORG_ID
+		  WHERE SPM.IS_DELETED = 'N'
+		    AND   SPM.MGR_ID NOT IN 
+		        (SELECT   spur.mgr_id
+                  FROM   STBL_PRI_USER_ROLE spur
+                 WHERE   spur.ROLE_ID = #{ROLE_ID})
+             <if test="MGR_NAME!=NULL and MGR_NAME!=''">
+					AND SPM.MGR_NAME LIKE '%'||#{MGR_NAME}||'%'   
+			</if>
+           <!--   <if test="MGR_NAME!=NULL and MGR_NAME!=''">
+					AND o.party_name LIKE '%'||#{MGR_NAME}||'%'
+			</if> -->
+			<if test="ORG_NAME!=NULL and ORG_NAME!=''">
+				 AND o.PARTY_NAME = #{ORG_NAME} 
+			</if>
+	</select>
+	
+		<select id="querySelectManagerWithRoleId" resultType="com.boco.share.privilege.bean.PriManagerBean" parameterType="java.util.Map" >
+		SELECT   SPM.MGR_ID mgrId,
+		          SPM.USER_CODE userCode,
+		        SPM.MGR_NAME mgrName,
+		         (SELECT   SPOZ.ORG_NAME
+		            FROM   STBL_PRI_ORGANIZATION SPOZ
+		           WHERE   SPOZ.ORG_ID = spm.ORG_ID)
+		            orgName,
+		         TOP_PARENT_ID topParentId,
+		         (SELECT   SPOZ.ORG_NAME
+		            FROM   STBL_PRI_ORGANIZATION SPOZ
+		           WHERE   SPOZ.ORG_ID = spm.TOP_PARENT_ID)
+		            topParentName
+		  FROM   STBL_PRI_MANAGER spm
+		  WHERE SPM.IS_DELETED = 'N'
+		    AND   SPM.MGR_ID IN 
+		         (SELECT   SPUR.MGR_ID
+                  FROM   STBL_PRI_USER_ROLE SPUR
+                 WHERE   SPUR.ROLE_ID = #{ROLE_ID})
+	         <if test="MGR_NAME!=NULL and MGR_NAME!=''">
+				AND SPM.MGR_NAME LIKE '%'||#{MGR_NAME}||'%' 
+			</if>
+	</select>
+	
+	<delete id="deleteManagerWithRoleId">  
+         DELETE FROM STBL_PRI_USER_ROLE WHERE ROLE_ID= #{roleId}
+	</delete>  
+	
+    <insert id="updateManagerRole" parameterType="java.util.Map">
+			INSERT INTO STBL_PRI_USER_ROLE (
+								USER_ROLE_ID,
+                                MGR_ID,
+                                ROLE_ID,
+                                CREATED_BY)
+			    VALUES (#{USER_ROLE_ID}, #{MGR_ID}, #{ROLE_ID}, #{CREATED_BY})
+	</insert>
+	
+	 <insert id="roleSelectedMenu" parameterType="java.util.Map">
+		INSERT INTO STBL_PRI_ROLE_MENU (
+							   ROLE_MENU_ID,
+                               MENU_ID,
+                               ROLE_ID,
+                               CREATED_BY)
+			    VALUES (#{ROLE_MENU_ID}, #{MENU_ID}, #{ROLE_ID}, #{CREATED_BY})
+	</insert>
+	
+	<delete id="deleteRoleMenu">  
+         DELETE FROM STBL_PRI_ROLE_MENU WHERE ROLE_ID= #{roleId}
+	</delete>  
+	
+	 <insert id="roleSelectedOpt" parameterType="java.util.Map">
+		INSERT INTO STBL_PRI_ROLE_OPT (
+							   ROLE_OPT_ID,
+                               MENU_OPT_ID,
+                               ROLE_ID,
+                               CREATED_BY)
+			    VALUES (#{ROLE_OPT_ID}, #{MENU_OPT_ID}, #{ROLE_ID}, #{CREATED_BY})
+	</insert>
+	
+	<delete id="deleteRoleOpt">  
+         DELETE FROM STBL_PRI_ROLE_OPT WHERE ROLE_ID= #{roleId}
+	</delete>  
+	
+	<select id="queryAllOptByMenuIds" resultType="java.util.Map" parameterType="java.util.Map" >
+		  SELECT   SPMO.MENU_OPT_ID,
+		           SPMO.OPT_ID,
+		           SPMO.MENU_ID,
+		           SPO.OPT_NAME,
+		                 (CASE (SELECT   COUNT (1)
+		                    FROM   STBL_PRI_ROLE_OPT spro
+		                   WHERE   spro.role_id = #{ROLE_ID}
+		                           AND SPRO.MENU_OPT_ID = SPMO.MENU_OPT_ID)
+		               WHEN 0
+		               THEN
+		                  'N'
+		               ELSE
+		                  'Y'
+		            END)
+		              SELECT_OPT
+		    FROM   STBL_PRI_MENU_OPT spmo, STBL_PRI_OPT spo
+		   WHERE       SPMO.OPT_ID = SPO.OPT_ID
+		           AND SPMO.IS_DELETED = 'N'
+		           AND spo.IS_DELETED = 'N'
+		ORDER BY   SPMO.MENU_ID, SPO.OPT_ORDER ASC
+	</select>
+	
+	<delete id="deleteTarget" parameterType="String">  
+        DELETE FROM DW_ROLE_TARGET WHERE ROLE_ID = #{roleId}  AND TARGET_ID = #{targetId}
+	</delete>  
+	
+	<select id="isRoleSelectTarget" resultType="String" parameterType="String">
+		 SELECT   CASE COUNT (1) WHEN 0 THEN 'N' ELSE 'Y' END IS_SELECT
+              FROM   DW_ROLE_TARGET
+             WHERE   ROLE_ID = #{roleId}
+                   AND TARGET_ID = #{targetId}
+   </select>
+   
+      <insert id="selectTarget" parameterType="java.util.Map">
+			 INSERT INTO DW_ROLE_TARGET (ROLE_TARGET_ID,
+		                            TARGET_ID,
+		                            ROLE_ID,
+		                            CREATED_BY)
+			    VALUES (#{ROLE_TARGET_ID}, #{TARGET_ID}, #{ROLE_ID}, #{CREATED_BY})
+	</insert>
+	
+	<select id="queryOrg" resultType="String">
+		SELECT party_name name
+			FROM c_organization t
+			WHERE t.parent_id = 0
+			AND t.id not in (84026,-3,577627)
+			ORDER BY t.priority
+    </select>
+	<insert id="saveManagerRole" parameterType="java.util.Map">
+		INSERT INTO stbl_pri_user_role (
+							   ROLE_OPT_ID,
+                               MENU_OPT_ID,
+                               ROLE_ID,
+                               CREATED_BY)
+			    VALUES (#{ROLE_OPT_ID}, #{MENU_OPT_ID}, #{ROLE_ID}, #{CREATED_BY})
+	</insert>
+</mapper>
