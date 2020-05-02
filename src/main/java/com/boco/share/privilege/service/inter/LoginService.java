@@ -11,7 +11,7 @@ import com.boco.share.privilege.bean.User;
  */
 public interface LoginService {
 
-	public User getUserByName(String name);
+	public User getUserByCode(String code);
 	
-	public boolean checkLoginUser(String name, String passWord);
+	public boolean checkLoginUser(String code, String passWord);
 }

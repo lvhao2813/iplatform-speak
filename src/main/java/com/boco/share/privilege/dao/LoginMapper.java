@@ -14,5 +14,5 @@ import com.boco.share.privilege.bean.User;
  */
 @Mapper
 public interface LoginMapper {
-	public User getUserByName(@Param("name") String name);
+	public User getUserByCode(@Param("code") String code);
 }

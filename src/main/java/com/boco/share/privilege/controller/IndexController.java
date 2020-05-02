@@ -38,12 +38,14 @@ public class IndexController extends BaseController implements PrivilageConstant
 	public ModelAndView login(@RequestParam Map<String, String> formMap) {
 		boolean isCheck = loginService.checkLoginUser(formMap.get("username"), formMap.get("password"));
 		ModelAndView mav = null;
+		boolean error = false;
 		if(isCheck) {
 			mav = new ModelAndView("index");
 		}else {
 			mav = new ModelAndView("login");
+			error = true;
 		}
-		mav.addObject("isCheck", isCheck);
+		mav.addObject("isCheck", error);
 		return mav;
 	}
 

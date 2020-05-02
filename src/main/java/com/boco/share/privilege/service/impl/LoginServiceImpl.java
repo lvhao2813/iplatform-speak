@@ -21,13 +21,13 @@ public class LoginServiceImpl implements LoginService {
 	private LoginMapper loginMapper;
 
 	@Override
-	public User getUserByName(String name) {
-		return loginMapper.getUserByName(name);
+	public User getUserByCode(String code) {
+		return loginMapper.getUserByCode(code);
 	}
 
 	@Override
-	public boolean checkLoginUser(String name, String passWord) {
-		User user = loginMapper.getUserByName(name);
+	public boolean checkLoginUser(String code, String passWord) {
+		User user = loginMapper.getUserByCode(code);
 		if (user == null) {
 			return false;
 		}else {

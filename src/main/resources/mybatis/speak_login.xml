@@ -14,12 +14,12 @@
 	</resultMap>
 	
 	
-	<select id="getUserByName" resultMap="user">
+	<select id="getUserByCode" resultMap="user">
 		select id id, name name, code code, phone phone
 		
 		, active_flag activeFlag, is_manager manager,passWord passWord from ods_s_user t where 1=1 
-		<if test="name !=null and name!=''">
-			and t.name = #{name}
+		<if test="code !=null and code!=''">
+			and t.code = #{code}
 		</if>
 	</select>
 	
