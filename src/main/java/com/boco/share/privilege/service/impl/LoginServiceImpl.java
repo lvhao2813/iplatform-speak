@@ -15,14 +15,28 @@ import com.boco.share.privilege.service.inter.LoginService;
  *
  */
 @Service
-public class LoginServiceImpl implements LoginService{
+public class LoginServiceImpl implements LoginService {
 
 	@Autowired
 	private LoginMapper loginMapper;
-	
+
 	@Override
 	public User getUserByName(String name) {
 		return loginMapper.getUserByName(name);
+	}
+
+	@Override
+	public boolean checkLoginUser(String name, String passWord) {
+		User user = loginMapper.getUserByName(name);
+		if (user == null) {
+			return false;
+		}else {
+			if(passWord.equals(user.getPassWord())) {
+				return true;
+			}else {
+				return false;
+			}
+		}
 	}
 
 }

@@ -1,6 +1,7 @@
 spring:
   application:
     name: iplatform-share
+server:
   port: 8888
   session:
      timeout: 28800

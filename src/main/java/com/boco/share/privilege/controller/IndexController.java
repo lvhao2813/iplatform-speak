@@ -1,7 +1,5 @@
 package com.boco.share.privilege.controller;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,19 +12,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.boco.share.framework.springmvc.BaseController;
+import com.boco.share.privilege.service.inter.LoginService;
 import com.boco.share.privilege.util.PrivilageConstants;
 
 @Controller
 @RequestMapping("/")
 public class IndexController extends BaseController implements PrivilageConstants {
-	
 
+	@Autowired
+	private LoginService loginService;
 
 	@RequestMapping("")
-    public String login2(Map<String, Object> map, String loginMessage) {
-        return "login";
-    }
-	
+	public String login2(Map<String, Object> map, String loginMessage) {
+		return "login";
+	}
+
 	/**
 	 * 登陆
 	 * 
@@ -35,11 +35,16 @@ public class IndexController extends BaseController implements PrivilageConstant
 	 * @return
 	 */
 	@RequestMapping("login")
-	public String login(Map<String, Object> map, String loginMessage) {
-		map.put("loginMessage", loginMessage);
-		map.put("mgrName", "admin");
-		
-		return "index";
+	public ModelAndView login(@RequestParam Map<String, String> formMap) {
+		boolean isCheck = loginService.checkLoginUser(formMap.get("username"), formMap.get("password"));
+		ModelAndView mav = null;
+		if(isCheck) {
+			mav = new ModelAndView("index");
+		}else {
+			mav = new ModelAndView("login");
+		}
+		mav.addObject("isCheck", isCheck);
+		return mav;
 	}
 
 	@RequestMapping("demo")
@@ -53,7 +58,7 @@ public class IndexController extends BaseController implements PrivilageConstant
 		HttpSession session = request.getSession();
 		return "forward:" + (String) session.getAttribute(HOME_URL);
 	}
-	
+
 	@RequestMapping("index")
 	public ModelAndView index(Map<String, Object> map, HttpServletRequest request,
 			@RequestParam Map<String, String> formMap) {
@@ -62,7 +67,7 @@ public class IndexController extends BaseController implements PrivilageConstant
 
 		return mv;
 	}
-	
+
 	@RequestMapping("home")
 	public ModelAndView home(Map<String, Object> map) {
 		ModelAndView mv = new ModelAndView("index");

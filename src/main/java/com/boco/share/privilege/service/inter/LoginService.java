@@ -12,4 +12,6 @@ import com.boco.share.privilege.bean.User;
 public interface LoginService {
 
 	public User getUserByName(String name);
+	
+	public boolean checkLoginUser(String name, String passWord);
 }
