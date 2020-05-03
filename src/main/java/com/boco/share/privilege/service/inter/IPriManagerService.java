@@ -62,7 +62,7 @@ public interface IPriManagerService {
 	 * @param priManager
 	 * @return
 	 */
-	int insert(PriManagerBean priManager);
+	int insert(User user);
 
 	/**
 	 * Title: update

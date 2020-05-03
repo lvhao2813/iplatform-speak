@@ -181,9 +181,9 @@ public class PriManagerController extends BaseController implements LoginConstan
 	}
 
 	@RequestMapping("insertpage")
-	public ModelAndView insertPage(@ModelAttribute(value = "PriManagerBean") PriManagerBean priManagerBean) {
+	public ModelAndView insertPage(@ModelAttribute(value = "User") User user) {
 		ModelAndView mav = new ModelAndView("privilege/manager/add");
-		mav.addObject("priManagerBean", priManagerBean);
+		mav.addObject("User", user);
 		return mav;
 	}
 
@@ -210,14 +210,17 @@ public class PriManagerController extends BaseController implements LoginConstan
 
 	@RequestMapping("add")
 	@ResponseBody
-	public void insert(@ModelAttribute(value = "PriManagerBean") PriManagerBean priManagerBean, HttpSession session) {
-		PriManagerBean priManager = (PriManagerBean) session.getAttribute(PRI_MANAGER);
-
-		priManagerBean.setMgrId(UniqueIDGenerator.getLongUUID());
-		priManagerBean.setCreatedBy(priManager.getUserCode());
-		priManagerBean.setPassword(Md5Util.encode(DEFAULT_PWD));
-		userManagerService.insert(priManagerBean);
+	public void insert(@ModelAttribute(value = "User") User user, HttpSession session) {
+		//User userManager = (User) session.getAttribute(PRI_MANAGER);		
+		
+		user.setId((UniqueIDGenerator.getLongUUID()));
+		//user.setCreatedBy(priManager.getUserCode());
+		user.setPassWord((Md5Util.encode(DEFAULT_PWD)));
+		
+		userManagerService.insert(user);
 	}
+	
+
 
 	@RequestMapping("updatepage")
 	public ModelAndView updatePage(@RequestParam Map<String, String> formMap,

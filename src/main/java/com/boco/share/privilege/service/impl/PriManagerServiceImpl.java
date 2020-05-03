@@ -14,7 +14,6 @@ import com.boco.share.privilege.bean.PriMenuBean;
 import com.boco.share.privilege.bean.User;
 import com.boco.share.privilege.dao.PriManagerMapper;
 import com.boco.share.privilege.service.inter.IPriManagerService;
-import com.boco.share.privilege.util.Md5Util;
 
 /**
  * <p>
@@ -64,8 +63,8 @@ public class PriManagerServiceImpl implements IPriManagerService {
 	}
 
 	@Override
-	public int insert(PriManagerBean priManager) {
-		return userManagerMapper.insertManager(priManager);
+	public int insert(User user) {
+		return userManagerMapper.insertManager(user);
 	}
 
 	@Override

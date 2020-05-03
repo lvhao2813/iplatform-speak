@@ -170,17 +170,36 @@
 			<result column="ACTIVEFLAG" property="activeFlag" jdbcType="VARCHAR" />
 			<result column="MANAGER" property="manager" jdbcType="VARCHAR" />
 			<result column="PASSWORD" property="passWord" jdbcType="VARCHAR" />
+			<result column="EMAIL" property="email" jdbcType="VARCHAR" />
+			<result column="DESCRITION" property="descrition" jdbcType="VARCHAR" />
 		</resultMap>
 		
 	<select id="loadManagers" parameterType="java.util.HashMap" resultMap="user">
 		select id id, name name, code code, phone phone , 
-		active_flag activeFlag, is_manager manager,
-		passWord passWord 
-		from ods_s_user t where code = #{USER_CODE}
+		active_flag activeFlag, is_manager manager,passWord passWord, 
+		e_mail email,descrition descrition 
+		from ods_s_user t 
+		where 1=1
+
+		<if test="USER_CODE != null and USER_CODE!=''">
+			and t.code like concat('%',#{USER_CODE},'%')	
+		</if>
+
+		<if test="MGR_NAME != null and MGR_NAME!=''">
+			and t.name like concat('%',#{MGR_NAME},'%')	
+		</if>
 		
   </select>
   
-  <insert id="insertManager" parameterType="com.boco.share.privilege.bean.PriManagerBean">
+  <insert id="insertManager" parameterType="com.boco.share.privilege.bean.User">
+  		insert into ods_s_user(id,name,code,phone,
+  							active_flag,is_manager,password,
+  							e_mail,descrition) 
+  		values (3,
+  		"22","www","188",2,2,231321,"999@","321")
+  		
+  		
+  		
 		INSERT INTO STBL_PRI_MANAGER (MGR_ID,
                               USER_CODE,
                               MGR_NAME,

@@ -63,7 +63,7 @@ public interface PriManagerMapper {
 	 * @param priManagerBean
 	 * @return
 	 */
-	int insertManager(PriManagerBean priManagerBean);
+	int insertManager(User user);
 
 	/**
 	 * Title: updateManager

@@ -21,6 +21,26 @@ public class User {
 	private String manager;
 	
 	private String passWord;
+	
+	private String email;
+	
+	private String descrition;
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getDescrition() {
+		return descrition;
+	}
+
+	public void setDescrition(String descrition) {
+		this.descrition = descrition;
+	}
 
 	public String getId() {
 		return id;
@@ -77,7 +97,6 @@ public class User {
 	public void setPassWord(String passWord) {
 		this.passWord = passWord;
 	}
-	
 	
 	
 }

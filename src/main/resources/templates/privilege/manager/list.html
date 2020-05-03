@@ -89,6 +89,8 @@ function openBatchDeletePage(){
 							<th>用户账号</th>
        						<th>用户名称</th>
        						<th>电话</th>
+       						<th>email</th>
+       						<th>描述</th>
        						<!-- 
 							<th>部门</th>
 							<th>公司</th>
@@ -103,6 +105,8 @@ function openBatchDeletePage(){
 						<td th:text="${user['code']}"></td>
 						<td th:text="${user['name']}"></td>
 						<td th:text="${user['phone']}"></td>
+						<td th:text="${user['email']}"></td>
+						<td th:text="${user['descrition']}"></td>
 						<!-- <td>
 							<span th:text="${priManagerBean['stop']== '0'}? '禁用':'可用'"></span>
 							<a href="#" th:class="${priManagerBean['stop']== '0'}? 'color-red':'c-blue'" th:onclick="'javascript:ajaxIsStop(\''+${priManagerBean['mgrId']}+'\')'" th:text="${priManagerBean['stop'] == '0'}? '[ 可用 ]':'[ 禁用 ]'"></a>
