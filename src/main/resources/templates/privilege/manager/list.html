@@ -92,26 +92,22 @@ function openBatchDeletePage(){
 							<th>部门</th>
 							<th>公司</th>
 							 -->
-							<th>状态</th>
+							<!-- <th>状态</th> -->
 							<th>操作</th>
 	       			</tr>
-	       			<tr th:each="priManagerBean : ${resultList}">
+	       			<tr th:each="user : ${resultList}">
 						<td align="center">
-							<input type="checkbox" id="checkboxId"  th:name="check"  th:value="${priManagerBean['mgrId']}" />
+							<input type="checkbox" id="checkboxId"  th:name="check"  th:value="${priManagerBean['id']}" />
 						</td>
-						<td th:text="${priManagerBean['userCode']}"></td>
-						<td th:text="${priManagerBean['mgrName']}"></td>
-							<!-- 
-						<td th:text="${priManagerBean['orgName']}"></td>
-						<td th:text="${priManagerBean['topParentName']}"></td>
-						-->
-						<td>
+						<td th:text="${user['code']}"></td>
+						<td th:text="${user['name']}"></td>
+						<!-- <td>
 							<span th:text="${priManagerBean['stop']== '0'}? '禁用':'可用'"></span>
 							<a href="#" th:class="${priManagerBean['stop']== '0'}? 'color-red':'c-blue'" th:onclick="'javascript:ajaxIsStop(\''+${priManagerBean['mgrId']}+'\')'" th:text="${priManagerBean['stop'] == '0'}? '[ 可用 ]':'[ 禁用 ]'"></a>
-						</td>
+						</td> -->
 						<td align="center">
-						<a href="#" class="c-green parentedit" th:onclick="'javascript:openLargeEditLayer(\'/privilege/manager/updatepage?MGR_ID='+${priManagerBean['mgrId']}+'\')'">编辑</a> 
-						<a href="#" class="color-red parentIframe" th:onclick="'javascript:openDeleteLayer(\'/privilege/manager/deletepage?deleteUrl=/privilege/manager/delete&deleteId='+${priManagerBean['mgrId']}+'\')'">删除</a> 
+						<a href="#" class="c-green parentedit" th:onclick="'javascript:openLargeEditLayer(\'/privilege/manager/updatepage?MGR_ID='+${user['id']}+'\')'">编辑</a> 
+						<a href="#" class="color-red parentIframe" th:onclick="'javascript:openDeleteLayer(\'/privilege/manager/deletepage?deleteUrl=/privilege/manager/delete&deleteId='+${user['id']}+'\')'">删除</a> 
 						</td>
 					</tr>
 	       		

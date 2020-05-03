@@ -161,59 +161,21 @@
 			         AND SPMO.OPT_ID = SPO.OPT_ID
 			         AND SPMO.MENU_ID = SPM.MENU_ID
   </select>
-
-	<select id="loadManagers"
-		parameterType="com.boco.share.privilege.bean.PriManagerBean"
-		resultMap="priManager">
-		SELECT   MGR_ID,
-			         USER_CODE,
-			         MGR_NAME,
-			         MGR_TYPE,
-			         ORG_ID,
-			         (SELECT   SPOZ.ORG_NAME
-			            FROM   STBL_PRI_ORGANIZATION SPOZ
-			           WHERE   SPOZ.ORG_ID = spm.ORG_ID)
-			            ORG_NAME,
-			         TOP_PARENT_ID,
-			         (SELECT   SPOZ.ORG_NAME
-			            FROM   STBL_PRI_ORGANIZATION SPOZ
-			           WHERE   SPOZ.ORG_ID = spm.TOP_PARENT_ID)
-			            TOP_PARENT_NAME,
-			         PASSWORD,
-			         END_DATE,
-			         START_DATE,
-			         STOP,
-			         LOGIN_TIMES,
-			         LAST_LOGIN_DATE,
-			         LOGIN_DATE,
-			         GRANT_TYPE,
-			         IS_SUPER,
-			         STATUS,
-			         MOBILE,
-			         REMARK,
-			         UPDATED_DT,
-			         UPDATED_BY,
-			         CREATED_DT,
-			         CREATED_BY,
-			         IS_DELETED,
-			         E_MAIL,
-			         VERSION
-			  FROM   STBL_PRI_MANAGER spm
-			 WHERE   is_deleted = 'N'
-			     AND   IS_SUPER !=1
-			 <if test="MGR_TYPE!=null and MGR_TYPE!=''">
-				AND MGR_TYPE = #{MGR_TYPE}
-			</if>
-			<if test="MGR_ID!=null and MGR_ID!=''">
-				AND MGR_ID = #{MGR_ID}
-			</if>
-			<if test="MGR_NAME!=null and MGR_NAME!=''">
-				AND MGR_NAME like '%'||#{MGR_NAME}||'%'
-			</if>
-			<if test="USER_CODE!=NULL and USER_CODE!=''">
-				AND USER_CODE =  #{USER_CODE}
-			</if>
-		  	order by  CREATED_DT DESC
+  
+		<resultMap type="com.boco.share.privilege.bean.User" id="user">
+			<result column="ID" property="id" jdbcType="VARCHAR" />
+			<result column="NAME" property="name" jdbcType="VARCHAR" />
+			<result column="CODE" property="code" jdbcType="VARCHAR" />
+			<result column="PHONE" property="phone" jdbcType="VARCHAR" />
+			<result column="ACTIVEFLAG" property="activeFlag" jdbcType="VARCHAR" />
+			<result column="MANAGER" property="manager" jdbcType="VARCHAR" />
+			<result column="PASSWORD" property="passWord" jdbcType="VARCHAR" />
+		</resultMap>
+	<select id="loadManagers" parameterType="java.util.HashMap" resultMap="user">
+		select id id, name name, code code, phone phone , 
+		active_flag activeFlag, is_manager manager,
+		passWord passWord 
+		from ods_s_user t where 1=1 
   </select>
   
   <insert id="insertManager" parameterType="com.boco.share.privilege.bean.PriManagerBean">

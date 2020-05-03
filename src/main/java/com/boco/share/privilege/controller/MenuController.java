@@ -19,7 +19,7 @@ import com.boco.share.framework.pagination.Pagination;
 import com.boco.share.framework.springmvc.BaseController;
 import com.boco.share.privilege.bean.PriManagerBean;
 import com.boco.share.privilege.bean.PriMenuBean;
-import com.boco.share.privilege.service.inter.IPriMenuService;
+import com.boco.share.privilege.service.inter.MenuService;
 import com.boco.share.privilege.service.inter.IPriOptService;
 import com.boco.share.privilege.util.PrivilageConstants;
 import com.github.pagehelper.PageHelper;
@@ -33,10 +33,10 @@ import com.github.pagehelper.PageInfo;
  */
 @Controller
 @RequestMapping("/privilege/menu")
-public class PriMenuController extends BaseController {
+public class MenuController extends BaseController {
 
 	@Autowired
-	public IPriMenuService priMenuService;
+	public MenuService priMenuService;
 
 	@Autowired
 	public IPriOptService priOptService;

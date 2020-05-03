@@ -28,8 +28,9 @@ import com.boco.share.framework.pagination.Pagination;
 import com.boco.share.framework.springmvc.BaseController;
 import com.boco.share.privilege.bean.PriManagerBean;
 import com.boco.share.privilege.bean.PriMenuBean;
+import com.boco.share.privilege.bean.User;
 import com.boco.share.privilege.service.inter.IPriManagerService;
-import com.boco.share.privilege.service.inter.IPriMenuService;
+import com.boco.share.privilege.service.inter.MenuService;
 import com.boco.share.privilege.service.inter.IPriOrganizationService;
 import com.boco.share.privilege.service.inter.IPriRoleService;
 import com.boco.share.privilege.util.LoginConstants;
@@ -58,7 +59,7 @@ public class PriManagerController extends BaseController implements LoginConstan
 	public IPriOrganizationService priOrganizationService;
 
 	@Autowired
-	public IPriMenuService priMenuService;
+	public MenuService priMenuService;
 	
 	/**
 	 * 登录管理平台
@@ -165,9 +166,9 @@ public class PriManagerController extends BaseController implements LoginConstan
 			@ModelAttribute(value = "pagination") Pagination pagination) {
 
 		PageHelper.startPage(pagination.getCurrentPageNum(), pagination.getPageCount());
-		List<PriManagerBean> resultList = userManagerService.loadManagers(formMap);
+		List<User> resultList = userManagerService.loadManagers(formMap);
 
-		PageInfo<PriManagerBean> pageInfo = new PageInfo<PriManagerBean>(resultList);
+		PageInfo<User> pageInfo = new PageInfo<User>(resultList);
 		pagination.setTotalCount(pageInfo.getTotal());
 		pagination.setTotalPageNum(pageInfo.getPages());
 
@@ -221,7 +222,7 @@ public class PriManagerController extends BaseController implements LoginConstan
 	@RequestMapping("updatepage")
 	public ModelAndView updatePage(@RequestParam Map<String, String> formMap,
 			@ModelAttribute(value = "PriManagerBean") PriManagerBean priManagerBean) {
-		List<PriManagerBean> resultList = userManagerService.loadManagers(formMap);
+		List<User> resultList = userManagerService.loadManagers(formMap);
 
 		ModelAndView mav = new ModelAndView("privilege/manager/update");
 		if (resultList != null && resultList.size() > 0) {

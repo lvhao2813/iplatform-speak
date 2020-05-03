@@ -7,6 +7,7 @@ import javax.servlet.ServletRequest;
 
 import com.boco.share.privilege.bean.PriManagerBean;
 import com.boco.share.privilege.bean.PriMenuBean;
+import com.boco.share.privilege.bean.User;
 
 /**
 * <p>Title: IPriManagerService</p>  
@@ -53,7 +54,7 @@ public interface IPriManagerService {
 	 * @param formMap
 	 * @return
 	 */
-	List<PriManagerBean> loadManagers(Map<String, String> formMap);
+	List<User> loadManagers(Map<String, String> formMap);
 
 	/**
 	 * Title: insert

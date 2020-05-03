@@ -21,7 +21,7 @@ import com.boco.share.framework.springmvc.BaseController;
 import com.boco.share.privilege.bean.PriManagerBean;
 import com.boco.share.privilege.bean.PriMenuBean;
 import com.boco.share.privilege.bean.PriRoleBean;
-import com.boco.share.privilege.service.inter.IPriMenuService;
+import com.boco.share.privilege.service.inter.MenuService;
 import com.boco.share.privilege.service.inter.IPriOrganizationService;
 import com.boco.share.privilege.service.inter.IPriRoleService;
 import com.boco.share.privilege.util.PrivilageConstants;
@@ -45,7 +45,7 @@ public class PriRoleController extends BaseController {
 	public IPriOrganizationService priOrganizationService;
 
 	@Autowired
-	public IPriMenuService priMenuService;
+	public MenuService priMenuService;
 
 	@RequestMapping("query")
 	public ModelAndView queryRoleList(@RequestParam Map<String, String> formMap,

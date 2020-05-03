@@ -4,12 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-/**
-* <p>Title: PriMenuBean</p>  
-* <p>Description: </p>  
-* @author RayLLi  
-* @date 2018年8月27日
- */
+
 public class PriMenuBean implements Serializable {
 
 	/** serialVersionUID*/  

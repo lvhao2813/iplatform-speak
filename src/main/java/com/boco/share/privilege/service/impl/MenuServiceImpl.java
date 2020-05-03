@@ -10,7 +10,7 @@ import com.boco.share.framework.common.CollectionUtil;
 import com.boco.share.framework.common.UniqueIDGenerator;
 import com.boco.share.privilege.bean.PriMenuBean;
 import com.boco.share.privilege.dao.PriMenuMapper;
-import com.boco.share.privilege.service.inter.IPriMenuService;
+import com.boco.share.privilege.service.inter.MenuService;
 
 /**
 * Title: PriMenuServiceImpl 
@@ -19,7 +19,7 @@ import com.boco.share.privilege.service.inter.IPriMenuService;
 * @date 2018年8月27日
  */
 @Service
-public class PriMenuServiceImpl implements IPriMenuService {
+public class MenuServiceImpl implements MenuService {
 
 	@Autowired
 	public PriMenuMapper priMenuMapper;

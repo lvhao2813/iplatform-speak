@@ -11,6 +11,7 @@ import org.springframework.util.StringUtils;
 
 import com.boco.share.privilege.bean.PriManagerBean;
 import com.boco.share.privilege.bean.PriMenuBean;
+import com.boco.share.privilege.bean.User;
 import com.boco.share.privilege.dao.PriManagerMapper;
 import com.boco.share.privilege.service.inter.IPriManagerService;
 import com.boco.share.privilege.util.Md5Util;
@@ -58,7 +59,7 @@ public class PriManagerServiceImpl implements IPriManagerService {
 	}
 
 	@Override
-	public List<PriManagerBean> loadManagers(Map<String, String> formMap) {
+	public List<User> loadManagers(Map<String, String> formMap) {
 		return userManagerMapper.loadManagers(formMap);
 	}
 

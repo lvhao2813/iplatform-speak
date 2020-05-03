@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.boco.share.privilege.bean.PriManagerBean;
 import com.boco.share.privilege.bean.PriMenuBean;
+import com.boco.share.privilege.bean.User;
 
 /**
 * Title: PriManagerMapper 
@@ -54,7 +55,7 @@ public interface PriManagerMapper {
 	 * @param formMap
 	 * @return
 	 */
-	List<PriManagerBean> loadManagers(Map<String, String> formMap);
+	List<User> loadManagers(Map<String, String> formMap);
 
 	/**
 	 * Title: insertManager
