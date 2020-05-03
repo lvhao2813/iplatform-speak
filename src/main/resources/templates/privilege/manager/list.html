@@ -88,6 +88,7 @@ function openBatchDeletePage(){
 							</th>
 							<th>用户账号</th>
        						<th>用户名称</th>
+       						<th>电话</th>
        						<!-- 
 							<th>部门</th>
 							<th>公司</th>
@@ -97,10 +98,11 @@ function openBatchDeletePage(){
 	       			</tr>
 	       			<tr th:each="user : ${resultList}">
 						<td align="center">
-							<input type="checkbox" id="checkboxId"  th:name="check"  th:value="${priManagerBean['id']}" />
+							<input type="checkbox" id="checkboxId"  th:name="check"  th:value="${user['id']}" />
 						</td>
 						<td th:text="${user['code']}"></td>
 						<td th:text="${user['name']}"></td>
+						<td th:text="${user['phone']}"></td>
 						<!-- <td>
 							<span th:text="${priManagerBean['stop']== '0'}? '禁用':'可用'"></span>
 							<a href="#" th:class="${priManagerBean['stop']== '0'}? 'color-red':'c-blue'" th:onclick="'javascript:ajaxIsStop(\''+${priManagerBean['mgrId']}+'\')'" th:text="${priManagerBean['stop'] == '0'}? '[ 可用 ]':'[ 禁用 ]'"></a>

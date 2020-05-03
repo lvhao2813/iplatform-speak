@@ -171,11 +171,13 @@
 			<result column="MANAGER" property="manager" jdbcType="VARCHAR" />
 			<result column="PASSWORD" property="passWord" jdbcType="VARCHAR" />
 		</resultMap>
+		
 	<select id="loadManagers" parameterType="java.util.HashMap" resultMap="user">
 		select id id, name name, code code, phone phone , 
 		active_flag activeFlag, is_manager manager,
 		passWord passWord 
-		from ods_s_user t where 1=1 
+		from ods_s_user t where code = #{USER_CODE}
+		
   </select>
   
   <insert id="insertManager" parameterType="com.boco.share.privilege.bean.PriManagerBean">
