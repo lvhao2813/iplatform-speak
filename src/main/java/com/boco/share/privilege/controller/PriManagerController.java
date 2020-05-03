@@ -219,20 +219,20 @@ public class PriManagerController extends BaseController implements LoginConstan
 
 	@RequestMapping("updatepage")
 	public ModelAndView updatePage(@RequestParam Map<String, String> formMap,
-			@ModelAttribute(value = "PriManagerBean") PriManagerBean priManagerBean) {
+			@ModelAttribute(value = "User") User user) {
 		List<User> resultList = userManagerService.loadManagers(formMap);
 
 		ModelAndView mav = new ModelAndView("privilege/manager/update");
 		if (resultList != null && resultList.size() > 0) {
-			mav.addObject("priManagerBean", resultList.get(0));
+			mav.addObject("User", resultList.get(0));
 		}
 		return mav;
 	}
 
 	@RequestMapping("update")
 	@ResponseBody
-	public void update(PriManagerBean priManager) {
-		userManagerService.update(priManager);
+	public void update(User user) {
+		userManagerService.update(user);
 	}
 
 	@RequestMapping("deletepage")

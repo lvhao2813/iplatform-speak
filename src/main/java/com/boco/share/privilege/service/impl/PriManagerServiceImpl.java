@@ -71,13 +71,13 @@ public class PriManagerServiceImpl implements IPriManagerService {
 	}
 
 	@Override
-	public int update(PriManagerBean priManager) {
-		return userManagerMapper.updateManager(priManager);
+	public int update(User user) {
+		return userManagerMapper.updateManager(user);
 	}
 
 	@Override
-	public void deleteManager(String mgrId) {
-		userManagerMapper.deleteManager(mgrId);
+	public void deleteManager(String deleteId) {
+		userManagerMapper.deleteManager(deleteId);
 	}
 
 	@Override

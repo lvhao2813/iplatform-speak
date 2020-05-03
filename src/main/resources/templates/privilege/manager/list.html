@@ -112,7 +112,7 @@ function openBatchDeletePage(){
 							<a href="#" th:class="${priManagerBean['stop']== '0'}? 'color-red':'c-blue'" th:onclick="'javascript:ajaxIsStop(\''+${priManagerBean['mgrId']}+'\')'" th:text="${priManagerBean['stop'] == '0'}? '[ 可用 ]':'[ 禁用 ]'"></a>
 						</td> -->
 						<td align="center">
-						<a href="#" class="c-green parentedit" th:onclick="'javascript:openLargeEditLayer(\'/privilege/manager/updatepage?MGR_ID='+${user['id']}+'\')'">编辑</a> 
+						<a href="#" class="c-green parentedit" th:onclick="'javascript:openLargeEditLayer(\'/privilege/manager/updatepage?ID='+${user['id']}+'\')'">编辑</a> 
 						<a href="#" class="color-red parentIframe" th:onclick="'javascript:openDeleteLayer(\'/privilege/manager/deletepage?deleteUrl=/privilege/manager/delete&deleteId='+${user['id']}+'\')'">删除</a> 
 						</td>
 					</tr>

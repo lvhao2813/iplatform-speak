@@ -70,14 +70,14 @@ public interface IPriManagerService {
 	 * @param priManager
 	 * @return
 	 */
-	int update(PriManagerBean priManager);
+	int update(User user);
 
 	/**
 	 * Title: deleteManager
 	 * Description: 
 	 * @param mgrId
 	 */
-	void deleteManager(String mgrId);
+	void deleteManager(String deleteId);
 
 	/**
 	 * Title: batchDeleteManager

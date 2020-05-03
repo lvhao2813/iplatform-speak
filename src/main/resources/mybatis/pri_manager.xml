@@ -189,6 +189,10 @@
 			and t.name like concat('%',#{MGR_NAME},'%')	
 		</if>
 		
+		<if test="ID != null and ID !=''">
+			and t.id = #{ID}
+		</if>
+		
   </select>
   
   <insert id="insertManager" parameterType="com.boco.share.privilege.bean.User">
@@ -204,48 +208,36 @@
 	</insert>
   
 	<update id="deleteManager" parameterType="String">
-		UPDATE STBL_PRI_MANAGER set IS_DELETED = 'Y' WHERE MGR_ID = #{deleteId}	
+		delete from ods_s_user where id = #{deleteId}
 	</update>
 	
 	 <update id="batchDeleteManager" parameterType="String">
-        UPDATE STBL_PRI_MANAGER set IS_DELETED = 'Y' WHERE MGR_ID in
+        delete from ods_s_user where id in
+        
        <foreach item="deleteIds" collection="array" open="(" separator="," close=")">
             	#{deleteIds}
         </foreach>
+        
     </update>
     
-    <update id="updateManager" parameterType="com.boco.share.privilege.bean.PriManagerBean">
-		update STBL_PRI_MANAGER
-			SET UPDATED_DT=now(),
-				  VERSION=VERSION+1
-				  <if test="userCode!=null and userCode!=''">
-					, USER_CODE = #{userCode}
+    <update id="updateManager" parameterType="com.boco.share.privilege.bean.User">
+		update ods_s_user t set 
+				 <if test="name!=null and name!=''">
+					t.name = #{name}
 				</if>
-				<if test="mgrName!=null and mgrName!=''">
-					, MGR_NAME = #{mgrName}
+				<if test="code!=null and code!=''">
+					,t.code = #{code}
 				</if>
-				<if test="mgrType!=null and mgrType!=''">
-					, MGR_TYPE = #{mgrType}
+				<if test="phone!=null and phone!=''">
+					, t.phone = #{phone}
 				</if>
-				<if test="orgId!=null and orgId!=''">
-					, ORG_ID = #{orgId}
-				</if>
-				<if test="topParentId!=null and topParentId!=''">
-					, TOP_PARENT_ID = #{topParentId}
-				</if>
-				<if test="password!=null and password!=''">
-					, PASSWORD = #{password}
-				</if>
-				<if test="mobile!=null and mobile!=''">
-					, MOBILE = #{mobile}
+				<if test="descrition!=null and descrition!=''">
+					, t.descrition = #{descrition}
 				</if>
 				<if test="email!=null and email!=''">
-					, E_MAIL = #{email}
+					, t.e_mail = #{email}
 				</if>
-				<if test="remark!=null and remark!=''">
-					, remark = #{remark}
-				</if>
-			     where MGR_ID = #{mgrId}
+			     where t.id = #{id}
 	</update>
 	
 	<update id="updateMgrPwd" parameterType="java.util.HashMap" >

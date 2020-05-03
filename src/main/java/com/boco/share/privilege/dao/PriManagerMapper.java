@@ -71,7 +71,7 @@ public interface PriManagerMapper {
 	 * @param priManagerBean
 	 * @return
 	 */
-	int updateManager(PriManagerBean priManagerBean);
+	int updateManager(User user);
 
 	/**
 	 * Title: deleteManager
@@ -79,14 +79,14 @@ public interface PriManagerMapper {
 	 * @param mgrId
 	 * @return
 	 */
-	int deleteManager(String mgrId);
+	int deleteManager(String deleteId);
 
 	/**
 	 * Title: batchDeleteManager
 	 * Description: 批量删除管理员
 	 * @param mgrIds
 	 */
-	void batchDeleteManager(String[] mgrIds);
+	void batchDeleteManager(String[] deleteIds);
 
 	/**
 	 * Title: setStopOrActive
