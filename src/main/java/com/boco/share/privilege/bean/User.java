@@ -3,27 +3,41 @@
  */
 package com.boco.share.privilege.bean;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * @author LOVE
  *
  */
+@ApiModel(value = "用户对象", description = "用户对象")
 public class User {
+	
+	@ApiModelProperty(value = "用户id")
 	private String id;
 	
+	@ApiModelProperty(value = "用户名称")
 	private String name;
 	
+	@ApiModelProperty(value = "账户")
 	private String code;
 	
+	@ApiModelProperty(value = "电话")
 	private String phone;
 	
+	@ApiModelProperty(value = "是否启用")
 	private String activeFlag;
 	
+	@ApiModelProperty(value = "是否管理员")
 	private String manager;
 	
+	@ApiModelProperty(value = "密码")
 	private String passWord;
 	
+	@ApiModelProperty(value = "邮箱")
 	private String email;
 	
+	@ApiModelProperty(value = "描述")
 	private String descrition;
 
 	public String getEmail() {

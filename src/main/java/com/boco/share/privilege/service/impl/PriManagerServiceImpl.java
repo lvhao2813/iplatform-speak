@@ -14,6 +14,8 @@ import com.boco.share.privilege.bean.PriMenuBean;
 import com.boco.share.privilege.bean.User;
 import com.boco.share.privilege.dao.PriManagerMapper;
 import com.boco.share.privilege.service.inter.IPriManagerService;
+import com.boco.share.privilege.util.Md5Util;
+import com.boco.share.privilege.util.PrivilageConstants;
 
 /**
  * <p>
@@ -64,6 +66,7 @@ public class PriManagerServiceImpl implements IPriManagerService {
 
 	@Override
 	public int insert(User user) {
+		user.setPassWord((Md5Util.encode(PrivilageConstants.DEFAULT_PWD)));
 		return userManagerMapper.insertManager(user);
 	}
 

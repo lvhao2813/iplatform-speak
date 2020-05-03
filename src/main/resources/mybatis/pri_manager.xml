@@ -192,24 +192,15 @@
   </select>
   
   <insert id="insertManager" parameterType="com.boco.share.privilege.bean.User">
-  		insert into ods_s_user(id,name,code,phone,
-  							active_flag,is_manager,password,
-  							e_mail,descrition) 
-  		values (3,
-  		"22","www","188",2,2,231321,"999@","321")
+  		insert into ods_s_user(name, code, phone,
+  							   active_flag, is_manager, password,
+  							   e_mail, descrition) 
+  		values (
+  				#{name}, #{code}, #{phone},
+  				'1', '0', #{passWord},
+  				#{email}, #{descrition}
+  		)
   		
-  		
-  		
-		INSERT INTO STBL_PRI_MANAGER (MGR_ID,
-                              USER_CODE,
-                              MGR_NAME,
-                              PASSWORD,
-                              IS_SUPER,
-                              MOBILE,
-                              E_MAIL,
-                              CREATED_BY)
-        VALUES (#{mgrId}, #{userCode}, #{mgrName}, 
-			      #{password},0, #{mobile}, #{email}, #{createdBy})
 	</insert>
   
 	<update id="deleteManager" parameterType="String">

@@ -211,11 +211,6 @@ public class PriManagerController extends BaseController implements LoginConstan
 	@RequestMapping("add")
 	@ResponseBody
 	public void insert(@ModelAttribute(value = "User") User user, HttpSession session) {
-		//User userManager = (User) session.getAttribute(PRI_MANAGER);		
-		
-		user.setId((UniqueIDGenerator.getLongUUID()));
-		//user.setCreatedBy(priManager.getUserCode());
-		user.setPassWord((Md5Util.encode(DEFAULT_PWD)));
 		
 		userManagerService.insert(user);
 	}
