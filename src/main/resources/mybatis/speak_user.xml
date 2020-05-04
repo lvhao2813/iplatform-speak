@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.boco.share.privilege.dao.UserMapper">
+	<resultMap type="com.boco.share.privilege.bean.User" id="user">
+		<result column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="CODE" property="code" jdbcType="VARCHAR" />
+		<result column="PHONE" property="phone" jdbcType="VARCHAR" />
+		<result column="ACTIVEFLAG" property="activeFlag" jdbcType="VARCHAR" />
+		<result column="MANAGER" property="manager" jdbcType="VARCHAR" />
+		<result column="PASSWORD" property="passWord" jdbcType="VARCHAR" />
+		<result column="EMAIL" property="email" jdbcType="VARCHAR" />
+		<result column="DESCRITION" property="descrition" jdbcType="VARCHAR" />
+	</resultMap>
+		
+	<select id="loadUsers" parameterType="java.util.HashMap" resultMap="user">
+		select id id, name name, code code, phone phone , 
+		active_flag activeFlag, is_manager manager,passWord passWord, 
+		e_mail email,descrition descrition 
+		from ods_s_user t 
+		where 1=1
+
+		<if test="USER_CODE != null and USER_CODE!=''">
+			and t.code like concat('%',#{USER_CODE},'%')	
+		</if>
+
+		<if test="MGR_NAME != null and MGR_NAME!=''">
+			and t.name like concat('%',#{MGR_NAME},'%')	
+		</if>
+  </select>
+  
+  <select id="getUserById" parameterType="java.util.HashMap" resultMap="user">
+		select id id, name name, code code, phone phone , 
+		active_flag activeFlag, is_manager manager,passWord passWord, 
+		e_mail email,descrition descrition 
+		from ods_s_user t 
+		where 1=1
+		<if test="ID != null and ID !=''">
+			and t.id = #{ID}
+		</if>
+  </select>
+  
+  <insert id="insert" parameterType="com.boco.share.privilege.bean.User">
+  		insert into ods_s_user(name, code, phone,
+  							   active_flag, is_manager, password,
+  							   e_mail, descrition) 
+  		values (
+  				#{name}, #{code}, #{phone},
+  				'1', '0', #{passWord},
+  				#{email}, #{descrition}
+  		)
+  		
+	</insert>
+  
+	<update id="deleteManager" parameterType="String">
+		delete from ods_s_user where id = #{deleteId}
+	</update>
+	
+	 <update id="batchDeleteManager" parameterType="String">
+        delete from ods_s_user where id in
+        
+       <foreach item="deleteIds" collection="array" open="(" separator="," close=")">
+            	#{deleteIds}
+        </foreach>
+        
+    </update>
+    
+    <update id="update" parameterType="com.boco.share.privilege.bean.User">
+		update ods_s_user t set 
+				 <if test="name!=null and name!=''">
+					t.name = #{name}
+				</if>
+				<if test="code!=null and code!=''">
+					,t.code = #{code}
+				</if>
+				<if test="phone!=null and phone!=''">
+					, t.phone = #{phone}
+				</if>
+				<if test="descrition!=null and descrition!=''">
+					, t.descrition = #{descrition}
+				</if>
+				<if test="email!=null and email!=''">
+					, t.e_mail = #{email}
+				</if>
+			     where t.id = #{id}
+	</update>
+
+</mapper>
