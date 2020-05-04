@@ -41,25 +41,37 @@ layui.define(["element", "jquery"], function (exports) {
          * 初始化
          * @param url
          */
-        this.init = function (url) {
+        this.init = function () {
             var loading = layer.load(0, {shade: false, time: 2 * 1000});
 
             // layuimini.initBgColor();
 
             layuimini.initDevice();
-            $.getJSON(url, function (data, status) {
-                if (data == null) {
+            
+            $.ajax({
+          	  type: "POST",
+          	  url: "/privilege/menu/queryMenuList",
+          	  cache: false,
+          	  async:false,
+          	  contentType : "application/x-www-form-urlencoded; charset=utf-8",
+          	  success: function(dataStr){
+          		if (dataStr == null) {
                     layuimini.msg_error('暂无菜单信息');
                 } else {
+                	var data = JSON.parse(dataStr);
                     layuimini.initHome(data.homeInfo);
                     layuimini.initLogo(data.logoInfo);
                     layuimini.initClear(data.clearInfo);
                     layuimini.initMenu(data.menuInfo);
                     layuimini.initTab();
                 }
-            }).fail(function () {
-                layuimini.msg_error('菜单接口有误');
-            });
+          	  },
+          	  error:function(dataStr){
+          		 layuimini.msg_error('菜单接口有误');
+          	  },
+          	  complete:function(){
+          	  }
+          }); 
             layer.close(loading);
         };
 

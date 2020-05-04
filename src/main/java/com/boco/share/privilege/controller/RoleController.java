@@ -39,7 +39,7 @@ public class RoleController extends BaseController implements LoginConstants, Pr
 	private RoleService roleService;
 
 	@RequestMapping("query")
-	public ModelAndView queryManagerList(@RequestParam Map<String, String> formMap,
+	public ModelAndView queryRoleList(@RequestParam Map<String, String> formMap,
 			@ModelAttribute(value = "pagination") Pagination pagination) {
 
 		PageHelper.startPage(pagination.getCurrentPageNum(), pagination.getPageCount());
@@ -75,7 +75,7 @@ public class RoleController extends BaseController implements LoginConstants, Pr
 			@ModelAttribute(value = "Role") Role role) {
 		Role result = roleService.getRoleById(formMap);
 		ModelAndView mav = new ModelAndView("privilege/role/update");
-		mav.addObject("User", result);
+		mav.addObject("Role", result);
 		return mav;
 	}
 

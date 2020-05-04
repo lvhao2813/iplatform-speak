@@ -1,141 +1,138 @@
 package com.boco.share.privilege.service.impl;
 
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.boco.share.framework.common.CollectionUtil;
-import com.boco.share.framework.common.UniqueIDGenerator;
-import com.boco.share.privilege.bean.PriMenuBean;
-import com.boco.share.privilege.dao.PriMenuMapper;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.boco.share.privilege.dao.MenuMapper;
 import com.boco.share.privilege.service.inter.MenuService;
 
 /**
-* Title: PriMenuServiceImpl 
-* Description:   
-* @author RayLLi  
-* @date 2018年8月27日
+ * Title: PriMenuServiceImpl Description:
+ * 
+ * @author RayLLi
+ * @date 2018年8月27日
  */
 @Service
 public class MenuServiceImpl implements MenuService {
 
 	@Autowired
-	public PriMenuMapper priMenuMapper;
+	public MenuMapper priMenuMapper;
 
+	/**
+	 * 查询菜单列表并展示
+	 */
 	@Override
-	public List<PriMenuBean> queryMenu(Map<String, String> formMap) {
-		return priMenuMapper.queryMenu(formMap);
+	public JSONObject queryMenuList() {
+		JSONObject result = new JSONObject();
+
+		//清空缓存的链接
+		result.put("clearInfo", getClearCacheUrl());
+		//构造首页链接
+		result.put("homeInfo", getHomeUrl());
+		//构造logo
+		result.put("logoInfo", getLogoUrl());
+		//构造菜单
+		result.put("menuInfo", getMenuUrl());
+		
+		return result;
 	}
 
-	@Override
-	public List<PriMenuBean> queryMenuListByLevel(Map<String, String> formMap) {
-		List<PriMenuBean> currentMenuList = priMenuMapper.queryMenuListByLevel(formMap);
-		initTree(currentMenuList);
-		return currentMenuList;
+	/**
+	 * 构造清空缓存链接
+	 * 
+	 * @return
+	 */
+	private JSONObject getClearCacheUrl() {
+		JSONObject clear = new JSONObject();
+//		clearInfo.put("clearUrl", "/clearCache");
+		clear.put("clearUrl", "{'code': 1, 'msg': '服务端清理缓存成功'}");
+		return clear;
 	}
 	
 	/**
-	 * Title: initTree
-	 * Description: 组合树形结构上下级ID
-	 * @param resultList
+	 * 构造首页链接
+	 * 
+	 * @return
 	 */
-	private void initTree(List<PriMenuBean> resultList) {
-		for (int i = 0; i < resultList.size(); i++) {
-			PriMenuBean currentMenuBean = resultList.get(i);
-
-			if ("0".equals(currentMenuBean.getParentId())) {
-				currentMenuBean.setTreeParentsId("0");
-				currentMenuBean.setTreeId(String.valueOf(currentMenuBean.getMenuOrd()).trim());
-			} else {
-				currentMenuBean.setTreeParentsId(currentMenuBean.getAllParentsId().trim());
-				currentMenuBean.setTreeId((currentMenuBean.getAllParentsId()+"-"+currentMenuBean.getMenuOrd()).trim());
-			}
-
-		}
-	}
-
-	@Override
-	public int insertMenu(PriMenuBean priMenuBean) {
-//		Integer MaxOrder = priMenuMapper.queryMaxOrder(priMenuBean.getParentId());
-//		priMenuBean.setMenuOrd(MaxOrder+1);
-		return priMenuMapper.insertMenu(priMenuBean);
-	}
-
-	@Override
-	public int updateMenu(PriMenuBean priMenuBean) {
-//		Integer MaxOrder = priMenuMapper.queryMaxOrder(priMenuBean.getParentId());
-//		priMenuBean.setMenuOrd(MaxOrder+1);
-		return priMenuMapper.updateMenu(priMenuBean);
-	}
-
-	@Override
-	public int deleteMenu(String deleteId) {
-		return priMenuMapper.deleteMenu(deleteId);
-	}
-
-	@Override
-	public void batchDelete(String[] deleteIds) {
-		priMenuMapper.batchDeleteMenu(deleteIds);
-	}
-
-	@Override
-	public void menuSelectedOpt(String menuId, String[] optIds, String createdBy) {
-
-		try {
-			priMenuMapper.deleteSelectedOpt(menuId);
-			if(optIds!=null) {
-				for (String optId : optIds) {
-					Map<String,String> formMap = CollectionUtil.getHashMap(4);
-					formMap.put("MENU_OPT_ID", UniqueIDGenerator.getUUID());
-					formMap.put("MENU_ID", menuId);
-					formMap.put("OPT_ID", optId);
-					formMap.put("CREATED_BY", createdBy);
-					
-					priMenuMapper.insertSelectedOpt(formMap);
-				}
-			}
-		} catch (Exception e) {
-			throw new RuntimeException();
-		}
+	private JSONObject getHomeUrl() {
+		JSONObject home = new JSONObject();
+		home.put("title", "首页");
+		home.put("icon", "fa fa-home");
+		home.put("href", "/api/v1/iplatformtools/query");
+		return home;
 	}
 	
-	@Override
-	public List<Map<String, String>> querySelectOptByMenuId(String menuId) {
-		return priMenuMapper.querySelectOptByMenuId(menuId);
+	/**
+	 * 构造首页链接
+	 * 
+	 * @return
+	 */
+	private JSONObject getLogoUrl() {
+		JSONObject logo = new JSONObject();
+		logo.put("title", "计划管理");
+		logo.put("image", "images/index_logo.png");
+		logo.put("href", "");
+		return logo;
+	}
+	/**
+	 * 构造首页链接
+	 * 
+	 * @return
+	 */
+	private JSONObject getMenuUrl() {
+		JSONObject currency = new JSONObject();
+		
+		JSONObject manage = new JSONObject();
+		manage.put("title", "常规管理");
+		manage.put("image", "fa fa-address-book");
+		manage.put("child", genAllMenus());
+		
+		currency.put("currency", manage);
+		return currency;
+	}
+	/**
+	 * 构造首页链接
+	 * 
+	 * @return
+	 */
+	private JSONArray genAllMenus() {
+		JSONArray menus = new JSONArray();
+		
+		JSONObject home = new JSONObject();
+		home.put("title", "主页");
+		home.put("href", "foldOut");
+		home.put("icon", "fa fa-home");
+		home.put("rightIcon", "fa fa-outdent");
+		home.put("target", "_self");
+		
+		JSONObject home2 = new JSONObject();
+		home2.put("title", "系统设置");
+		home2.put("href", "page/setting.html");
+		home2.put("icon", "fa fa-gears");
+		home2.put("target", "_self");
+		JSONArray setting = new JSONArray();
+		
+		JSONObject user = new JSONObject();
+		user.put("title", "用户管理");
+		user.put("href", "/privilege/user/query");
+		user.put("icon", "fa fa-tachometer");
+		user.put("target", "_self");
+		setting.add(user);
+		JSONObject role = new JSONObject();
+		role.put("title", "角色管理");
+		role.put("href", "/privilege/role/query");
+		role.put("icon", "fa fa-tachometer");
+		role.put("target", "_self");
+		setting.add(role);
+		home2.put("child", setting);
+		
+		
+		menus.add(home);
+		menus.add(home2);
+		
+		return menus;
 	}
 
-	@Deprecated
-	@Override
-	public void setIsHome(String menuId) {
-//		priMenuMapper.cancelAllHomePage();
-//		priMenuMapper.setupOrCancelHomePageByMenuId(menuId);
-	}
-
-	@Override
-	public List<Map<String, String>> listSelectWithOutRole(Map<String, String> formMap) {
-		return priMenuMapper.listSelectWithOutRole(formMap);
-	}
-
-	@Override
-	public List<Map<String, String>> listSelectWithInRole(Map<String, String> formMap) {
-		return priMenuMapper.listSelectWithInRole(formMap);
-	}
-
-	@Override
-	public void updateHomeRole(String menuId, String[] checkedIds) {
-		priMenuMapper.deleteHomeWithRoleId(menuId);
-		if (checkedIds != null) {
-			for (String roleId : checkedIds) {
-				Map<String, String> formMap = CollectionUtil.getHashMap(2);
-				formMap.put("MENU_ID", menuId);
-				formMap.put("ROLE_ID", roleId);
-				priMenuMapper.updateHomeRole(formMap);
-			}
-		}
-	}
-
-	
-	
 }

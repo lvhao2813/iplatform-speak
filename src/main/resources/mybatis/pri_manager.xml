@@ -102,34 +102,6 @@
 		ROWNUM = 1 AND spur.IS_DELETED = 'N'
 	</select>
 
-	<select id="loadAllMenu"
-		resultMap="com.boco.share.privilege.dao.PriMenuMapper.TblPriMenuResult">
-		SELECT MENU_ID,
-		parent_id,
-		menu_code,
-		menu_name,
-		description,
-		menu_link,
-		is_leaf,
-		menu_level,
-		menu_ord,
-		status,
-		remark,
-		updated_dt,
-		updated_by,
-		created_dt,
-		created_by,
-		is_deleted,
-		version,
-		optype
-		FROM
-		stbl_pri_menue
-		WHERE is_deleted = 'N'
-		START WITH parent_id = '0'
-		CONNECT
-		BY PRIOR menu_id = parent_id
-		ORDER SIBLINGS BY menu_ord
-	</select>
 
 	<select id="queryMenuAndOptByUser"
 		resultType="java.util.Map"

@@ -33,7 +33,7 @@ function resetSearch(){
 }
 
 function openBatchDeletePage(){
-	deleteData('/privilege/manager/batchDeletePage?deleteUrl=/privilege/manager/batchDelete');
+	deleteData('/privilege/user/batchDeletePage?deleteUrl=/privilege/user/batchDelete');
 }
 </script>
 
@@ -44,7 +44,7 @@ function openBatchDeletePage(){
 <div th:insert="/common/common_index :: index_head"></div>
 <div th:include="/common/onload_list_js :: loadJS"></div>
 
-<form id="callForm" name="callForm" th:action="@{/privilege/manager/query}" th:method="post">
+<form id="callForm" name="callForm" th:action="@{/privilege/user/query}" th:method="post">
 
 	<input style="display:none" name="deleteIds" id="deleteIds" value="">
 
@@ -74,7 +74,7 @@ function openBatchDeletePage(){
 			<div class="title">	
 				    	<h2> <a class="active">用户列表</a></h2>	
 				    	<div class="operation">
-				    		<a class="parentadd"  onclick="openCommonLayer('新增记录','500px','300px','/privilege/manager/insertpage')"><img th:src="@{/images/icon-add.png}" />新增</a>	
+				    		<a class="parentadd"  onclick="openCommonLayer('新增记录','500px','300px','/privilege/user/insertpage')"><img th:src="@{/images/icon-add.png}" />新增</a>	
 				    	    <a class="parentIframe" onclick="openBatchDeletePage()"><img th:src="@{/images/icon-del.png}" />删除</a>
 				    	</div>
 				    		
@@ -112,8 +112,8 @@ function openBatchDeletePage(){
 							<a href="#" th:class="${priManagerBean['stop']== '0'}? 'color-red':'c-blue'" th:onclick="'javascript:ajaxIsStop(\''+${priManagerBean['mgrId']}+'\')'" th:text="${priManagerBean['stop'] == '0'}? '[ 可用 ]':'[ 禁用 ]'"></a>
 						</td> -->
 						<td align="center">
-						<a href="#" class="c-green parentedit" th:onclick="'javascript:openLargeEditLayer(\'/privilege/manager/updatepage?ID='+${user['id']}+'\')'">编辑</a> 
-						<a href="#" class="color-red parentIframe" th:onclick="'javascript:openDeleteLayer(\'/privilege/manager/deletepage?deleteUrl=/privilege/manager/delete&deleteId='+${user['id']}+'\')'">删除</a> 
+						<a href="#" class="c-green parentedit" th:onclick="'javascript:openLargeEditLayer(\'/privilege/user/updatepage?ID='+${user['id']}+'\')'">编辑</a> 
+						<a href="#" class="color-red parentIframe" th:onclick="'javascript:openDeleteLayer(\'/privilege/user/deletepage?deleteUrl=/privilege/user/delete&deleteId='+${user['id']}+'\')'">删除</a> 
 						</td>
 					</tr>
 	       		

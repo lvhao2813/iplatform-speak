@@ -58,7 +58,7 @@ public class UserController extends BaseController implements LoginConstants, Pr
 
 	@RequestMapping("insertpage")
 	public ModelAndView insertPage(@ModelAttribute(value = "User") User user) {
-		ModelAndView mav = new ModelAndView("privilege/role/add");
+		ModelAndView mav = new ModelAndView("privilege/manager/add");
 		mav.addObject("User", user);
 		return mav;
 	}

@@ -11,13 +11,6 @@ import com.boco.share.privilege.bean.Role;
  */
 public interface RoleService {
 	
-	/**
-	 * 查询角色通过等级
-	 * @param grade
-	 * @return
-	 */
-	public Role getUserByGrade(String grade);
-	
 	
 	/**
 	 * Title: loadManagers

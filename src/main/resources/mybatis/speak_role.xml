@@ -28,6 +28,21 @@
 
   	</select>
   
+	<select id="getRoleById" parameterType="java.util.HashMap" resultMap="role">
+		SELECT
+			id id,
+			name name,
+			description description,
+			status status,
+			code  code
+		from ods_s_role t
+		where 1=1
+		<if test="ROLE_ID != null and ROLE_ID!=''">
+			and t.id  = #{ROLE_ID}
+		</if>
+
+  	</select>
+  
   
   	<insert id="insert" parameterType="com.boco.share.privilege.bean.Role">
   		insert into ods_s_role(name, description,

@@ -19,11 +19,6 @@ public class RoleServiceImpl implements RoleService {
 	@Autowired
 	private RoleMapper roleMapper;
 	
-	@Override
-	public Role getUserByGrade(String grade) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public List<Role> loadRoles(Map<String, String> formMap) {
@@ -32,8 +27,7 @@ public class RoleServiceImpl implements RoleService {
 
 	@Override
 	public Role getRoleById(Map<String, String> formMap) {
-		// TODO Auto-generated method stub
-		return null;
+		return roleMapper.getRoleById(formMap);
 	}
 
 	@Override

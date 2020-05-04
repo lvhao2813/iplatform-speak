@@ -9,7 +9,6 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.boco.share.privilege.bean.Role;
-import com.boco.share.privilege.bean.User;
 
 /**
  * @author li970
@@ -18,24 +17,25 @@ import com.boco.share.privilege.bean.User;
 
 @Mapper
 public interface RoleMapper {
+
 	/**
-	 *	 查询角色通过名称
+	 * 获取角色，通过id
 	 * 
-	 * @param name
+	 * @param formMap
 	 * @return
 	 */
-	public List<Role> getRolesByName(String name);
-	
+	Role getRoleById(Map<String, String> formMap);
+
 	/**
-	 * 	读取角色信息
+	 * 读取角色信息
+	 * 
 	 * @param formMap
 	 * @return
 	 */
 	public List<Role> loadRoles(Map<String, String> formMap);
-	
 
 	/**
-	 * 	新增角色
+	 * 新增角色
 	 * 
 	 * @param role
 	 * @return
@@ -64,5 +64,4 @@ public interface RoleMapper {
 	 */
 	void batchDeleteRoles(String[] ids);
 
-	
 }

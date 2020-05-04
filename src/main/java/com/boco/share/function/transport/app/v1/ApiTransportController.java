@@ -39,9 +39,8 @@ public class ApiTransportController {
 
 	@ApiOperation(value = "发布数据包，同步数据接口，Wsdl")
 	@ResponseBody
-	@RequestMapping(value = "/getWsdlDatas", method = RequestMethod.POST)
-	public String getWsdlDatas(
-			@ApiParam(name = "transportHttpBean", value = "数据传输请求") @RequestBody TransportHttpBean transportHttpBean) {
+	@RequestMapping(value = "/queryMenuList", method = RequestMethod.POST)
+	public String queryMenuList() {
 
 		return "";
 	}

@@ -164,7 +164,7 @@ public class PriRoleController extends BaseController {
 	public ModelAndView gotoSelectOptPage(@RequestParam Map<String, String> formMap) {
 		ModelAndView modelAndView = new ModelAndView("privilege/role/select_menu");
 
-		List<PriMenuBean> resultList = priMenuService.queryMenuListByLevel(formMap);
+		List<PriMenuBean> resultList = null;//priMenuService.queryMenuListByLevel(formMap);
 
 		List<Map<String, String>> optList = userRoleService.queryAllOptByMenuIds(formMap);
 
