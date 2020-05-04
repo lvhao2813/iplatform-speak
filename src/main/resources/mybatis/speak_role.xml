@@ -90,14 +90,32 @@
 		-->
     </select>
     
-    <select id="querySelectUserWithRoleId" resultType="com.boco.share.privilege.bean.User" parameterType="java.util.Map" >
+	<select id="querySelectUserWithRoleId" resultType="com.boco.share.privilege.bean.User" parameterType="java.util.Map" >
+		select u.id id, u.name name, u.code code 
+		FROM ods_s_user u 
+		where 1 = 1
+		and u.id in(select user_id from ods_s_role_user where role_id =#{ROLE_ID})
+	</select>
+	
+	<select id="queryUserWithOutRoleId" resultType="com.boco.share.privilege.bean.User" parameterType="java.util.Map" >	
+        select u.id id, u.name name, u.code code 
+		FROM ods_s_user u 
+		where 1 = 1
+		and u.id not in(select user_id from ods_s_role_user where role_id =#{ROLE_ID})
+        <if test="MGR_NAME!=NULL and MGR_NAME!=''">
+			AND u.name LIKE concat('%',#{MGR_NAME},'%')	
+		</if>    
+	</select>
+	
+	<!--  
+	<select id="querySelectUserWithRoleId" resultType="com.boco.share.privilege.bean.User" parameterType="java.util.Map" >
 		SELECT u.id id, u.name name, u.code code
 		FROM ods_s_role_user ru
 		left join ods_s_user u on ru.user_id = u.id
 		where u.id in (select user_id from ods_s_role_user where role_id = #{ROLE_ID})
 	</select>
-	
-	<select id="queryUserWithOutRoleId" resultType="com.boco.share.privilege.bean.User" parameterType="java.util.Map" >	
+	<select id="queryUserWithOutRoleId" resultType="com.boco.share.privilege.bean.User" parameterType="java.util.Map" >
+		
         SELECT u.id id, u.name name, u.code code
         FROM ods_s_role_user ru 
         left join ods_s_user u on ru.user_id = u.id
@@ -107,7 +125,7 @@
 			AND u.name LIKE concat('%',#{MGR_NAME},'%')	
 		</if>    
 	</select>
-	
+	-->
 	<delete id="deleteUserWithRoleId" parameterType="String">  
          delete from ods_s_role_user where role_id= #{roleId}
 	</delete>  
