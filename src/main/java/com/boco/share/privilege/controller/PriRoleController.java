@@ -34,8 +34,8 @@ import com.github.pagehelper.PageInfo;
 * @author RayLLi  
 * @date 2018年8月27日
  */
-@Controller
-@RequestMapping("/privilege/role")
+
+
 public class PriRoleController extends BaseController {
 
 	@Autowired

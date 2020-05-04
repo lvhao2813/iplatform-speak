@@ -20,7 +20,7 @@ import com.boco.share.privilege.service.inter.IPriRoleService;
 * @author RayLLi  
 * @date 2018年8月23日
  */
-@Service
+
 public class PriRoleServiceImpl implements IPriRoleService {
 
 	@Autowired

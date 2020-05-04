@@ -66,13 +66,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void deleteManager(String deleteId) {
-		userMapper.deleteManager(deleteId);
+	public void deleteUser(String deleteId) {
+		userMapper.deleteUser(deleteId);
 	}
 
 	@Override
-	public void batchDeleteManager(String[] mgrIds) {
-		userMapper.batchDeleteManager(mgrIds);
+	public void batchDeleteUsers(String[] mgrIds) {
+		userMapper.batchDeleteUsers(mgrIds);
 	}
 
 }

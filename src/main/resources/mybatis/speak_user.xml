@@ -2,6 +2,7 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.boco.share.privilege.dao.UserMapper">
+
 	<resultMap type="com.boco.share.privilege.bean.User" id="user">
 		<result column="ID" property="id" jdbcType="VARCHAR" />
 		<result column="NAME" property="name" jdbcType="VARCHAR" />
@@ -28,20 +29,20 @@
 		<if test="MGR_NAME != null and MGR_NAME!=''">
 			and t.name like concat('%',#{MGR_NAME},'%')	
 		</if>
-  </select>
+  	</select>
   
-  <select id="getUserById" parameterType="java.util.HashMap" resultMap="user">
-		select id id, name name, code code, phone phone , 
-		active_flag activeFlag, is_manager manager,passWord passWord, 
-		e_mail email,descrition descrition 
-		from ods_s_user t 
-		where 1=1
-		<if test="ID != null and ID !=''">
-			and t.id = #{ID}
-		</if>
-  </select>
+	  <select id="getUserById" parameterType="java.util.HashMap" resultMap="user">
+			select id id, name name, code code, phone phone , 
+			active_flag activeFlag, is_manager manager,passWord passWord, 
+			e_mail email,descrition descrition 
+			from ods_s_user t 
+			where 1=1
+			<if test="ID != null and ID !=''">
+				and t.id = #{ID}
+			</if>
+	  </select>
   
-  <insert id="insert" parameterType="com.boco.share.privilege.bean.User">
+  	<insert id="insert" parameterType="com.boco.share.privilege.bean.User">
   		insert into ods_s_user(name, code, phone,
   							   active_flag, is_manager, password,
   							   e_mail, descrition) 
@@ -53,7 +54,7 @@
   		
 	</insert>
   
-	<update id="deleteManager" parameterType="String">
+	<update id="deleteUser" parameterType="String">
 		delete from ods_s_user where id = #{deleteId}
 	</update>
 	

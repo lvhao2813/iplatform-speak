@@ -15,7 +15,7 @@ import com.boco.share.privilege.bean.PriRoleBean;
 * @author RayLLi  
 * @date 2018年8月28日
  */
-@Mapper
+
 public interface PriRoleMapper {
 
 	/**

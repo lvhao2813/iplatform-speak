@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.boco.share.privilege.dao.RoleMapper">
+
+	<resultMap type="com.boco.share.privilege.bean.Role" id="role">
+		<result column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+		<result column="CODE" property="code" jdbcType="VARCHAR" />
+		
+	</resultMap>
+	
+		
+	<select id="loadRoles" parameterType="java.util.HashMap" resultMap="role">
+		SELECT
+			id id,
+			name name,
+			description description,
+			status status,
+			code  code
+		from ods_s_role t
+		where 1=1
+		<if test="ROLE_NAME != null and ROLE_NAME!=''">
+			and t.name like concat('%',#{ROLE_NAME},'%')	
+		</if>
+
+  	</select>
+  
+  
+  	<insert id="insert" parameterType="com.boco.share.privilege.bean.Role">
+  		insert into ods_s_role(name, description,
+  							   status, code) 
+  		values (
+  				#{name}, #{description}, #{status},
+  				#{code}
+  		)
+  		
+	</insert>
+  
+	<update id="deleteRole" parameterType="String">
+		delete from ods_s_role where id = #{deleteId}
+	</update>
+	
+	 <update id="batchDeleteRoles" parameterType="String">
+        delete from ods_s_role where id in
+        
+       <foreach item="deleteIds" collection="array" open="(" separator="," close=")">
+            	#{deleteIds}
+        </foreach>  
+    </update>
+    
+    
+    <update id="update" parameterType="com.boco.share.privilege.bean.Role">
+		update ods_s_role t set 
+			<if test="name!=null and name!=''">
+				t.name = #{name}
+			</if>
+			<if test="description!=null and description!=''">
+				,t.description = #{description}
+			</if>
+		     where t.id = #{id}
+	</update>
+		  	
+</mapper>

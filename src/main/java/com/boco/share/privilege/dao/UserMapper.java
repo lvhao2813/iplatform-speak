@@ -71,13 +71,13 @@ public interface UserMapper {
 	 * 
 	 * @param user ID
 	 */
-	void deleteManager(String deleteId);
+	void deleteUser(String deleteId);
 
 	/**
 	 * 批量删除用户
 	 * 
 	 * @param ids
 	 */
-	void batchDeleteManager(String[] ids);
+	void batchDeleteUsers(String[] ids);
 
 }
