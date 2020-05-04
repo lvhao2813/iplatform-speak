@@ -46,48 +46,42 @@
 </head>
 <body id="bg-white">
 <div id="mask" class="mask"></div>  
-<div class="company-box">
-		<ul class="company" id="company">
-			<li th:each="org : ${orgGroup}" th:text="${org}" th:id="${org}"></li>
-		</ul>
-	</div>
-	<div class="check-people">
+
+<div class="check-people">
 <div class="tc-user-l">
 <form name="queryRoleManager" id="queryRoleManager" th:action="@{~/privilege/role/gotoSelectManagerPage}" th:method="post">
 	<div class="xz-search">
 	
 		<input style="display:none" type="text" name="ROLE_ID" id="ROLE_ID" th:value="${formMap['ROLE_ID']}" />
-		<input style="display:none" type="text" name="ORG_NAME" id="ORG_NAME" th:value="${formMap['ORG_NAME']}" />
-		<!--<input name='ecmsfrom' type='hidden' value='9'>
-		<input type="hidden" name="show" value="title,newstext">  -->
+	
 		 <select name="classid" id="choose">
 			<option value="0">姓名</option>
 		</select>
 		<input class="inp_srh"  th:value="${formMap['OUT_ROLE_NAME']}" id="OUT_ROLE_NAME" name="OUT_ROLE_NAME"/>
 		<input class="btn_srh" id="queryRoleManagerSubmit" type="submit" name="submit" value="搜索">
 	
-</div>
+	</div>
 
 	
 		<table width="100%" cellpadding="0" cellspacing="0" class="user-list-title tr-width" >
-		<tr>
-			<th><input type="checkbox"  class="llistall"/></th>
-			<th>姓名</th>
-			<th>单位</th>			
-		</tr>	
+			<tr>
+				<th><input type="checkbox"  class="llistall"/></th>
+				<th>姓名</th>
+				<th>编码</th>			
+			</tr>	
 		</table>
-	<div class="user-h">
-		<table width="100%" cellpadding="0" cellspacing="0" class="user-list td-width" id="lList">
-		
-		<tr th:each="formMap : ${outRoleList}">
-			<input type="hidden"  th:value="${formMap.mgrId}" name="checkedIds" />
-			<td><input type="checkbox"/></td>
-			<td th:text="${formMap.mgrName}"></td>
-			<td th:text="${formMap.orgName}"></td>
-		</tr>
-		
-		</table>
-	</div>
+		<div class="user-h">
+			<table width="100%" cellpadding="0" cellspacing="0" class="user-list td-width" id="lList">
+			
+			<tr th:each="user : ${outUserList}">
+				<input type="hidden"  th:value="${user.id}" name="checkedIds" />
+				<td><input type="checkbox"/></td>
+				<td th:text="${user.name}"></td>
+				<td th:text="${user.code}"></td>
+			</tr>
+			
+			</table>
+		</div>
 <div>
 	<div th:include="/privilege/role/left_page"></div>
 </div>
@@ -95,7 +89,8 @@
 </div>
 <div class="tc-user-btn">
 	<button type="button" class="tc-user-btnblue1" id="add"></button>
-	<button  type="button" class="tc-user-btnblue2"  id="remove"></button></div>
+	<button  type="button" class="tc-user-btnblue2"  id="remove"></button>
+</div>
 
 <div class="tc-user-r">
 
@@ -113,18 +108,18 @@
 		<tr>
 			<th><input type="checkbox" name="qx" class="rlistall"/></th>
 			<th>姓名</th>
-			<th>单位</th>
+			<th>编码</th>
 		</tr>	
 			</table>
 			<div class="user-h">
 			<form id="callForm" name="callForm"  th:action="@{~/privilege/role/saveManagerRole}" th:method="post">
 			<input style="display:none" type="text" name="roleId" th:value="${formMap['ROLE_ID']}" />
 			<table width="100%" cellpadding="0" cellspacing="0" class="user-list td-width" id="rList">
-				<tr th:each="formMap : ${inRoleList}">
-							<input type="hidden"  th:value="${formMap.mgrId}" name="checkedIds" />
+				<tr th:each="user : ${inRoleList}">
+							<input type="hidden"  th:value="${user.id}" name="checkedIds" />
 							<td><input type="checkbox"/></td>
-							<td th:text="${formMap.mgrName}"></td>
-							<td th:text="${formMap.orgName}"></td>
+							<td th:text="${user.name}"></td>
+							<td th:text="${user.code}"></td>
 					</tr>
 			</table>
 			</form>

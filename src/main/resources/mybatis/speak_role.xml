@@ -99,17 +99,15 @@
 		-->
 	</select>
 	
-	<select id="querySelectUserWithOutRoleId" resultType="com.boco.share.privilege.bean.User" parameterType="java.util.Map" >	
-        SELECT * FROM ods_s_role_use
-        <!--   <if test="MGR_NAME!=NULL and MGR_NAME!=''">
-		<if test="MGR_NAME!=NULL and MGR_NAME!=''">
-			AND SPM.MGR_NAME LIKE '%'||#{MGR_NAME}||'%'   
+	<select id="queryUserWithOutRoleId" resultType="com.boco.share.privilege.bean.User" parameterType="java.util.Map" >	
+        SELECT u.id id, u.name name, u.code code
+        FROM ods_s_role_user ru 
+        left join ods_s_user u on ru.user_id = u.id
+        where 1 = 1 
+        and u.id not in ( select user_id from ods_s_role_user where role_id = #{ROLE_ID} )
+        <if test="MGR_NAME!=NULL and MGR_NAME!=''">
+			AND u.name LIKE concat('%',#{MGR_NAME},'%')	
 		</if>
-			AND o.party_name LIKE '%'||#{MGR_NAME}||'%'
-		</if> 
-		<if test="ORG_NAME!=NULL and ORG_NAME!=''">
-			 AND o.PARTY_NAME = #{ORG_NAME} 
-		</if>
-		-->
+       
 	</select>
 </mapper>

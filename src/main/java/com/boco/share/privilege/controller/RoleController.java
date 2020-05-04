@@ -49,20 +49,13 @@ public class RoleController extends BaseController implements LoginConstants, Pr
 			@ModelAttribute(value = "pagination") Pagination pagination) {
 		ModelAndView modelAndView = new ModelAndView("privilege/role/select_manager");
 
-		List<String> queryOrg = roleService.queryOrg();
-		modelAndView.addObject("orgGroup", queryOrg);
-
-		if (StringUtils.isEmpty(formMap.get(orgNameStr))) {
-			formMap.put(orgNameStr, "省公司");
-		}
-
+		//查询左侧，未绑定用户列表
 		Map<String, String> outRoleMap = CollectionUtil.getHashMap();
 		outRoleMap.put("ROLE_ID", formMap.get("ROLE_ID"));
 		outRoleMap.put("MGR_NAME", formMap.get("OUT_ROLE_NAME"));
-		outRoleMap.put("ORG_NAME", formMap.get("ORG_NAME"));
 
 		PageHelper.startPage(pagination.getCurrentPageNum(), pagination.getPageCount());
-		List<User> resultList = roleService.querySelectUserWithOutRoleId(outRoleMap);
+		List<User> resultList = roleService.queryUserWithOutRoleId(outRoleMap);
 
 		// 取分页信息
 		PageInfo<User> pageInfo = new PageInfo<User>(resultList);

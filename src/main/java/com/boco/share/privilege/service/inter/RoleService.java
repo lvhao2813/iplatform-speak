@@ -61,12 +61,11 @@ public interface RoleService {
 	public List<String> queryOrg();
 	
 	/**
-	 * Title: querySelectManagerWithOutRoleId
-	 * Description: 
+	 * 查询左侧，未绑定用户列表
 	 * @param formMap
 	 * @return
 	 */
-	public List<User> querySelectUserWithOutRoleId(Map<String, String> formMap);
+	public List<User> queryUserWithOutRoleId(Map<String, String> formMap);
 	
 	/**
 	 * Title: querySelectManagerWithRoleId

@@ -58,8 +58,8 @@ public class RoleServiceImpl implements RoleService {
 	}
 	
 	@Override
-	public List<User> querySelectUserWithOutRoleId(Map<String, String> formMap){
-		return roleMapper.querySelectUserWithOutRoleId(formMap);
+	public List<User> queryUserWithOutRoleId(Map<String, String> formMap){
+		return roleMapper.queryUserWithOutRoleId(formMap);
 	}
 	
 	@Override
