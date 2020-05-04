@@ -8,10 +8,10 @@
 
 
 <script type="text/javascript" th:inline="javascript">
-function ajaxIsUse(roleId){
+function ajaxIsUse(id){
 	 $.ajax({
 	  	  type: "POST",
-		  url: "/privilege/role/setIsUse?roleId="+roleId,
+		  url: "/privilege/role/setIsUse?id="+id,
 		  cache: false,
 		  async:false,
 		  contentType : "application/x-www-form-urlencoded; charset=utf-8",
@@ -89,23 +89,23 @@ function openBatchDeletePage(){
 							<th>角色状态</th>
 							<th>操作</th>
 	       			</tr>
-	       			<tr th:each="priRoleBean : ${resultList}">
+	       			<tr th:each="role : ${resultList}">
 						<td align="center">
-							<input type="checkbox" id="checkboxId"  th:name="check"  th:value="${priRoleBean['roleId']}" />
+							<input type="checkbox" id="checkboxId"  th:name="check"  th:value="${role['id']}" />
 						</td>
-						<td th:text="${priRoleBean['roleName']}"></td>
+						<td th:text="${role['name']}"></td>
 						<!-- <td th:text="${priRoleBean['orgName']}"></td> -->
-						<td th:text="${priRoleBean['description']}"></td>
+						<td th:text="${role['description']}"></td>
 						<td>
-							<span th:text="${priRoleBean['status']== 'Y'}? '禁用':'可用'"></span>
-							<a href="#" th:class="${priRoleBean['status']== 'Y'}? 'color-red':'c-blue'" th:onclick="'javascript:ajaxIsUse(\''+${priRoleBean['roleId']}+'\')'" th:text="${priRoleBean['status'] == 'Y'}? '[ 可用 ]':'[ 禁用 ]'"></a>
+							<span th:text="${role['status']== 'Y'}? '禁用':'可用'"></span>
+							<a href="#" th:class="${role['status']== 'Y'}? 'color-red':'c-blue'" th:onclick="'javascript:ajaxIsUse(\''+${role['id']}+'\')'" th:text="${role['status'] == 'Y'}? '[ 可用 ]':'[ 禁用 ]'"></a>
 						</td>
 						<td align="center">
-						<a href="#" class="c-blue parentyh" th:onclick="'javascript:openSelectTargetLayer(\'/privilege/role/gotoSelectTargetPage?ROLE_ID='+${priRoleBean['roleId']}+'\')'" >绑定指标</a>
-						<a href="#" class="c-blue parentyh" th:onclick="'javascript:openSelectManagerLayer(\'/privilege/role/gotoSelectManagerPage?ROLE_ID='+${priRoleBean['roleId']}+'\')'" >绑定用户</a>
-						<a href="#" class="c-purple parentmenu" th:onclick="'javascript:openSelectMenuLayer(\'/privilege/role/gotoSelectMenuPage?ROLE_ID='+${priRoleBean['roleId']}+'\')'" >分配菜单</a>
-						<a href="#" class="c-green parentedit" th:onclick="'javascript:openLargeEditLayer(\'/privilege/role/updatepage?ROLE_ID='+${priRoleBean['roleId']}+'\')'">编辑</a> 
-						<a href="#" class="color-red parentIframe" th:onclick="'javascript:openDeleteLayer(\'/privilege/role/deletepage?deleteUrl=/privilege/role/delete&deleteId='+${priRoleBean['roleId']}+'\')'">删除</a> 
+						<a href="#" class="c-blue parentyh" th:onclick="'javascript:openSelectTargetLayer(\'/privilege/role/gotoSelectTargetPage?ROLE_ID='+${role['id']}+'\')'" >绑定指标</a>
+						<a href="#" class="c-blue parentyh" th:onclick="'javascript:openSelectManagerLayer(\'/privilege/role/gotoSelectManagerPage?ROLE_ID='+${role['id']}+'\')'" >绑定用户</a>
+						<a href="#" class="c-purple parentmenu" th:onclick="'javascript:openSelectMenuLayer(\'/privilege/role/gotoSelectMenuPage?ROLE_ID='+${role['id']}+'\')'" >分配菜单</a>
+						<a href="#" class="c-green parentedit" th:onclick="'javascript:openLargeEditLayer(\'/privilege/role/updatepage?ROLE_ID='+${role['id']}+'\')'">编辑</a> 
+						<a href="#" class="color-red parentIframe" th:onclick="'javascript:openDeleteLayer(\'/privilege/role/deletepage?deleteUrl=/privilege/role/delete&deleteId='+${role['id']}+'\')'">删除</a> 
 						</td>
 					</tr>
 	       		
