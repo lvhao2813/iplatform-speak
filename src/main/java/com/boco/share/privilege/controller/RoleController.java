@@ -10,18 +10,22 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.boco.share.framework.common.CollectionUtil;
 import com.boco.share.framework.constants.ConfigContants;
 import com.boco.share.framework.pagination.Pagination;
 import com.boco.share.framework.springmvc.BaseController;
+import com.boco.share.privilege.bean.PriManagerBean;
 import com.boco.share.privilege.bean.Role;
 import com.boco.share.privilege.bean.User;
 import com.boco.share.privilege.service.inter.RoleService;
+import com.boco.share.privilege.service.inter.UserService;
 import com.boco.share.privilege.util.LoginConstants;
 import com.boco.share.privilege.util.PrivilageConstants;
 import com.github.pagehelper.PageHelper;
@@ -38,6 +42,44 @@ public class RoleController extends BaseController implements LoginConstants, Pr
 	@Autowired
 	private RoleService roleService;
 
+	final String orgNameStr = "ORG_NAME";
+	
+	@RequestMapping("gotoSelectManagerPage")
+	public ModelAndView gotoSelectManagerPage(@RequestParam Map<String, String> formMap,
+			@ModelAttribute(value = "pagination") Pagination pagination) {
+		ModelAndView modelAndView = new ModelAndView("privilege/role/select_manager");
+
+		List<String> queryOrg = roleService.queryOrg();
+		modelAndView.addObject("orgGroup", queryOrg);
+
+		if (StringUtils.isEmpty(formMap.get(orgNameStr))) {
+			formMap.put(orgNameStr, "省公司");
+		}
+
+		Map<String, String> outRoleMap = CollectionUtil.getHashMap();
+		outRoleMap.put("ROLE_ID", formMap.get("ROLE_ID"));
+		outRoleMap.put("MGR_NAME", formMap.get("OUT_ROLE_NAME"));
+		outRoleMap.put("ORG_NAME", formMap.get("ORG_NAME"));
+
+		PageHelper.startPage(pagination.getCurrentPageNum(), pagination.getPageCount());
+		List<User> resultList = roleService.querySelectUserWithOutRoleId(outRoleMap);
+
+		// 取分页信息
+		PageInfo<User> pageInfo = new PageInfo<User>(resultList);
+		pagination.setTotalCount(pageInfo.getTotal());
+		pagination.setTotalPageNum(pageInfo.getPages());
+		modelAndView.addObject("pagination", pagination);
+		modelAndView.addObject("outRoleList", resultList);
+
+		Map<String, String> inRoleMap = CollectionUtil.getHashMap();
+		inRoleMap.put("ROLE_ID", formMap.get("ROLE_ID"));
+		inRoleMap.put("MGR_NAME", formMap.get("IN_ROLE_NAME"));
+		modelAndView.addObject("inRoleList", roleService.querySelectUserWithRoleId(inRoleMap));
+		modelAndView.addObject("formMap", formMap);
+		
+		return modelAndView;
+	}
+	
 	@RequestMapping("query")
 	public ModelAndView queryRoleList(@RequestParam Map<String, String> formMap,
 			@ModelAttribute(value = "pagination") Pagination pagination) {
