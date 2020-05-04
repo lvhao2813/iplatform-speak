@@ -50,12 +50,19 @@ public interface PriManagerMapper {
 	List<Map<String, String>> queryMenuAndOptByUser(PriManagerBean priManager);
 
 	/**
-	 * Title: loadManagers
+	 * Title: loadUsers
 	 * Description: 读取所有管理员信息
 	 * @param formMap
 	 * @return
 	 */
-	List<User> loadManagers(Map<String, String> formMap);
+	List<User> loadUsers(Map<String, String> formMap);
+	
+	/**
+	 * 获取用户，通过id
+	 * @param formMap
+	 * @return
+	 */
+	User getUserById(Map<String, String> formMap);
 
 	/**
 	 * Title: insertManager

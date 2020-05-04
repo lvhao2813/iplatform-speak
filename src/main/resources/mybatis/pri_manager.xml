@@ -174,7 +174,7 @@
 			<result column="DESCRITION" property="descrition" jdbcType="VARCHAR" />
 		</resultMap>
 		
-	<select id="loadManagers" parameterType="java.util.HashMap" resultMap="user">
+	<select id="loadUsers" parameterType="java.util.HashMap" resultMap="user">
 		select id id, name name, code code, phone phone , 
 		active_flag activeFlag, is_manager manager,passWord passWord, 
 		e_mail email,descrition descrition 
@@ -193,6 +193,18 @@
 			and t.id = #{ID}
 		</if>
 		
+  </select>
+  
+  	
+  <select id="getUserById" parameterType="java.util.HashMap" resultMap="user">
+		select id id, name name, code code, phone phone , 
+		active_flag activeFlag, is_manager manager,passWord passWord, 
+		e_mail email,descrition descrition 
+		from ods_s_user t 
+		where 1=1
+		<if test="ID != null and ID !=''">
+			and t.id = #{ID}
+		</if>
   </select>
   
   <insert id="insertManager" parameterType="com.boco.share.privilege.bean.User">

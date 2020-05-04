@@ -60,8 +60,14 @@ public class PriManagerServiceImpl implements IPriManagerService {
 	}
 
 	@Override
-	public List<User> loadManagers(Map<String, String> formMap) {
-		return userManagerMapper.loadManagers(formMap);
+	public List<User> loadUsers(Map<String, String> formMap) {
+		return userManagerMapper.loadUsers(formMap);
+	}
+	
+
+	@Override
+	public User getUserById(Map<String, String> formMap) {
+		return userManagerMapper.getUserById(formMap);
 	}
 
 	@Override

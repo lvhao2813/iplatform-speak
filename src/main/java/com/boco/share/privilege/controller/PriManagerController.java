@@ -45,8 +45,7 @@ import com.github.pagehelper.PageInfo;
  * @author RayLLi
  * @date 2018年8月27日
  */
-@Controller
-@RequestMapping("/privilege/manager")
+
 public class PriManagerController extends BaseController implements LoginConstants,PrivilageConstants,ConfigContants {
 
 	@Autowired
@@ -166,7 +165,7 @@ public class PriManagerController extends BaseController implements LoginConstan
 			@ModelAttribute(value = "pagination") Pagination pagination) {
 
 		PageHelper.startPage(pagination.getCurrentPageNum(), pagination.getPageCount());
-		List<User> resultList = userManagerService.loadManagers(formMap);
+		List<User> resultList = userManagerService.loadUsers(formMap);
 
 		PageInfo<User> pageInfo = new PageInfo<User>(resultList);
 		pagination.setTotalCount(pageInfo.getTotal());
@@ -220,12 +219,10 @@ public class PriManagerController extends BaseController implements LoginConstan
 	@RequestMapping("updatepage")
 	public ModelAndView updatePage(@RequestParam Map<String, String> formMap,
 			@ModelAttribute(value = "User") User user) {
-		List<User> resultList = userManagerService.loadManagers(formMap);
+		User result = userManagerService.getUserById(formMap);
 
 		ModelAndView mav = new ModelAndView("privilege/manager/update");
-		if (resultList != null && resultList.size() > 0) {
-			mav.addObject("User", resultList.get(0));
-		}
+		mav.addObject("User", result);
 		return mav;
 	}
 

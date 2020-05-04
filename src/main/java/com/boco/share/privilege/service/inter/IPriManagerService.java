@@ -54,7 +54,14 @@ public interface IPriManagerService {
 	 * @param formMap
 	 * @return
 	 */
-	List<User> loadManagers(Map<String, String> formMap);
+	List<User> loadUsers(Map<String, String> formMap);
+	
+	/**
+	 * 获取用户，通过id
+	 * @param formMap
+	 * @return
+	 */
+	User getUserById(Map<String, String> formMap);
 
 	/**
 	 * Title: insert
