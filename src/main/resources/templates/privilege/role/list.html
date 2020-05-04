@@ -86,7 +86,7 @@ function openBatchDeletePage(){
        						<th>角色名称</th>
 							<th>角色描述</th>
 						<!-- 		<th>角色公司</th> -->
-							<th>角色状态</th>
+							<th>角色编码</th>
 							<th>操作</th>
 	       			</tr>
 	       			<tr th:each="role : ${resultList}">
@@ -96,10 +96,13 @@ function openBatchDeletePage(){
 						<td th:text="${role['name']}"></td>
 						<!-- <td th:text="${priRoleBean['orgName']}"></td> -->
 						<td th:text="${role['description']}"></td>
+						<!--
 						<td>
 							<span th:text="${role['status']== 'Y'}? '禁用':'可用'"></span>
 							<a href="#" th:class="${role['status']== 'Y'}? 'color-red':'c-blue'" th:onclick="'javascript:ajaxIsUse(\''+${role['id']}+'\')'" th:text="${role['status'] == 'Y'}? '[ 可用 ]':'[ 禁用 ]'"></a>
 						</td>
+						-->
+						<td th:text="${role['code']}"></td>
 						<td align="center">
 						<a href="#" class="c-blue parentyh" th:onclick="'javascript:openSelectTargetLayer(\'/privilege/role/gotoSelectTargetPage?ROLE_ID='+${role['id']}+'\')'" >绑定指标</a>
 						<a href="#" class="c-blue parentyh" th:onclick="'javascript:openSelectManagerLayer(\'/privilege/role/gotoSelectManagerPage?ROLE_ID='+${role['id']}+'\')'" >绑定用户</a>

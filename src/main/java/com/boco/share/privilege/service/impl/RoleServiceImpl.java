@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.boco.share.privilege.bean.Role;
+import com.boco.share.privilege.bean.User;
 import com.boco.share.privilege.dao.RoleMapper;
 import com.boco.share.privilege.service.inter.RoleService;
 /**
@@ -33,7 +34,6 @@ public class RoleServiceImpl implements RoleService {
 	@Override
 	public int insert(Role role) {
 		role.setStatus("Y"); // 默认是可用
-		role.setCode("这个怎么写");
 		return roleMapper.insert(role);
 	}
 
@@ -52,4 +52,18 @@ public class RoleServiceImpl implements RoleService {
 		roleMapper.batchDeleteRoles(ids);
 	}
 
+	@Override
+	public List<String> queryOrg() {
+		return roleMapper.queryOrg();
+	}
+	
+	@Override
+	public List<User> querySelectUserWithOutRoleId(Map<String, String> formMap){
+		return roleMapper.querySelectUserWithOutRoleId(formMap);
+	}
+	
+	@Override
+	public List<User> querySelectUserWithRoleId(Map<String, String> formMap){
+		return roleMapper.querySelectUserWithRoleId(formMap);
+	}
 }

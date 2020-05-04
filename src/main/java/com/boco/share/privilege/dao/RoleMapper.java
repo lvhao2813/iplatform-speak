@@ -9,6 +9,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.boco.share.privilege.bean.Role;
+import com.boco.share.privilege.bean.User;
 
 /**
  * @author li970
@@ -63,5 +64,28 @@ public interface RoleMapper {
 	 * @param ids
 	 */
 	void batchDeleteRoles(String[] ids);
+
+	/**
+	 * Title: queryOrg
+	 * Description: 
+	 * @return
+	 */
+	public List<String> queryOrg();
+	
+	/**
+	 * Title: querySelectManagerWithRoleId
+	 * Description: 
+	 * @param formMap
+	 * @return
+	 */
+	public List<User> querySelectUserWithRoleId(Map<String, String> formMap);
+
+	/**
+	 * Title: querySelectManagerWithOutRoleId
+	 * Description: 
+	 * @param formMap
+	 * @return
+	 */
+	public List<User> querySelectUserWithOutRoleId(Map<String, String> formMap);
 
 }

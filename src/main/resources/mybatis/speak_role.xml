@@ -75,7 +75,41 @@
 			<if test="description!=null and description!=''">
 				,t.description = #{description}
 			</if>
+			<if test="code!=null and code!=''">
+				,t.code = #{code}
+			</if>
 		     where t.id = #{id}
 	</update>
-		  	
+
+	<select id="queryOrg" resultType="String">	
+		select id from ods_s_role_use
+		<!--  
+			t WHERE t.parent_id = 0
+			AND t.id not in (84026,-3,577627)
+			ORDER BY t.priority
+		-->
+    </select>
+    
+    <select id="querySelectUserWithRoleId" resultType="com.boco.share.privilege.bean.User" parameterType="java.util.Map" >
+		SELECT * FROM ods_s_role_use
+		<!--  
+	         <if test="MGR_NAME!=NULL and MGR_NAME!=''">
+				AND SPM.MGR_NAME LIKE '%'||#{MGR_NAME}||'%' 
+			</if>
+		-->
+	</select>
+	
+	<select id="querySelectUserWithOutRoleId" resultType="com.boco.share.privilege.bean.User" parameterType="java.util.Map" >	
+        SELECT * FROM ods_s_role_use
+        <!--   <if test="MGR_NAME!=NULL and MGR_NAME!=''">
+		<if test="MGR_NAME!=NULL and MGR_NAME!=''">
+			AND SPM.MGR_NAME LIKE '%'||#{MGR_NAME}||'%'   
+		</if>
+			AND o.party_name LIKE '%'||#{MGR_NAME}||'%'
+		</if> 
+		<if test="ORG_NAME!=NULL and ORG_NAME!=''">
+			 AND o.PARTY_NAME = #{ORG_NAME} 
+		</if>
+		-->
+	</select>
 </mapper>

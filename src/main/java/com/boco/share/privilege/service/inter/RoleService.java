@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.boco.share.privilege.bean.Role;
+import com.boco.share.privilege.bean.User;
 
 /**
  * @author li970
@@ -52,4 +53,27 @@ public interface RoleService {
 	 * @param ids
 	 */
 	void batchDeleteRoles(String[] ids);
+	
+	/**
+	 * queryOrg
+	 * @return
+	 */
+	public List<String> queryOrg();
+	
+	/**
+	 * Title: querySelectManagerWithOutRoleId
+	 * Description: 
+	 * @param formMap
+	 * @return
+	 */
+	public List<User> querySelectUserWithOutRoleId(Map<String, String> formMap);
+	
+	/**
+	 * Title: querySelectManagerWithRoleId
+	 * Description: 
+	 * @param formMap
+	 * @return
+	 */
+	public List<User> querySelectUserWithRoleId(Map<String, String> formMap);
+	
 }
