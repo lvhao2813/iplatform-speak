@@ -10,7 +10,6 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,7 +24,6 @@ import com.boco.share.privilege.bean.PriManagerBean;
 import com.boco.share.privilege.bean.Role;
 import com.boco.share.privilege.bean.User;
 import com.boco.share.privilege.service.inter.RoleService;
-import com.boco.share.privilege.service.inter.UserService;
 import com.boco.share.privilege.util.LoginConstants;
 import com.boco.share.privilege.util.PrivilageConstants;
 import com.github.pagehelper.PageHelper;
@@ -42,7 +40,6 @@ public class RoleController extends BaseController implements LoginConstants, Pr
 	@Autowired
 	private RoleService roleService;
 
-	final String orgNameStr = "ORG_NAME";
 	
 	@RequestMapping("gotoSelectManagerPage")
 	public ModelAndView gotoSelectManagerPage(@RequestParam Map<String, String> formMap,
@@ -72,6 +69,18 @@ public class RoleController extends BaseController implements LoginConstants, Pr
 		
 		return modelAndView;
 	}
+	
+	@RequestMapping("saveManagerRole")
+	public ModelAndView saveManagerRole(HttpSession session, @RequestParam String roleId,
+			@RequestParam(value="checkedIds", required = false) String[] checkedIds) {
+		
+		roleService.updateUserRole(roleId, checkedIds);
+		
+		Map<String, String> formMap = CollectionUtil.getHashMap();
+		formMap.put("ROLE_ID", roleId);
+		return gotoSelectManagerPage(formMap, new Pagination());
+	}
+
 	
 	@RequestMapping("query")
 	public ModelAndView queryRoleList(@RequestParam Map<String, String> formMap,

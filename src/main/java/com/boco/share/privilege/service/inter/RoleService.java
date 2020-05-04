@@ -68,11 +68,20 @@ public interface RoleService {
 	public List<User> queryUserWithOutRoleId(Map<String, String> formMap);
 	
 	/**
-	 * Title: querySelectManagerWithRoleId
+	 * 查询右侧，绑定用户列表
 	 * Description: 
 	 * @param formMap
 	 * @return
 	 */
 	public List<User> querySelectUserWithRoleId(Map<String, String> formMap);
+
+	/**
+	 * 
+	 * 更新用户角色
+	 * @param roleId
+	 * @param checkedIds
+	 * @param code
+	 */
+	void updateUserRole(String roleId, String[] checkedIds);
 	
 }

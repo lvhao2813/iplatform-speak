@@ -73,7 +73,7 @@
 		<div class="user-h">
 			<table width="100%" cellpadding="0" cellspacing="0" class="user-list td-width" id="lList">
 			
-			<tr th:each="user : ${outUserList}">
+			<tr th:each="user : ${outRoleList}">
 				<input type="hidden"  th:value="${user.id}" name="checkedIds" />
 				<td><input type="checkbox"/></td>
 				<td th:text="${user.name}"></td>
@@ -82,14 +82,20 @@
 			
 			</table>
 		</div>
+		
 <div>
 	<div th:include="/privilege/role/left_page"></div>
 </div>
+
 </form>	
 </div>
+
 <div class="tc-user-btn">
+111
 	<button type="button" class="tc-user-btnblue1" id="add"></button>
+222
 	<button  type="button" class="tc-user-btnblue2"  id="remove"></button>
+333
 </div>
 
 <div class="tc-user-r">

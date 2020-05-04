@@ -6,6 +6,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.boco.share.framework.common.CollectionUtil;
+import com.boco.share.framework.common.UniqueIDGenerator;
 import com.boco.share.privilege.bean.Role;
 import com.boco.share.privilege.bean.User;
 import com.boco.share.privilege.dao.RoleMapper;
@@ -66,4 +68,21 @@ public class RoleServiceImpl implements RoleService {
 	public List<User> querySelectUserWithRoleId(Map<String, String> formMap){
 		return roleMapper.querySelectUserWithRoleId(formMap);
 	}
+	
+	@Override
+	public void updateUserRole(String roleId, String[] checkedIds) {
+		
+		roleMapper.deleteUserWithRoleId(roleId);
+		if (checkedIds != null) {
+			for (String mgrId : checkedIds) {
+				Map<String, String> formMap = CollectionUtil.getHashMap(4);
+				formMap.put("USER_ROLE_ID", UniqueIDGenerator.getUUID());
+				formMap.put("MGR_ID", mgrId);
+				formMap.put("ROLE_ID", roleId);
+				roleMapper.updateUserRole(formMap);
+			}
+		}
+	}
+	
+	
 }

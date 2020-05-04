@@ -91,12 +91,10 @@
     </select>
     
     <select id="querySelectUserWithRoleId" resultType="com.boco.share.privilege.bean.User" parameterType="java.util.Map" >
-		SELECT * FROM ods_s_role_use
-		<!--  
-	         <if test="MGR_NAME!=NULL and MGR_NAME!=''">
-				AND SPM.MGR_NAME LIKE '%'||#{MGR_NAME}||'%' 
-			</if>
-		-->
+		SELECT u.id id, u.name name, u.code code
+		FROM ods_s_role_user ru
+		left join ods_s_user u on ru.user_id = u.id
+		where u.id in (select user_id from ods_s_role_user where role_id = #{ROLE_ID})
 	</select>
 	
 	<select id="queryUserWithOutRoleId" resultType="com.boco.share.privilege.bean.User" parameterType="java.util.Map" >	
@@ -107,7 +105,15 @@
         and u.id not in ( select user_id from ods_s_role_user where role_id = #{ROLE_ID} )
         <if test="MGR_NAME!=NULL and MGR_NAME!=''">
 			AND u.name LIKE concat('%',#{MGR_NAME},'%')	
-		</if>
-       
+		</if>    
 	</select>
+	
+	<delete id="deleteUserWithRoleId" parameterType="String">  
+         delete from ods_s_role_user where role_id= #{roleId}
+	</delete>  
+	
+    <insert id="updateUserRole" parameterType="java.util.Map">
+			insert into ods_s_role_user (role_id,user_id)
+			values (#{ROLE_ID}, #{MGR_ID})					    
+	</insert>
 </mapper>

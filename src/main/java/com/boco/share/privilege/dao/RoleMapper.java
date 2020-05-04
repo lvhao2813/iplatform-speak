@@ -87,4 +87,17 @@ public interface RoleMapper {
 	 */
 	public List<User> queryUserWithOutRoleId(Map<String, String> formMap);
 
+	/**
+	 * 删除所有关于这条的 用户
+	 * @param roleId
+	 */
+	void deleteUserWithRoleId(String roleId);
+
+	/**
+	 * 更新
+	 * @param formMap
+	 */
+	void updateUserRole(Map<String, String> formMap);
+	
+
 }
