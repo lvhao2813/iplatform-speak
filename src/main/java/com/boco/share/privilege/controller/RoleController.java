@@ -46,7 +46,7 @@ public class RoleController extends BaseController implements LoginConstants, Pr
 			@ModelAttribute(value = "pagination") Pagination pagination) {
 		ModelAndView modelAndView = new ModelAndView("privilege/role/select_manager");
 
-		//查询左侧，未绑定用户列表
+		//查询左侧,未绑定用户列表
 		Map<String, String> outRoleMap = CollectionUtil.getHashMap();
 		outRoleMap.put("ROLE_ID", formMap.get("ROLE_ID"));
 		outRoleMap.put("MGR_NAME", formMap.get("OUT_ROLE_NAME"));
