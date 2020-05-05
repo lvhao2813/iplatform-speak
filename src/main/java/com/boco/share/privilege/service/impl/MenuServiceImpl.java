@@ -10,7 +10,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.boco.share.privilege.bean.Menu;
 import com.boco.share.privilege.dao.MenuMapper;
 import com.boco.share.privilege.service.inter.MenuService;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 
 /**
  * Title: PriMenuServiceImpl Description:
@@ -92,28 +91,27 @@ public class MenuServiceImpl implements MenuService {
 		JSONObject manage = new JSONObject();
 		manage.put("title", "常规管理");
 		manage.put("image", "fa fa-address-book");
-		
+
 		JSONArray jtemp = getAllMenus("0");
 		manage.put("child", jtemp); // 这里以后通过数据库读取
 
 		currency.put("currency", manage);
 		return currency;
 	}
-	
+
 	/**
 	 * 通过数据库读取菜单
 	 * 
 	 * @return
 	 */
 	private JSONArray getAllMenus(String parentId) {
-		List<Menu> menuList = priMenuMapper.queryMenuByParentID(String.valueOf(parentId));	
-		if (menuList.size() == 0) {
+		List<Menu> menuList = priMenuMapper.queryMenuByParentId(String.valueOf(parentId));
+		if (menuList == null || menuList.isEmpty()) {
 			return null;
 		}
 		JSONArray menus = new JSONArray();
-		JSONObject temp = new JSONObject();
 		for (Menu menu : menuList) {
-			System.out.println(menu);
+			JSONObject temp = new JSONObject();
 			temp.put("title", menu.getTitle());
 			temp.put("href", menu.getHref());
 			temp.put("icon", menu.getIcon());
@@ -121,11 +119,10 @@ public class MenuServiceImpl implements MenuService {
 				temp.put("rightIcon", menu.getRightIcon());
 			}
 			temp.put("target", menu.getTarget());
-			
-			List<Menu> childList = priMenuMapper.queryMenuByParentID(menu.getId());
-			if(childList.size()!=0) {
-				JSONArray tmenus = getAllMenus(menu.getId());
-				temp.put("child",tmenus);
+
+			JSONArray tmenus = getAllMenus(menu.getId());
+			if (tmenus != null) {
+				temp.put("child", tmenus);
 			}
 			menus.add(temp);
 		}
