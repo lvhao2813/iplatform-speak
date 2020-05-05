@@ -1,6 +1,7 @@
 package com.boco.share.privilege.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.boco.share.privilege.bean.Menu;
 import com.boco.share.privilege.dao.MenuMapper;
 import com.boco.share.privilege.service.inter.MenuService;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 /**
  * Title: PriMenuServiceImpl Description:
@@ -21,10 +23,10 @@ import com.boco.share.privilege.service.inter.MenuService;
 public class MenuServiceImpl implements MenuService {
 
 	@Autowired
-	public MenuMapper priMenuMapper;
+	public MenuMapper menuMapper;
 
 	/**
-	 * 查询菜单列表并展示
+	 * 	查询菜单列表并展示
 	 */
 	@Override
 	public JSONObject queryAllMenuList() {
@@ -91,22 +93,22 @@ public class MenuServiceImpl implements MenuService {
 		JSONObject manage = new JSONObject();
 		manage.put("title", "常规管理");
 		manage.put("image", "fa fa-address-book");
-
+		
 		JSONArray jtemp = getAllMenus("0");
 		manage.put("child", jtemp); // 这里以后通过数据库读取
 
 		currency.put("currency", manage);
 		return currency;
 	}
-
+	
 	/**
 	 * 通过数据库读取菜单
 	 * 
 	 * @return
 	 */
 	private JSONArray getAllMenus(String parentId) {
-		List<Menu> menuList = priMenuMapper.queryMenuByParentId(String.valueOf(parentId));
-		if (menuList == null || menuList.isEmpty()) {
+		List<Menu> menuList = menuMapper.queryMenuByParentID(String.valueOf(parentId));	
+		if (menuList.size() == 0) {
 			return null;
 		}
 		JSONArray menus = new JSONArray();
@@ -115,19 +117,21 @@ public class MenuServiceImpl implements MenuService {
 			temp.put("title", menu.getTitle());
 			temp.put("href", menu.getHref());
 			temp.put("icon", menu.getIcon());
+			temp.put("target", menu.getTarget());	
 			if (menu.getRightIcon() != null) {
 				temp.put("rightIcon", menu.getRightIcon());
-			}
-			temp.put("target", menu.getTarget());
-
+			}	
 			JSONArray tmenus = getAllMenus(menu.getId());
-			if (tmenus != null) {
-				temp.put("child", tmenus);
-			}
+			temp.put("child",tmenus);
+			
 			menus.add(temp);
 		}
 		return menus;
+	}
 
+	@Override
+	public List<Menu> loadMenus(Map<String, String> formMap){
+		return menuMapper.loadMenus(formMap);
 	}
 
 }

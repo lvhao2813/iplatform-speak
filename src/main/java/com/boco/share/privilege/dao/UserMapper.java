@@ -23,7 +23,7 @@ public interface UserMapper {
 	 * @param code
 	 * @return
 	 */
-	public User getUserByCode(String code);
+	User getUserByCode(String code);
 
 	/**
 	 * 校验用户密码是否正确
@@ -32,7 +32,7 @@ public interface UserMapper {
 	 * @param passWord
 	 * @return
 	 */
-	public boolean checkLoginUser(String code, String passWord);
+	boolean checkLoginUser(String code, String passWord);
 
 	/**
 	 * Title: loadManagers Description: 读取管理员信息
@@ -71,13 +71,13 @@ public interface UserMapper {
 	 * 
 	 * @param user ID
 	 */
-	void deleteUser(String deleteId);
+	public void deleteUser(String deleteId);
 
 	/**
 	 * 批量删除用户
 	 * 
 	 * @param ids
 	 */
-	void batchDeleteUsers(String[] ids);
+	public void batchDeleteUsers(String[] ids);
 
 }
