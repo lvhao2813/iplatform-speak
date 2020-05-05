@@ -100,14 +100,15 @@
 
 <div class="tc-user-r">
 
-		<div class="xz-search">
-	<form name="queryForm" th:action="@{~/privilege/role/gotoSelectManagerPage}" th:method="post">
+<div class="xz-search">
+	<form name="queryForm" id="queryRoleManager" th:action="@{~/privilege/role/gotoSelectManagerPage}" th:method="post">
+		<input style="display:none" type="text" name="ROLE_ID" id="ROLE_ID" th:value="${formMap['ROLE_ID']}" />
 		<select name="classid" id="choose">
 			<option value="0">姓名</option>
 			
 		</select> 
 		<input class="inp_srh" th:value="${formMap['IN_ROLE_NAME']}" name="IN_ROLE_NAME" />
-		<input class="btn_srh" type="submit" name="submit" value="搜索">
+		<input class="btn_srh" type="submit" name="submit" id="queryRoleManagerSubmit" value="搜索">
 	</form>
 </div>
 			<table width="100%" cellpadding="0" cellspacing="0" class="user-list-title tr-width" >
@@ -122,11 +123,11 @@
 			<input style="display:none" type="text" name="roleId" th:value="${formMap['ROLE_ID']}" />
 			<table width="100%" cellpadding="0" cellspacing="0" class="user-list td-width" id="rList">
 				<tr th:each="user : ${inRoleList}">
-							<input type="hidden"  th:value="${user.id}" name="checkedIds" />
-							<td><input type="checkbox"/></td>
-							<td th:text="${user.name}"></td>
-							<td th:text="${user.code}"></td>
-					</tr>
+					<input type="hidden"  th:value="${user.id}" name="checkedIds" />
+					<td><input type="checkbox"/></td>
+					<td th:text="${user.name}"></td>
+				<td th:text="${user.code}"></td>
+			</tr>
 			</table>
 			</form>
 	</div>

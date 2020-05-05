@@ -95,6 +95,9 @@
 		FROM ods_s_user u 
 		where 1 = 1
 		and u.id in(select user_id from ods_s_role_user where role_id =#{ROLE_ID})
+		<if test="MGR_NAME!=NULL and MGR_NAME!=''">
+			AND u.name LIKE concat('%',#{MGR_NAME},'%')	
+		</if>    
 	</select>
 	
 	<select id="queryUserWithOutRoleId" resultType="com.boco.share.privilege.bean.User" parameterType="java.util.Map" >	

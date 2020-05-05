@@ -64,7 +64,8 @@ public class RoleController extends BaseController implements LoginConstants, Pr
 		Map<String, String> inRoleMap = CollectionUtil.getHashMap();
 		inRoleMap.put("ROLE_ID", formMap.get("ROLE_ID"));
 		inRoleMap.put("MGR_NAME", formMap.get("IN_ROLE_NAME"));
-		modelAndView.addObject("inRoleList", roleService.querySelectUserWithRoleId(inRoleMap));
+		List<User> resultListRight = roleService.querySelectUserWithRoleId(inRoleMap);
+		modelAndView.addObject("inRoleList", resultListRight);
 		modelAndView.addObject("formMap", formMap);
 		
 		return modelAndView;
