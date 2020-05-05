@@ -19,7 +19,7 @@
 <table width="100%" cellpadding="0" cellspacing="0" class="tc-edit">
 <!-- 
 <input type="hidden" id="parentOrgId"  th:field="*{topParentId}"  value="" />
-<input type="hidden" id="orgId" th:field="*{orgId}"  value="" />
+<input type="hidden" id="orgId" th:field="*{userId}"  value="" />
  -->
 	<tr>
 		<th width="15%"><span>*</span>姓名：</th>
@@ -64,7 +64,7 @@
 	<script type="text/javascript">
 	
 	function submitUpdate(){
-		jqueryAjaxSubmit('/privilege/manager/add');
+		jqueryAjaxSubmit('/privilege/user/add');
 	}
 	
 	$.base64.utf8decode = true;

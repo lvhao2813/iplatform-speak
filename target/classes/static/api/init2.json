@@ -46,7 +46,13 @@
            "child": [
               {
               "title": "用户管理",
-              "href": "/privilege/manager/query",
+              "href": "/privilege/user/query",
+              "icon": "fa fa-tachometer",
+              "target": "_self"
+            },
+            {
+              "title": "角色管理",
+              "href": "/privilege/role/query",
               "icon": "fa fa-tachometer",
               "target": "_self"
             },

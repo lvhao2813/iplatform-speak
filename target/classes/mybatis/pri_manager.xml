@@ -102,34 +102,6 @@
 		ROWNUM = 1 AND spur.IS_DELETED = 'N'
 	</select>
 
-	<select id="loadAllMenu"
-		resultMap="com.boco.share.privilege.dao.PriMenuMapper.TblPriMenuResult">
-		SELECT MENU_ID,
-		parent_id,
-		menu_code,
-		menu_name,
-		description,
-		menu_link,
-		is_leaf,
-		menu_level,
-		menu_ord,
-		status,
-		remark,
-		updated_dt,
-		updated_by,
-		created_dt,
-		created_by,
-		is_deleted,
-		version,
-		optype
-		FROM
-		stbl_pri_menue
-		WHERE is_deleted = 'N'
-		START WITH parent_id = '0'
-		CONNECT
-		BY PRIOR menu_id = parent_id
-		ORDER SIBLINGS BY menu_ord
-	</select>
 
 	<select id="queryMenuAndOptByUser"
 		resultType="java.util.Map"
@@ -174,7 +146,7 @@
 			<result column="DESCRITION" property="descrition" jdbcType="VARCHAR" />
 		</resultMap>
 		
-	<select id="loadManagers" parameterType="java.util.HashMap" resultMap="user">
+	<select id="loadUsers" parameterType="java.util.HashMap" resultMap="user">
 		select id id, name name, code code, phone phone , 
 		active_flag activeFlag, is_manager manager,passWord passWord, 
 		e_mail email,descrition descrition 
@@ -189,72 +161,67 @@
 			and t.name like concat('%',#{MGR_NAME},'%')	
 		</if>
 		
+		<if test="ID != null and ID !=''">
+			and t.id = #{ID}
+		</if>
+		
+  </select>
+  
+  	
+  <select id="getUserById" parameterType="java.util.HashMap" resultMap="user">
+		select id id, name name, code code, phone phone , 
+		active_flag activeFlag, is_manager manager,passWord passWord, 
+		e_mail email,descrition descrition 
+		from ods_s_user t 
+		where 1=1
+		<if test="ID != null and ID !=''">
+			and t.id = #{ID}
+		</if>
   </select>
   
   <insert id="insertManager" parameterType="com.boco.share.privilege.bean.User">
-  		insert into ods_s_user(id,name,code,phone,
-  							active_flag,is_manager,password,
-  							e_mail,descrition) 
-  		values (3,
-  		"22","www","188",2,2,231321,"999@","321")
+  		insert into ods_s_user(name, code, phone,
+  							   active_flag, is_manager, password,
+  							   e_mail, descrition) 
+  		values (
+  				#{name}, #{code}, #{phone},
+  				'1', '0', #{passWord},
+  				#{email}, #{descrition}
+  		)
   		
-  		
-  		
-		INSERT INTO STBL_PRI_MANAGER (MGR_ID,
-                              USER_CODE,
-                              MGR_NAME,
-                              PASSWORD,
-                              IS_SUPER,
-                              MOBILE,
-                              E_MAIL,
-                              CREATED_BY)
-        VALUES (#{mgrId}, #{userCode}, #{mgrName}, 
-			      #{password},0, #{mobile}, #{email}, #{createdBy})
 	</insert>
   
 	<update id="deleteManager" parameterType="String">
-		UPDATE STBL_PRI_MANAGER set IS_DELETED = 'Y' WHERE MGR_ID = #{deleteId}	
+		delete from ods_s_user where id = #{deleteId}
 	</update>
 	
 	 <update id="batchDeleteManager" parameterType="String">
-        UPDATE STBL_PRI_MANAGER set IS_DELETED = 'Y' WHERE MGR_ID in
+        delete from ods_s_user where id in
+        
        <foreach item="deleteIds" collection="array" open="(" separator="," close=")">
             	#{deleteIds}
         </foreach>
+        
     </update>
     
-    <update id="updateManager" parameterType="com.boco.share.privilege.bean.PriManagerBean">
-		update STBL_PRI_MANAGER
-			SET UPDATED_DT=now(),
-				  VERSION=VERSION+1
-				  <if test="userCode!=null and userCode!=''">
-					, USER_CODE = #{userCode}
+    <update id="updateManager" parameterType="com.boco.share.privilege.bean.User">
+		update ods_s_user t set 
+				 <if test="name!=null and name!=''">
+					t.name = #{name}
 				</if>
-				<if test="mgrName!=null and mgrName!=''">
-					, MGR_NAME = #{mgrName}
+				<if test="code!=null and code!=''">
+					,t.code = #{code}
 				</if>
-				<if test="mgrType!=null and mgrType!=''">
-					, MGR_TYPE = #{mgrType}
+				<if test="phone!=null and phone!=''">
+					, t.phone = #{phone}
 				</if>
-				<if test="orgId!=null and orgId!=''">
-					, ORG_ID = #{orgId}
-				</if>
-				<if test="topParentId!=null and topParentId!=''">
-					, TOP_PARENT_ID = #{topParentId}
-				</if>
-				<if test="password!=null and password!=''">
-					, PASSWORD = #{password}
-				</if>
-				<if test="mobile!=null and mobile!=''">
-					, MOBILE = #{mobile}
+				<if test="descrition!=null and descrition!=''">
+					, t.descrition = #{descrition}
 				</if>
 				<if test="email!=null and email!=''">
-					, E_MAIL = #{email}
+					, t.e_mail = #{email}
 				</if>
-				<if test="remark!=null and remark!=''">
-					, remark = #{remark}
-				</if>
-			     where MGR_ID = #{mgrId}
+			     where t.id = #{id}
 	</update>
 	
 	<update id="updateMgrPwd" parameterType="java.util.HashMap" >

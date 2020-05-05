@@ -15,5 +15,5 @@ import com.alibaba.fastjson.JSONObject;
  */
 public interface MenuService {
 
-	public JSONObject queryMenuList();
+	public JSONObject queryAllMenuList();
 }

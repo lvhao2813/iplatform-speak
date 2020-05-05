@@ -36,7 +36,7 @@ public class MenuController extends BaseController {
 	@ResponseBody
 	@RequestMapping(value = "/queryMenuList", method = RequestMethod.POST)
 	public String queryMenuList() {
-		return menuService.queryMenuList().toString();
+		return menuService.queryAllMenuList().toString();
 	}
 
 }

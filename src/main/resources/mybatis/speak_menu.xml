@@ -3,5 +3,26 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.boco.share.privilege.dao.MenuMapper">
 
-
+	<resultMap type="com.boco.share.privilege.bean.Menu" id="role">
+		<result column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="PARENTID" property="parentId" jdbcType="VARCHAR" />
+		<result column="TITLE" property="title" jdbcType="VARCHAR" />
+		<result column="HREF" property="href" jdbcType="VARCHAR" />
+		<result column="ICON" property="icon" jdbcType="VARCHAR" />
+		<result column="RIGHTICON" property="rightIcon" jdbcType="VARCHAR" />
+		<result column="TARGET" property="target" jdbcType="VARCHAR" />
+		<result column="LEVEL" property="level" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="queryMenuByParentID" resultType="com.boco.share.privilege.bean.Menu">
+		SELECT id id,parentId parentId,title title,
+			   href href,icon icon,rightIcon rightIcon,
+			   target target,level level
+		from ods_s_menu t
+		where 1=1
+		<if test="PARENT_ID!= null and PARENT_ID!=''">
+			and parentId = #{PARENT_ID}
+		</if>
+		order by id
+  	</select>
 </mapper>

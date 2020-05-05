@@ -25,7 +25,6 @@
 		<if test="ROLE_NAME != null and ROLE_NAME!=''">
 			and t.name like concat('%',#{ROLE_NAME},'%')	
 		</if>
-
   	</select>
   
 	<select id="getRoleById" parameterType="java.util.HashMap" resultMap="role">
@@ -40,7 +39,6 @@
 		<if test="ROLE_ID != null and ROLE_ID!=''">
 			and t.id  = #{ROLE_ID}
 		</if>
-
   	</select>
   
   

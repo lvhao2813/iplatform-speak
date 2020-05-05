@@ -55,6 +55,12 @@ public class Menu {
 		return href;
 	}
 
+	@Override
+	public String toString() {
+		return "Menu [id=" + id + ", parentId=" + parentId + ", title=" + title + ", href=" + href + ", icon=" + icon
+				+ ", rightIcon=" + rightIcon + ", target=" + target + ", level=" + level + ", child=" + child + "]";
+	}
+
 	public void setHref(String href) {
 		this.href = href;
 	}
