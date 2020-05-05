@@ -124,7 +124,8 @@ public class MenuServiceImpl implements MenuService {
 			
 			List<Menu> childList = priMenuMapper.queryMenuByParentID(menu.getId());
 			if(childList.size()!=0) {
-				temp.put("child", getAllMenus(menu.getId()));
+				JSONArray tmenus = getAllMenus(menu.getId());
+				temp.put("child",tmenus);
 			}
 			menus.add(temp);
 		}
