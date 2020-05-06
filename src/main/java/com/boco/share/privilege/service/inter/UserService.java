@@ -17,7 +17,7 @@ public interface UserService {
 	 * @param code
 	 * @return
 	 */
-	public User getUserByCode(String code);
+	User getUserByCode(String code);
 	
 	/**
 	 * 校验用户密码是否正确
@@ -26,7 +26,7 @@ public interface UserService {
 	 * @param passWord
 	 * @return
 	 */
-	public boolean checkLoginUser(String code, String passWord);
+	boolean checkLoginUser(String code, String passWord);
 	
 	/**
 	 * Title: loadManagers

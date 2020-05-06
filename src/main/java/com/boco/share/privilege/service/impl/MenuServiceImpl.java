@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.boco.share.privilege.bean.Menu;
+import com.boco.share.privilege.bean.User;
 import com.boco.share.privilege.dao.MenuMapper;
 import com.boco.share.privilege.service.inter.MenuService;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -132,6 +133,41 @@ public class MenuServiceImpl implements MenuService {
 	@Override
 	public List<Menu> loadMenus(Map<String, String> formMap){
 		return menuMapper.loadMenus(formMap);
+	}
+
+
+	@Override
+	public int insert(Menu menu){
+		List<Menu> menuList = menuMapper.loadMenus(null);
+		int maxOrder = 0;
+		for(Menu temp:menuList) {
+
+			if(temp.getParentId().equals(menu.getParentId()) && Integer.parseInt(temp.getOrd()) >= maxOrder) {
+				maxOrder = Integer.parseInt(temp.getOrd());
+			}
+		}
+		menu.setOrd(String.valueOf(++maxOrder));
+		return menuMapper.insert(menu);
+	}
+	
+	@Override
+	public void delete(String deleteId) {
+		menuMapper.delete(deleteId);
+	}
+	
+	@Override
+	public void batchDeleteMenus(String[] ids) {
+		menuMapper.batchDeleteMenus(ids);
+	}
+	
+	@Override
+	public Menu getMenuById(Map<String, String> formMap) {
+		return menuMapper.getMenuById(formMap);
+	}
+	
+	@Override
+	public int update(Menu menu) {
+		return menuMapper.update(menu);
 	}
 
 }

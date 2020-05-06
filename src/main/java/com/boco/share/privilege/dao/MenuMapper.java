@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.boco.share.privilege.bean.Menu;
+import com.boco.share.privilege.bean.User;
 
 /**
  * 
@@ -16,13 +17,49 @@ import com.boco.share.privilege.bean.Menu;
 public interface MenuMapper {
 	
 	/**
-	 * 通过父结点查找目录
+	 * 通过父结点查找菜单
 	 * @param formMap
 	 * @return
 	 */
 	List<Menu> queryMenuByParentID(@Param("PARENT_ID")String parentId);
 	
-	
+	/**
+	 * 加载菜单
+	 * @param formMap
+	 * @return
+	 */
 	List<Menu> loadMenus(Map<String, String> formMap);
 	
+	/**
+	 * 增加菜单
+	 * @param menu
+	 * @return
+	 */
+	int insert(Menu menu);
+	
+	/**
+	 * 删除菜单
+	 * @param deleteId
+	 */
+	public void delete(String deleteId);
+	
+	/**
+	 * 批量删除菜单
+	 * @param deleteId
+	 */
+	public void batchDeleteMenus(String[] ids);
+	
+	/**
+	 * 通过ID 查找菜单
+	 * @param formMap
+	 * @return
+	 */
+	public Menu getMenuById(Map<String, String> formMap);
+	
+	/**
+	 * 修改目录
+	 * @param menu
+	 * @return
+	 */
+	public int update(Menu menu);
 }

@@ -13,41 +13,42 @@
 
 </head>
 <body id="bg-white">
-	<form id="callForm" name="callForm" th:object="${priMenuBean}"
+	<form id="callForm" name="callForm" th:object="${Menu}"
 		action="" th:method="post">
 		
-		<input style="display:none" type="text" name="menuId" th:value="${priMenuBean['menuId']}" />
+		<input style="display:none" type="text" name="menuId" th:value="${Menu['id']}" />
 		
 		<div class="p10">
 			<table width="100%" cellpadding="0" cellspacing="0" class="tc-edit">
+			<input type="hidden" id="id" th:field="*{id}"  />
 				<tr>
 					<th><span>*</span>地图名称：</th>
-					<td><input type="text" id="menuName" th:field="*{menuName}" class="input1" /></td>
+					<td><input type="text" id="menuName" th:field="*{title}" class="input1" /></td>
 					<th><span>*</span>地图代码：</th>
-					<td><input type="text" id="menuCode" th:field="*{menuCode}" class="input1" /></td>
+					<td><input type="text" id="menuCode" th:field="*{code}" class="input1" /></td>
 				</tr>
 				<tr>
 					<th><span>*</span>地图链接：</th>
-					<td><input type="text" id="menuLink" th:field="*{menuLink}" class="input1" /></td>
+					<td><input type="text" id="menuLink" th:field="*{href}" class="input1" /></td>
 					<th><span>*</span>地图排序：</th>
-					<td><input type="text" id="menuOrd" th:field="*{menuOrd}" class="input1" /></td>
+					<td><input type="text" id="menuOrd" th:field="*{ord}" class="input1" /></td>
 				</tr>
 				<tr>
 					<th><span>*</span>上级地图：</th>
 					<td>
 							<select  th:field="*{parentId}">
 		                		<option value="0">--请选择--</option>
-		                		<option th:each="menu : ${menuList}"
-		                			th:selected="${priMenuBean['parentId']==menu['menuId']}"
-									th:value="${menu.menuId}"
-									th:text="${menu.lpadMenuName}"></option>
+		                		<option th:each="eachmenu : ${menuList}"
+		                			th:selected="${eachmenu['id']==Menu['id']}"
+									th:value="${eachmenu.id}"
+									th:text="${eachmenu.title}"></option>
 						</select>
 					</td>
 					<th><span>*</span>叶子节点：</th>
 					<td>
 							<select th:field="*{isLeaf}">
-		                		<option th:selected="${#strings.contains(priMenuBean['isLeaf'],0)}" value="0">否</option>
-		                		<option th:selected="${#strings.contains(priMenuBean['isLeaf'],1)}" value="1">是</option>
+		                		<option th:selected="${#strings.contains(Menu['isLeaf'],0)}" value="0">否</option>
+		                		<option th:selected="${#strings.contains(Menu['isLeaf'],1)}" value="1">是</option>
 		                	</select>
 					</td>
 				<tr>

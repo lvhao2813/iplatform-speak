@@ -39,9 +39,56 @@ public class Menu {
 
 	@ApiModelProperty(value = "菜单等级")
 	private String level;
+	
+	@ApiModelProperty(value = "编码")
+	private String code;
+	
+	@ApiModelProperty(value = "菜单排序")
+	private String ord;
 
 	@ApiModelProperty(value = "子菜单")
 	private List<Menu> child = new ArrayList<Menu>();
+	
+	@ApiModelProperty(value = "是否是叶子节点")
+	private String isLeaf;
+	
+	@ApiModelProperty(value = "菜单描述")
+	private String description;
+	
+	public String getIsLeaf() {
+		return isLeaf;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public void setIsLeaf(String isLeaf) {
+		this.isLeaf = isLeaf;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+
+	public String getOrd() {
+		return ord;
+	}
+
+	public void setOrd(String ord) {
+		this.ord = ord;
+	}
+
+
 
 	public String getTitle() {
 		return title;

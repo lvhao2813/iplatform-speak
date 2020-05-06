@@ -59,7 +59,7 @@ function openSelectManagerLayer(url){
 			<div class="title">	
 				    	<h2> <a class="active">地图列表</a></h2>	
 				    	<div class="operation">
-				    		<a class="parentadd"  onclick="openCommonLayer('新增记录','600px','380px','/privilege/menu/insertpage')"><img th:src="@{~/images/icon-add.png}" />新增</a>	
+				    		<a class="parentadd"  onclick="openCommonLayer('新增记录','600px','380px','/privilege/menu/insertpage?mpi=m-p-i-4')"><img th:src="@{~/images/icon-add.png}" />新增</a>	
 				    	    <a class="parentIframe" onclick="openBatchDeletePage();"><img th:src="@{~/images/icon-del.png}" />删除</a>
 				    	</div>
 				    		
@@ -67,29 +67,27 @@ function openSelectManagerLayer(url){
 	<div class="auto">
 			<table width="100%" cellpadding="0" cellspacing="0" class="user-list mt10">
 	       			<tr>
-			       			<th width="30">
-								<input type="checkbox" class="check-all" id="mainCheckbox" name="mainCheckbox"
-													onClick="selectedAllCheckbox()" />
-							</th>
-	       							<th>地图名称</th>
-									<th>地图链接</th>
-									<th>地图排序</th>
-									<th>维护时间</th>
-									<th>操作</th>
-	       					</tr>
+		       			<th width="30">
+							<input type="checkbox" class="check-all" id="mainCheckbox" name="mainCheckbox"
+												onClick="selectedAllCheckbox()" />
+						</th>
+       							<th>地图名称</th>
+								<th>地图链接</th>
+								<th>地图排序</th>
+								<th>操作</th>
+       					</tr>
 	       			<tr th:each="Menu : ${resultList}">
 						<td align="center">
 							<input type="checkbox" id="checkboxId"  th:name="check"  th:value="${Menu['id']}" />
 						</td>
-						<td align="left" th:text="${Menu['title']}"></td>
-						<td align="left" th:text="${Menu['href']}"></td>
-						<td th:text="${Menu['level']}"></td>
-						<td th:text="${Menu['level']}"></td>
-						<td align="right">
-						<a href="#" class="c-blue parentyh" th:if="${Menu['menuLink'] != '#'}" th:onclick="'javascript:openSelectManagerLayer(\'/privilege/menu/gotoSelectRolePage?MENU_ID='+${priMenuBean['menuId']}+'\')'" >角色首页绑定</a>	       	
-						<a class="c-blue parent-bdgn"  th:onclick="'javascript:openSelectOptLayer(\''+${priMenuBean['menuId']}+'\')'">绑定功能</a>	       	
+						<td align="left" th:text="${Menu['title']}"></td> <!-- 名称 -->
+						<td align="left" th:text="${Menu['href']}"></td> <!-- 链接 -->
+						<td th:text="${Menu['level']}==0? (${Menu['ord']}): (${Menu['level']}+'-'+ ${Menu['ord']})"> </td> <!-- 地图排序(地图等级) -->
+						<td align="right"> <!-- 下面是操作 -->
+						<a href="#" class="c-blue parentyh" th:if="${Menu['href'] != 'foldOut'}" th:onclick="'javascript:openSelectManagerLayer(\'/privilege/menu/gotoSelectRolePage?MENU_ID='+${Menu['id']}+'\')'" >角色首页绑定</a>	       	
+						<a class="c-blue parent-bdgn"  th:onclick="'javascript:openSelectOptLayer(\''+${Menu['id']}+'\')'">绑定功能</a>	       	
 						<a href="#" class="c-green parentedit" th:onclick="'javascript:openEditLayer(\'/privilege/menu/updatepage?MENU_ID='+${Menu['id']}+'\')'">编辑</a> 
-						<a href="#" class="color-red parentIframe" th:onclick="'javascript:openDeleteLayer(\'/privilege/menu/deletepage?deleteUrl=/privilege/menu/delete&deleteId='+${priMenuBean['menuId']}+'\')'">删除</a> 
+						<a href="#" class="color-red parentIframe" th:onclick="'javascript:openDeleteLayer(\'/privilege/menu/deletepage?deleteUrl=/privilege/menu/delete&deleteId='+${Menu['id']}+'\')'">删除</a> 
 						</td>
 					</tr>
 	       		
