@@ -28,7 +28,7 @@
 		<if test="PARENT_ID!= null and PARENT_ID!=''">
 			and parentId = #{PARENT_ID}
 		</if>
-		order by id
+		order by ord
   	</select>
   	
   	

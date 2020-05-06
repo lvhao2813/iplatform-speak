@@ -79,6 +79,12 @@ public class MenuController extends BaseController {
 	public ModelAndView insertPage(@ModelAttribute(value = "Menu") Menu menu) {
 		ModelAndView mav = new ModelAndView("privilege/Menu/add");
 		List<Menu> menuList = menuService.loadMenus(null);
+		for(int i=0;i<menuList.size();++i) {
+			if(menuList.get(i).getIsLeaf().equals("1")) {
+				menuList.remove(i);
+				--i;
+			}
+		}
 		mav.addObject("Menu", menu);
 		mav.addObject("menuList", menuList);	
 		return mav;

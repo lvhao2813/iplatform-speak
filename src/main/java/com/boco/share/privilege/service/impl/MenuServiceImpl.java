@@ -1,5 +1,6 @@
 package com.boco.share.privilege.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +14,7 @@ import com.boco.share.privilege.bean.User;
 import com.boco.share.privilege.dao.MenuMapper;
 import com.boco.share.privilege.service.inter.MenuService;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.mysql.fabric.xmlrpc.base.Array;
 
 /**
  * Title: PriMenuServiceImpl Description:
@@ -109,7 +111,7 @@ public class MenuServiceImpl implements MenuService {
 	 */
 	private JSONArray getAllMenus(String parentId) {
 		List<Menu> menuList = menuMapper.queryMenuByParentID(String.valueOf(parentId));	
-		if (menuList.size() == 0) {
+		if (menuList.size() == 0 || menuList == null) {
 			return null;
 		}
 		JSONArray menus = new JSONArray();
@@ -132,7 +134,30 @@ public class MenuServiceImpl implements MenuService {
 
 	@Override
 	public List<Menu> loadMenus(Map<String, String> formMap){
-		return menuMapper.loadMenus(formMap);
+		if(formMap == null || formMap.get("MENU_NAME") == null) {
+			return getAllMenus("0",1);
+		}else {
+			return 	menuMapper.loadMenus(formMap);		
+		}
+	}
+	
+	private List<Menu> getAllMenus(String parentId,int a){
+		List<Menu> menuList = menuMapper.queryMenuByParentID(String.valueOf(parentId));	
+		if (menuList.size() == 0 || menuList == null) {
+			return null;
+		}
+		List<Menu> menus = new ArrayList<>();
+		for (Menu menu : menuList) {
+			menus.add(menu);
+			if(menu.getIsLeaf().equals("1")) {
+				continue;
+			}else {
+				List<Menu> tmenus = getAllMenus(menu.getId(),1);
+				if(  tmenus != null && tmenus.size() != 0 )
+				menus.addAll(tmenus);
+			}
+		}
+		return menus;
 	}
 
 
@@ -141,7 +166,6 @@ public class MenuServiceImpl implements MenuService {
 		List<Menu> menuList = menuMapper.loadMenus(null);
 		int maxOrder = 0;
 		for(Menu temp:menuList) {
-
 			if(temp.getParentId().equals(menu.getParentId()) && Integer.parseInt(temp.getOrd()) >= maxOrder) {
 				maxOrder = Integer.parseInt(temp.getOrd());
 			}

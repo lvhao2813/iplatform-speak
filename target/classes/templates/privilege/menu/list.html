@@ -82,7 +82,7 @@ function openSelectManagerLayer(url){
 						</td>
 						<td align="left" th:text="${Menu['title']}"></td> <!-- 名称 -->
 						<td align="left" th:text="${Menu['href']}"></td> <!-- 链接 -->
-						<td th:text="${Menu['level']}==0? (${Menu['ord']}): (${Menu['level']}+'-'+ ${Menu['ord']})"> </td> <!-- 地图排序(地图等级) -->
+						<td th:text="${Menu['level']}==0? ('#'): ( ${Menu['ord']})"> </td> <!-- 地图排序(地图等级) -->
 						<td align="right"> <!-- 下面是操作 -->
 						<a href="#" class="c-blue parentyh" th:if="${Menu['href'] != 'foldOut'}" th:onclick="'javascript:openSelectManagerLayer(\'/privilege/menu/gotoSelectRolePage?MENU_ID='+${Menu['id']}+'\')'" >角色首页绑定</a>	       	
 						<a class="c-blue parent-bdgn"  th:onclick="'javascript:openSelectOptLayer(\''+${Menu['id']}+'\')'">绑定功能</a>	       	
