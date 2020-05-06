@@ -97,7 +97,7 @@ public class MenuServiceImpl implements MenuService {
 		manage.put("title", "常规管理");
 		manage.put("image", "fa fa-address-book");
 		
-		JSONArray jtemp = getAllMenus("0");
+		JSONArray jtemp = getAllMenusJson("0");
 		manage.put("child", jtemp); // 这里以后通过数据库读取
 
 		currency.put("currency", manage);
@@ -109,7 +109,7 @@ public class MenuServiceImpl implements MenuService {
 	 * 
 	 * @return
 	 */
-	private JSONArray getAllMenus(String parentId) {
+	private JSONArray getAllMenusJson(String parentId) {
 		List<Menu> menuList = menuMapper.queryMenuByParentID(String.valueOf(parentId));	
 		if (menuList.size() == 0 || menuList == null) {
 			return null;
@@ -124,9 +124,10 @@ public class MenuServiceImpl implements MenuService {
 			if (menu.getRightIcon() != null) {
 				temp.put("rightIcon", menu.getRightIcon());
 			}	
-			JSONArray tmenus = getAllMenus(menu.getId());
-			temp.put("child",tmenus);
-			
+			JSONArray tmenus = getAllMenusJson(menu.getId());
+			if(tmenus != null) {
+				temp.put("child",tmenus);
+			}
 			menus.add(temp);
 		}
 		return menus;
@@ -135,25 +136,22 @@ public class MenuServiceImpl implements MenuService {
 	@Override
 	public List<Menu> loadMenus(Map<String, String> formMap){
 		if(formMap == null || formMap.get("MENU_NAME") == null) {
-			return getAllMenus("0",1);
+			return getAllMenusList("0");
 		}else {
-			return 	menuMapper.loadMenus(formMap);		
+			return menuMapper.loadMenus(formMap);		
 		}
 	}
 	
-	private List<Menu> getAllMenus(String parentId,int a){
+	private List<Menu> getAllMenusList(String parentId){
 		List<Menu> menuList = menuMapper.queryMenuByParentID(String.valueOf(parentId));	
-		if (menuList.size() == 0 || menuList == null) {
+		if (menuList == null || menuList.isEmpty()) {
 			return null;
 		}
 		List<Menu> menus = new ArrayList<>();
 		for (Menu menu : menuList) {
 			menus.add(menu);
-			if(menu.getIsLeaf().equals("1")) {
-				continue;
-			}else {
-				List<Menu> tmenus = getAllMenus(menu.getId(),1);
-				if(  tmenus != null && tmenus.size() != 0 )
+			List<Menu> tmenus = getAllMenusList(menu.getId());
+			if(tmenus != null) {
 				menus.addAll(tmenus);
 			}
 		}

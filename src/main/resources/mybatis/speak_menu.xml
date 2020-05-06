@@ -42,6 +42,7 @@
 		<if test="MENU_NAME != null and MENU_NAME!=''">
 			and t.title like concat('%',#{MENU_NAME},'%')
 		</if>
+		ORDER  BY ORD
   	</select>
   	
   	
