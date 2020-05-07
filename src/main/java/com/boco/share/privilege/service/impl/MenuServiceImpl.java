@@ -110,7 +110,7 @@ public class MenuServiceImpl implements MenuService {
 	 * @return
 	 */
 	private JSONArray getAllMenusJson(String parentId) {
-		List<Menu> menuList = menuMapper.queryMenuByParentID(String.valueOf(parentId));	
+		List<Menu> menuList = menuMapper.queryMenuByParentId(String.valueOf(parentId));	
 		if (menuList.size() == 0 || menuList == null) {
 			return null;
 		}
@@ -134,16 +134,37 @@ public class MenuServiceImpl implements MenuService {
 	}
 
 	@Override
+	public List<Menu> loadMenusFormat(Map<String, String> formMap){
+		List<Menu> formatMenusList =  loadMenus(formMap);
+		for(Menu menu : formatMenusList) {
+			switch (menu.getLevel()) {
+			case "1":
+				String st = new String(" 1  "+menu.getTitle());
+				menu.setTitle(st);
+				break;
+			case "2":
+				String st2 = new String("&nbsp;&nbsp;&nbsp;&nbsp;"+menu.getTitle());
+				menu.setTitle(st2);
+				break;
+			case "3": //万一有三级目录
+				menu.setTitle("    "+menu.getTitle());
+				break;		
+			}
+		}
+		return formatMenusList;
+	}
+	
+	@Override
 	public List<Menu> loadMenus(Map<String, String> formMap){
-		if(formMap == null || formMap.get("MENU_NAME") == null) {
+		if(formMap == null || formMap.get("MENU_NAME") == null) { //搜索全部 -- 就是加载
 			return getAllMenusList("0");
-		}else {
+		}else { // 有输入的搜索
 			return menuMapper.loadMenus(formMap);		
 		}
 	}
 	
 	private List<Menu> getAllMenusList(String parentId){
-		List<Menu> menuList = menuMapper.queryMenuByParentID(String.valueOf(parentId));	
+		List<Menu> menuList = menuMapper.queryMenuByParentId(String.valueOf(parentId));	
 		if (menuList == null || menuList.isEmpty()) {
 			return null;
 		}

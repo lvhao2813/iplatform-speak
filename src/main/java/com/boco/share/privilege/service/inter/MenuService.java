@@ -66,4 +66,11 @@ public interface MenuService {
 	 * @return
 	 */
 	int update(Menu menu);
+	
+	/**
+	 * 按前台展示格式输出目录列表
+	 * @param formMap
+	 * @return
+	 */
+	List<Menu> loadMenusFormat(Map<String, String> formMap);
 }

@@ -21,7 +21,7 @@ public interface MenuMapper {
 	 * @param formMap
 	 * @return
 	 */
-	List<Menu> queryMenuByParentID(@Param("PARENT_ID")String parentId);
+	List<Menu> queryMenuByParentId(@Param("PARENT_ID")String parentId);
 	
 	/**
 	 * 加载菜单

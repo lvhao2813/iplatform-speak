@@ -59,7 +59,7 @@ public class MenuController extends BaseController {
 			@ModelAttribute(value = "pagination") Pagination pagination) {
 
 		PageHelper.startPage(pagination.getCurrentPageNum(), pagination.getPageCount());
-		List<Menu> resultList = menuService.loadMenus(formMap);
+		List<Menu> resultList = menuService.loadMenusFormat(formMap);
 
 		PageInfo<Menu> pageInfo = new PageInfo<Menu>(resultList);
 		pagination.setTotalCount(pageInfo.getTotal());
