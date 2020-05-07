@@ -29,7 +29,7 @@ public class MenuServiceImpl implements MenuService {
 	public MenuMapper menuMapper;
 
 	/**
-	 * 	查询菜单列表并展示
+	 * 查询菜单列表并展示
 	 */
 	@Override
 	public JSONObject queryAllMenuList() {
@@ -96,21 +96,21 @@ public class MenuServiceImpl implements MenuService {
 		JSONObject manage = new JSONObject();
 		manage.put("title", "常规管理");
 		manage.put("image", "fa fa-address-book");
-		
+
 		JSONArray jtemp = getAllMenusJson("0");
 		manage.put("child", jtemp); // 这里以后通过数据库读取
 
 		currency.put("currency", manage);
 		return currency;
 	}
-	
+
 	/**
 	 * 通过数据库读取菜单
 	 * 
 	 * @return
 	 */
 	private JSONArray getAllMenusJson(String parentId) {
-		List<Menu> menuList = menuMapper.queryMenuByParentId(String.valueOf(parentId));	
+		List<Menu> menuList = menuMapper.queryMenuByParentId(String.valueOf(parentId));
 		if (menuList.size() == 0 || menuList == null) {
 			return null;
 		}
@@ -120,13 +120,13 @@ public class MenuServiceImpl implements MenuService {
 			temp.put("title", menu.getTitle());
 			temp.put("href", menu.getHref());
 			temp.put("icon", menu.getIcon());
-			temp.put("target", menu.getTarget());	
+			temp.put("target", menu.getTarget());
 			if (menu.getRightIcon() != null) {
 				temp.put("rightIcon", menu.getRightIcon());
-			}	
+			}
 			JSONArray tmenus = getAllMenusJson(menu.getId());
-			if(tmenus != null) {
-				temp.put("child",tmenus);
+			if (tmenus != null) {
+				temp.put("child", tmenus);
 			}
 			menus.add(temp);
 		}
@@ -134,37 +134,37 @@ public class MenuServiceImpl implements MenuService {
 	}
 
 	@Override
-	public List<Menu> loadMenusFormat(Map<String, String> formMap){
-		List<Menu> formatMenusList =  loadMenus(formMap);
-		for(Menu menu : formatMenusList) {
+	public List<Menu> loadMenusFormat(Map<String, String> formMap) {
+		List<Menu> formatMenusList = loadMenus(formMap);
+		for (Menu menu : formatMenusList) {
 			switch (menu.getLevel()) {
 			case "1":
-				String st = new String(" 1  "+menu.getTitle());
+				String st = new String("&nbsp;<b>" + menu.getTitle() + "</b>");
 				menu.setTitle(st);
 				break;
 			case "2":
-				String st2 = new String("&nbsp;&nbsp;&nbsp;&nbsp;"+menu.getTitle());
+				String st2 = new String("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + menu.getTitle());
 				menu.setTitle(st2);
 				break;
-			case "3": //万一有三级目录
-				menu.setTitle("    "+menu.getTitle());
-				break;		
+			case "3": // 万一有三级目录
+				menu.setTitle("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + menu.getTitle());
+				break;
 			}
 		}
 		return formatMenusList;
 	}
-	
+
 	@Override
-	public List<Menu> loadMenus(Map<String, String> formMap){
-		if(formMap == null || formMap.get("MENU_NAME") == null) { //搜索全部 -- 就是加载
+	public List<Menu> loadMenus(Map<String, String> formMap) {
+		if (formMap == null || formMap.get("MENU_NAME") == null) { // 搜索全部 -- 就是加载
 			return getAllMenusList("0");
-		}else { // 有输入的搜索
-			return menuMapper.loadMenus(formMap);		
+		} else { // 有输入的搜索
+			return menuMapper.loadMenus(formMap);
 		}
 	}
-	
-	private List<Menu> getAllMenusList(String parentId){
-		List<Menu> menuList = menuMapper.queryMenuByParentId(String.valueOf(parentId));	
+
+	private List<Menu> getAllMenusList(String parentId) {
+		List<Menu> menuList = menuMapper.queryMenuByParentId(String.valueOf(parentId));
 		if (menuList == null || menuList.isEmpty()) {
 			return null;
 		}
@@ -172,42 +172,41 @@ public class MenuServiceImpl implements MenuService {
 		for (Menu menu : menuList) {
 			menus.add(menu);
 			List<Menu> tmenus = getAllMenusList(menu.getId());
-			if(tmenus != null) {
+			if (tmenus != null) {
 				menus.addAll(tmenus);
 			}
 		}
 		return menus;
 	}
 
-
 	@Override
-	public int insert(Menu menu){
+	public int insert(Menu menu) {
 		List<Menu> menuList = menuMapper.loadMenus(null);
 		int maxOrder = 0;
-		for(Menu temp:menuList) {
-			if(temp.getParentId().equals(menu.getParentId()) && Integer.parseInt(temp.getOrd()) >= maxOrder) {
+		for (Menu temp : menuList) {
+			if (temp.getParentId().equals(menu.getParentId()) && Integer.parseInt(temp.getOrd()) >= maxOrder) {
 				maxOrder = Integer.parseInt(temp.getOrd());
 			}
 		}
 		menu.setOrd(String.valueOf(++maxOrder));
 		return menuMapper.insert(menu);
 	}
-	
+
 	@Override
 	public void delete(String deleteId) {
 		menuMapper.delete(deleteId);
 	}
-	
+
 	@Override
 	public void batchDeleteMenus(String[] ids) {
 		menuMapper.batchDeleteMenus(ids);
 	}
-	
+
 	@Override
 	public Menu getMenuById(Map<String, String> formMap) {
 		return menuMapper.getMenuById(formMap);
 	}
-	
+
 	@Override
 	public int update(Menu menu) {
 		return menuMapper.update(menu);

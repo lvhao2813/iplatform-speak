@@ -80,7 +80,7 @@ function openSelectManagerLayer(url){
 						<td align="center">
 							<input type="checkbox" id="checkboxId"  th:name="check"  th:value="${Menu['id']}" />
 						</td>
-						<td align="left" th:text="${ Menu['level']=='1'?(Menu['title']):('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+Menu['title'])}"></td> <!-- 名称 -->
+						<td align="left" th:utext="${Menu['title']}"></td> <!-- 名称 -->
 						<td align="left" th:text="${Menu['href']}"></td> <!-- 链接 -->
 						<td th:text="${Menu['ord']}"> </td> <!-- 地图排序(地图等级) -->
 						<td align="right"> <!-- 下面是操作 -->
