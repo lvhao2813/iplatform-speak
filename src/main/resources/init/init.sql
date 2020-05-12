@@ -24,7 +24,7 @@ create table ods_address(
 -- 问题分类
 create table ods_s_quention_sort(
  id int PRIMARY KEY AUTO_INCREMENT COMMENT '主键',
- code varchar(32) DEFAULT NULL COMMENT '编码',
+ code varchar(32) DEFAULT NULL COMMENT '分类编码',
  name varchar(255) DEFAULT NULL COMMENT '分类名称',
  ord int DEFAULT NULL COMMENT '排序'
 );

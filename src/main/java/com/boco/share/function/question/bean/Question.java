@@ -3,10 +3,14 @@
  */
 package com.boco.share.function.question.bean;
 
+import io.swagger.annotations.ApiModel;
+
 /**
  * @author LOVE
  *
  */
-public class Question {
 
+@ApiModel(value = "问题对象", description = "问题对象")
+public class Question {
+	
 }
