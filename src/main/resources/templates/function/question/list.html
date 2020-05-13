@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+	<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<div th:insert="/common/common_css :: privilege"></div>
+<script type="text/javascript" th:inline="javascript">
+
+</script>
+</head>
+<body>
+<div th:insert="/common/common_index :: index_head"></div>
+<div th:include="/common/onload_list_js :: loadJS"></div>
+
+<form id="callForm" name="callForm" th:action="@{/privilege/user/query}" th:method="post">
+
+	
+</form>
+<div th:insert="/common/common_index :: index_foot"></div>
+</body>
+</html>
+

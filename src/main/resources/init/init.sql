@@ -134,7 +134,7 @@ create table ods_s_chinese_unit(
 -- 汉字包
 create table ods_s_chinese(
   id int PRIMARY KEY AUTO_INCREMENT COMMENT '主键',
-  word varchar(6) DEFAULT NULL COMMENT '汉字',
+  chinese varchar(6) DEFAULT NULL COMMENT '汉字',
   pinyin varchar(12) DEFAULT NULL COMMENT '汉字拼音'
 );
 
