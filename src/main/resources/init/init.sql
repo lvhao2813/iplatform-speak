@@ -1,3 +1,4 @@
+#######################################  系统类功能 ###################################################
 -- 用户表
 create table ods_s_user(
 	id int PRIMARY KEY AUTO_INCREMENT COMMENT '主键',
@@ -9,6 +10,19 @@ create table ods_s_user(
 	password varchar(50) DEFAULT NULL COMMENT '登录密码'
 );
 
+-- 菜单
+create table ods_s_menu(
+	id int PRIMARY KEY AUTO_INCREMENT COMMENT '主键',
+	parentId int DEFAULT NULL COMMENT '父id',
+	title varchar(255) DEFAULT NULL COMMENT '菜单名称',
+	href varchar(255) DEFAULT NULL COMMENT '菜单链接',
+	icon varchar(255) DEFAULT NULL COMMENT '菜单图标',
+	rightIcon varchar(255) DEFAULT NULL COMMENT '菜单图标',
+	target varchar(255) DEFAULT NULL COMMENT '菜单目标,默认:_self',
+	level varchar(4) DEFAULT NULL COMMENT '菜单等级'
+);
+
+#######################################  商品购买支付类功能 ###################################################
 -- 地址管理
 create table ods_address(
 	id int PRIMARY KEY AUTO_INCREMENT COMMENT '主键',
@@ -21,6 +35,51 @@ create table ods_address(
 	user_id int COMMENT '用户id'
 );
 
+-- license地址
+create table ods_license_address(
+	id int PRIMARY KEY AUTO_INCREMENT COMMENT '主键',
+	accept_man varchar(255) COMMENT '收货人',
+  idCard varchar(18) DEFAULT NULL COMMENT '身份证号',
+	phone varchar(255) COMMENT '电话',
+	province varchar(255) COMMENT '省份',
+	city varchar(255) COMMENT '地市',
+	area varchar(255) COMMENT '片区',
+	address varchar(1000) COMMENT '详细地址',
+	is_delete varchar(2) COMMENT '是否删除',
+	user_id int COMMENT '用户id'
+);
+
+-- 订单分类码表
+create table ods_order_sort(
+	id int PRIMARY KEY AUTO_INCREMENT COMMENT '主键',
+	name varchar(255) DEFAULT NULL COMMENT '订单分类名称'
+
+);
+
+-- 订单
+create table ods_order(
+	id int PRIMARY KEY AUTO_INCREMENT COMMENT '主键',
+	name varchar(255) DEFAULT NULL COMMENT '订单名称',
+	create_date datetime DEFAULT NULL COMMENT '创建时间',
+	order_sort_id int DEFAULT NULL COMMENT '订单分类id',
+	user_id int COMMENT '用户id'
+);
+
+-- 商品 对于邮费 就相当于一个商品 根据地区确定的商品
+create table ods_goods(
+	id int PRIMARY KEY AUTO_INCREMENT COMMENT '主键',
+	name varchar(255) DEFAULT NULL COMMENT '商品名称',
+	price decimal DEFAULT NULL COMMENT '商品单价格',
+	unit varchar(32) DEFAULT NULL COMMENT '商品单位',
+	image varchar(255) DEFAULT NULL COMMENT '商品图片',
+	create_date datetime DEFAULT NULL COMMENT '创建时间',
+	order_id int DEFAULT NULL COMMENT '订单id'
+
+);
+
+
+
+#######################################  题目练习类功能 ###################################################
 -- 问题分类
 create table ods_s_quention_sort(
  id int PRIMARY KEY AUTO_INCREMENT COMMENT '主键',
@@ -52,6 +111,7 @@ create table ods_c_atachment(
 create table ods_questions(
 	id int PRIMARY KEY AUTO_INCREMENT COMMENT '主键',
 	name varchar(255) DEFAULT NULL COMMENT '名称',
+    create_date datetime DEFAULT NULL COMMENT '创建时间',
 	attachment_unit_id int COMMENT '语音附件包id',
 	sort_id int COMMENT '题目类别'
 );
@@ -79,3 +139,31 @@ create table ods_s_chinese(
 );
 
 
+-- 报名
+create table ods_exam_people(
+	id int PRIMARY KEY AUTO_INCREMENT COMMENT '主键',
+	name varchar(255) DEFAULT NULL COMMENT '姓名',
+	sex varchar(4) DEFAULT NULL COMMENT '性别',
+	idCard varchar(18) DEFAULT NULL COMMENT '身份证号',
+	birthday datetime DEFAULT NULL COMMENT '出生日期',
+	exam_type int DEFAULT NULL COMMENT '考试类型',
+
+);
+
+-- 考试类型
+create table ods_exam_type(
+	id int PRIMARY KEY AUTO_INCREMENT COMMENT '主键',
+	name varchar(255) DEFAULT NULL COMMENT '考试名称',
+	exam_date datetime DEFAULT NULL COMMENT '考试时间',
+	exam_address int DEFAULT NULL COMMENT '考试地点'
+
+);
+
+-- 成绩
+create table ods_grade(
+	id int PRIMARY KEY AUTO_INCREMENT COMMENT '主键',
+	name varchar(255) DEFAULT NULL COMMENT '姓名',
+	idCard varchar(18) DEFAULT NULL COMMENT '身份证号',
+	admissionTicket varchar(32) DEFAULT NULL COMMENT '准考证号',
+	score varchar(32) DEFAULT NULL COMMENT '成绩'
+);
