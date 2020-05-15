@@ -15,6 +15,14 @@
 		<result column="DESCRITION" property="descrition" jdbcType="VARCHAR" />
 	</resultMap>
 		
+	<resultMap type="com.boco.share.privilege.bean.UserAvailable" id="userAvailable">
+		<result column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="VIP" property="vip" jdbcType="VARCHAR" />
+		<result column="EXECFREQUENCY" property="execFrequency" jdbcType="INTEGER" />
+		<result column="EXECTIME" property="execTime" jdbcType="DATE" />
+		<result column="LINEEFFECTIVETIME" property="lineEffectiveTime" jdbcType="DATE" />
+	</resultMap>
+		
 	<select id="loadUsers" parameterType="java.util.HashMap" resultMap="user">
 		select id id, name name, code code, phone phone , 
 		active_flag activeFlag, is_manager manager,passWord passWord, 
@@ -51,7 +59,6 @@
   				'1', '0', #{passWord},
   				#{email}, #{descrition}
   		)
-  		
 	</insert>
   
 	<update id="deleteUser" parameterType="String">
@@ -86,5 +93,13 @@
 				</if>
 			     where t.id = #{id}
 	</update>
+	<select id="queryUserAvailableByUserId" parameterType="String" resultMap="userAvailable">
+			select id id, is_vip vip, execFrequency execFrequency,execTime execTime, lineEffectiveTime lineEffectiveTime
+			from ods_user_available 
+			where 1=1
+			<if test="userId != null and userId !=''">
+				and user_id = #{userId}
+			</if>
+	  </select>
 
 </mapper>

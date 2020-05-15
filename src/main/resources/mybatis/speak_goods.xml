@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.boco.share.function.goods.dao.GoodsMapper">
+
+	<resultMap type="com.boco.share.function.goods.bean.Goods" id="goods">
+		<result column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="PRICE" property="price" jdbcType="DECIMAL" />
+		<result column="UNIT" property="unit" jdbcType="VARCHAR" />
+		<result column="IMAGE" property="image" jdbcType="VARCHAR" />
+		<result column="DESCIPTION" property="desciption" jdbcType="VARCHAR" />
+		<result column="EXECFREQUENCY" property="execFrequency" jdbcType="INTEGER" />
+		<result column="EFFECTIVETIME" property="effectiveTime" jdbcType="INTEGER" />
+		<result column="CREATEDATE" property="createDate" jdbcType="DATE" />
+	</resultMap>
+	
+	
+	<select id="queryGoods" resultMap="goods" parameterType="java.util.HashMap">
+		select id id, name name, price price ,unit unit,
+			   image image, create_date createDate, desciption desciption,
+			   execFrequency execFrequency, effectiveTime effectiveTime
+		from ods_goods g
+		left join ods_c_sort s on g.sort_id = s.id and s.type = 'good'
+		where 1 = 1 
+		<if test="sortName!= null and sortName!=''">
+			and s.name = #{sortName}
+		</if>
+		<if test="goodsId!= null and goodsId!=''">
+			and g.id = #{goodsId}
+		</if>
+
+	</select>
+	
+	<select id="queryGoodsById" resultMap="goods">
+		select id id, name name, price price ,unit unit,
+			   image image, create_date createDate, desciption desciption,
+			   execFrequency execFrequency, effectiveTime effectiveTime
+		from ods_goods g
+		left join ods_c_sort s on g.sort_id = s.id and s.type = 'good'
+		where 1 = 1 
+		<if test="goodsId!= null and goodsId!=''">
+			and g.id = #{goodsId}
+		</if>
+
+	</select>
+		
+	
+</mapper>

@@ -9,6 +9,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.boco.share.privilege.bean.User;
+import com.boco.share.privilege.bean.UserAvailable;
 
 /**
  * @author lv
@@ -79,5 +80,13 @@ public interface UserMapper {
 	 * @param ids
 	 */
 	public void batchDeleteUsers(String[] ids);
+	
+	/**
+	 * 查询用户可用权益
+	 * 
+	 * @param code
+	 * @return
+	 */
+	UserAvailable queryUserAvailableByUserId(String userId);
 
 }
