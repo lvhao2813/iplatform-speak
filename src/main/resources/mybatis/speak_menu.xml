@@ -51,7 +51,7 @@
   					icon, rightIcon,target, level,
   				ord,code,isleaf,description) 
   		values (
-  				'1', #{title}, #{href},
+  				#{parentId}, #{title}, #{href},
   				'fa fa-tachometer',#{rightIcon}, #{target}, 2,
   				#{ord}, #{code},#{isLeaf},#{description}
   	);

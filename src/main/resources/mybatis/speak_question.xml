@@ -9,11 +9,8 @@
 		<result column="CODE" property="code" jdbcType="VARCHAR" />
 	</resultMap>
 	
-	
 	<select id="queryQuestionSorts" resultMap="question">
 		select id id, name name, code code from ods_c_sort where type = 'question'
 	</select>
-	
-		
-	
+
 </mapper>

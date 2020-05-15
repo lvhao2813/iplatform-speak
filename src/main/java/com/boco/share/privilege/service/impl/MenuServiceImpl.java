@@ -181,14 +181,14 @@ public class MenuServiceImpl implements MenuService {
 
 	@Override
 	public int insert(Menu menu) {
-		List<Menu> menuList = menuMapper.loadMenus(null);
-		int maxOrder = 0;
-		for (Menu temp : menuList) {
-			if (temp.getParentId().equals(menu.getParentId()) && Integer.parseInt(temp.getOrd()) >= maxOrder) {
-				maxOrder = Integer.parseInt(temp.getOrd());
-			}
-		}
-		menu.setOrd(String.valueOf(++maxOrder));
+		//之前想自增order 的时候写的，暂时不需要下面这段代码
+		//List<Menu> menuList = menuMapper.loadMenus(null);
+//		int maxOrder = 0;
+//		for (Menu temp : menuList) {
+//			if (temp.getParentId().equals(menu.getParentId()) && Integer.parseInt(temp.getOrd()) >= maxOrder) {
+//				maxOrder = Integer.parseInt(temp.getOrd());
+//			}
+//		}
 		return menuMapper.insert(menu);
 	}
 
