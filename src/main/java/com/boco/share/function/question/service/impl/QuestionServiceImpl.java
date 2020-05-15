@@ -8,7 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.boco.share.function.question.bean.QuestionSort;
+import com.boco.share.function.common.bean.Sort;
 import com.boco.share.function.question.dao.QuestionMapper;
 import com.boco.share.function.question.service.inter.QuestionService;
 
@@ -17,13 +17,13 @@ import com.boco.share.function.question.service.inter.QuestionService;
  *
  */
 @Service
-public class QuestionServiceImpl implements QuestionService{
+public class QuestionServiceImpl implements QuestionService {
 
 	@Autowired
 	private QuestionMapper mapper;
-	
+
 	@Override
-	public List<QuestionSort> queryQuestionSorts() {
+	public List<Sort> queryQuestionSorts() {
 		return mapper.queryQuestionSorts();
 	}
 

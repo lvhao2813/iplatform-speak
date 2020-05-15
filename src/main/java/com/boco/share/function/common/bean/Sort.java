@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.boco.share.function.question.bean;
+package com.boco.share.function.common.bean;
 
 import java.io.Serializable;
 
@@ -9,23 +9,23 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * @author LOVE
+ * @author lv
  *
  */
-@ApiModel(value = "题目分类对象", description = "题目分类对象")
-public class QuestionSort implements Serializable{
-	
-	private static final long serialVersionUID = -6716388284395038375L;
+@ApiModel(value = "分类对象", description = "分类对象")
+public class Sort implements Serializable {
+
+	private static final long serialVersionUID = -3843196360754119437L;
 
 	@ApiModelProperty(value = "分类id")
 	private String id;
 
 	@ApiModelProperty(value = "分类编码")
 	private String code;
-	
+
 	@ApiModelProperty(value = "分类名称")
 	private String name;
-	
+
 	@ApiModelProperty(value = "排序")
 	private int ord;
 
@@ -60,6 +60,5 @@ public class QuestionSort implements Serializable{
 	public void setOrd(int ord) {
 		this.ord = ord;
 	}
-	
-	
+
 }

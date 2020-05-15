@@ -49,13 +49,6 @@ create table ods_license_address(
 	user_id int COMMENT '用户id'
 );
 
--- 订单分类码表
-create table ods_order_sort(
-	id varchar(32) PRIMARY KEY AUTO_INCREMENT COMMENT '主键',
-	name varchar(255) DEFAULT NULL COMMENT '订单分类名称'
-
-);
-
 -- 订单
 create table ods_order(
 	id varchar(32) PRIMARY KEY AUTO_INCREMENT COMMENT '主键',
@@ -65,7 +58,7 @@ create table ods_order(
 	user_id int COMMENT '用户id'
 );
 
--- 商品 对于邮费 就相当于一个商品 根据地区确定的商品
+-- 商品 对于邮费 就相当于一个商品 根据地区确定的商品,商品的一个概述
 create table ods_goods(
 	id varchar(32) PRIMARY KEY AUTO_INCREMENT COMMENT '主键',
 	name varchar(255) DEFAULT NULL COMMENT '商品名称',
@@ -73,23 +66,31 @@ create table ods_goods(
 	unit varchar(32) DEFAULT NULL COMMENT '商品单位',
 	image varchar(255) DEFAULT NULL COMMENT '商品图片',
 	create_date datetime DEFAULT NULL COMMENT '创建时间',
+	goods_sort 
 	order_id int DEFAULT NULL COMMENT '订单id'
 
 );
+
+-- 商品分类
+create table ods_goods_sort(
+ 
+); 
 
 
 
 #######################################  题目练习类功能 ###################################################
 -- 问题分类
-create table ods_s_quention_sort(
+create table ods_s_sort(
  id varchar(32) PRIMARY KEY COMMENT '主键',
  code varchar(32) DEFAULT NULL COMMENT '分类编码',
  name varchar(255) DEFAULT NULL COMMENT '分类名称',
+ type varchar(32) DEFAULT NULL COMMENT '类型',
  ord int DEFAULT NULL COMMENT '排序'
 );
-INSERT into ods_s_quention_sort(code, name, ord) values('danzilianxi','单字练习','1');
-INSERT into ods_s_quention_sort(code, name, ord) values('ciyulianxi','词语练习','2');
-INSERT into ods_s_quention_sort(code, name, ord) values('duanwenlianxi','短文练习','3');
+
+INSERT into ods_s_sort(id,code, name, type, ord) values('1','danzilianxi','单字练习','question','1');
+INSERT into ods_s_sort(id,code, name, type, ord) values('2','ciyulianxi','词语练习','question','2');
+INSERT into ods_s_sort(id,code, name, type, ord) values('3','duanwenlianxi','短文练习','question','3');
 
 -- 附件包表
 create table ods_c_attachment_unit(

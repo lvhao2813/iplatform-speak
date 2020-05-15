@@ -5,7 +5,7 @@ package com.boco.share.function.question.service.inter;
 
 import java.util.List;
 
-import com.boco.share.function.question.bean.QuestionSort;
+import com.boco.share.function.common.bean.Sort;
 
 /**
  * @author LOVE
@@ -17,5 +17,6 @@ public interface QuestionService {
 	 * 
 	 * @return
 	 */
-	public List<QuestionSort> queryQuestionSorts();
+	public List<Sort> queryQuestionSorts();
+
 }

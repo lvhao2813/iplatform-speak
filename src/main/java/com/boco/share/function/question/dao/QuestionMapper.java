@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.boco.share.function.question.bean.QuestionSort;
+import com.boco.share.function.common.bean.Sort;
 
 /**
  * @author LOVE
@@ -21,6 +21,6 @@ public interface QuestionMapper {
 	 * 
 	 * @return
 	 */
-	public List<QuestionSort> queryQuestionSorts();
+	public List<Sort> queryQuestionSorts();
 
 }

@@ -6,6 +6,8 @@ package com.boco.share.function.question.bean;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.boco.share.function.common.bean.Sort;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -15,7 +17,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 
 @ApiModel(value = "题目对象", description = "问题对象")
-public class Question implements Serializable{
+public class Question implements Serializable {
 	private static final long serialVersionUID = 4672939995708681821L;
 
 	@ApiModelProperty(value = "题目id")
@@ -27,8 +29,8 @@ public class Question implements Serializable{
 	@ApiModelProperty(value = "创建时间")
 	private Date createDate;
 
-	@ApiModelProperty(value = "问题分类")
-	private QuestionSort sort;
+	@ApiModelProperty(value = "分类")
+	private Sort sort;
 
 	public String getId() {
 		return id;
@@ -54,11 +56,11 @@ public class Question implements Serializable{
 		this.createDate = createDate;
 	}
 
-	public QuestionSort getSort() {
+	public Sort getSort() {
 		return sort;
 	}
 
-	public void setSort(QuestionSort sort) {
+	public void setSort(Sort sort) {
 		this.sort = sort;
 	}
 
