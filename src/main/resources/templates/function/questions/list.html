@@ -32,7 +32,7 @@ function resetSearch(){
 }
 
 function openBatchDeletePage(){
-	deleteData('/privilege/role/batchDeletePage?deleteUrl=/privilege/question/batchDelete');
+	deleteData('/function/question/batchDeletePage?deleteUrl=/privilege/question/batchDelete');
 }
 </script>
 
@@ -62,7 +62,6 @@ function openBatchDeletePage(){
 					           </td>
 					           <td width="28%"></td>					           
 				            </tr>
-				           
 			            </table>
 		</div>
 		
@@ -71,9 +70,9 @@ function openBatchDeletePage(){
 			<div class="title">	
 				    	<h2> <a class="active">题目列表</a></h2>	
 				    	<div class="operation">
-				    		<a class="parentadd"  onclick="openCommonLayer('新增记录','800px','250px','/api/v1/question/insertpage')"><img th:src="@{/images/icon-add.png}" />单字练习</a>
-				    		<a class="parentadd"  onclick="openCommonLayer('新增记录','800px','250px','/api/v1/question/insertpage')"><img th:src="@{/images/icon-add.png}" />词语练习</a>
-				    		<a class="parentadd"  onclick="openCommonLayer('新增记录','800px','250px','/api/v1/question/insertpage')"><img th:src="@{/images/icon-add.png}" />短文练习</a>	
+				    		<a class="parentadd"  onclick="openCommonLayer('新增记录','800px','250px','/api/v1/question/insertpage?id=1')"><img th:src="@{/images/icon-add.png}" />单字练习</a>
+				    		<a class="parentadd"  onclick="openCommonLayer('新增记录','800px','250px','/api/v1/question/insertpage?id=2')"><img th:src="@{/images/icon-add.png}" />词语练习</a>
+				    		<a class="parentadd"  onclick="openCommonLayer('新增记录','800px','250px','/api/v1/question/insertpage?id=3')"><img th:src="@{/images/icon-add.png}" />短文练习</a>	
 				    	    <a class="parentIframe" onclick="openBatchDeletePage()"><img th:src="@{/images/icon-del.png}" />删除</a>
 				    	</div>
 				    		

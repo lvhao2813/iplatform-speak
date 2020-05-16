@@ -6,8 +6,6 @@ package com.boco.share.function.question.bean;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.boco.share.function.common.bean.Sort;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<link th:href="@{/css/common.css}" rel="stylesheet" />
+<link th:href="@{/css/syle.css}" rel="stylesheet" />
+<link th:href="@{~/js/layer/skin/layer.css}" rel="stylesheet"/>
+
+<!--[if lt IE 9]>
+				<script src="https://apps.bdimg.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
+			<![endif]-->
+
+</head>
+<body id="bg-white">
+	<form id="callForm" name="callForm" action="" th:method="post">
+		<div class="p10">
+<table width="100%" cellpadding="0" cellspacing="0" class="tc-edit">
+<input type="hidden" id="Id" th:field="*{serialVersionUID}"  />
+	<!--  
+	<input type="hidden" id="parentOrgId"  th:field="*{topParentId}" value="" />
+	<input type="hidden" id="orgId" th:field="*{orgId}"  />
+	-->
+	<tr th:each="duoyin : ${duoyinList}">
+		<td align="center">
+		<input type="checkbox" id="checkboxId"  th:name="check"  th:value="${duoyin['id']}" />
+		</td>
+<!-- 		 <select name="chooseDuyin"> -->
+<!--              <option th:each="pinyin: ${duoyin['pinyin']}" th:value="pinyin" th:text="${pinyin}"> -->
+<!--          </select> -->
+		</td>
+	</tr>
+
+</table>
+</div>
+<div class="tc-tip" id="tipsId" style="display:none"><img th:src="@{/images/icon-tip.png}"/>您还有必填项未填。</div>
+		<div class="tc-bottom">
+			<a onclick="submitUpdate()"
+				id="submitBtn">确定</a> <a
+				th:onclick="'javascript:closeCurrentLayer()'">取消</a>
+
+		</div>
+	</form>
+
+	<div th:include="/common/onload_layer_js :: loadJS"></div>
+	<script type="text/javascript">
+	function submitUpdate(){
+		jqueryAjaxSubmit('/privilege/user/update');
+	}
+	
+	
+	$.base64.utf8decode = true;
+	
+	function selectedOrg(orgId,orgName){
+		var orgName = $.base64('decode', orgName);
+		$("input[id='parentOrgId']").val(orgId);
+		$("input[id='orgId']").val("");
+		$("input[id='orgName']").val(orgName);
+		$("input[id='orgDepart']").removeAttr("disabled").val("请选择所在部门");
+	}
+	
+	function selectedDepart(departId,departName){
+		var departName = $.base64('decode', departName);
+		$("input[id='orgId']").val(departId);
+		$("input[id='orgDepart']").val(departName);
+	}
+	
+	function openSelectedOrgPage(){
+		layer.open({
+			type : 2,
+			skin : 'layui-layer-lan',
+			title : '选择单位',
+			fix : false,
+			shadeClose : true,
+			maxmin : true,
+			area : [ '350px', '320px' ],
+			content : '/privilege/role/selectOrg',
+		});
+	}
+	
+	function openSelectedPartPage(){
+		var parentOrgId=$("input[id='parentOrgId']").val();
+		layer.open({
+			type : 2,
+			skin : 'layui-layer-lan',
+			title : '选择部门',
+			fix : false,
+			shadeClose : true,
+			maxmin : true,
+			area : [ '350px', '320px' ],
+			content : '/privilege/role/selectDepartment?PARENT_ID='+parentOrgId,
+		});
+	}
+	
+	
+	</script>
+</body>
+</html>

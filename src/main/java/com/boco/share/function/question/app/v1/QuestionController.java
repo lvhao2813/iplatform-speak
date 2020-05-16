@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.boco.share.framework.pagination.Pagination;
+import com.boco.share.function.question.bean.Hanzi;
 import com.boco.share.function.question.bean.Question;
 import com.boco.share.function.question.service.inter.QuestionService;
-import com.boco.share.privilege.bean.User;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
@@ -72,6 +72,29 @@ public class QuestionController {
 		return modelAndView;
 	}
 
+	@RequestMapping("insertpage")
+	public ModelAndView insertPage(@RequestParam Map<String, String> formMap) {
+		ModelAndView mav =null;
+		switch (formMap.get("id")) {
+		case "1"://新增字
+			mav = new ModelAndView("function/questions/insertZi");
+			break;
+		case "2"://新增词
+			mav = new ModelAndView("function/questions/insertCi");
+			break;
+		case "3"://新增句子
+			mav = new ModelAndView("function/questions/insertJv");
+			break;	
+		}
+		return mav;
+	}
 	
+	@RequestMapping("insertZi")
+	public ModelAndView insert(@RequestParam Map<String, String> formMap) {
+		ModelAndView mav = new ModelAndView("function/questions/choosePinyin");
+		List<Hanzi> duyinList = questionService.getAllDuyin(formMap);
+		mav.addObject("duoyinList",duyinList);
+		return mav;
+	}
 
 }
