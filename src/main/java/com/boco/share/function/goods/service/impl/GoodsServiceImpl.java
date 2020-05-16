@@ -56,7 +56,8 @@ public class GoodsServiceImpl implements GoodsService {
 	private void effectGoods(UserAvailable available, Goods goods) {
 		switch (goods.getId()) {
 		//年费
-		case "1":
+		case "1": 
+			
 			break;
 		//季度
 		case "2":

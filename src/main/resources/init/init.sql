@@ -161,7 +161,7 @@ create table ods_questions_detail(
 -- 问题明细汉字包
 create table ods_s_chinese_unit(
   id varchar(32) PRIMARY KEY COMMENT '主键',
-  questions_detail_id int COMMENT '问题明细id',
+  questions_detail_id varchar(32) COMMENT '问题明细id',
   chinese_id varchar(32) COMMENT '汉字id',
   ord int COMMENT '汉字排序'
 );
@@ -170,7 +170,8 @@ create table ods_s_chinese_unit(
 create table ods_s_chinese(
   id varchar(32) PRIMARY KEY COMMENT '主键',
   chinese varchar(6) DEFAULT NULL COMMENT '汉字',
-  pinyin varchar(12) DEFAULT NULL COMMENT '汉字拼音'
+  pinyin varchar(12) DEFAULT NULL COMMENT '汉字拼音',
+  hzAndpy varchar(255) DEFAULT NULL COMMENT '汉字和拼音'
 );
 
 

@@ -48,7 +48,8 @@ public class GoodsController {
 			@ApiImplicitParam(dataType = "String", paramType = "query", name = "sortName", value = "商品分类名称，例如:套餐商品,普通商品,邮寄运费商品,教材商品", required = true) })
 	@RequestMapping(value = "/buyGoodsAvailable", method = RequestMethod.POST)
 	public String buyGoodsAvailable(@RequestParam Map<String, String> formMap) {
-		return goodsService.buyGoodsAvailable(formMap);
+		goodsService.buyGoodsAvailable(formMap);
+		return "";
 	}
 
 }

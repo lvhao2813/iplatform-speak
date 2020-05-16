@@ -29,10 +29,10 @@ public interface QuestionService {
 	public List<Question> loadQuestions(Map<String, String> formMap);
 	
 	/**
-	 * 通过formMap中的details 传来的字，得到其所有可能的读音。
-	 * @param formMap
+	 * 根据录入的题目内容，生成对应的题目
+	 * @param formMap type-题目分类,name-题目名称,details-题目内容
 	 * @return
 	 */
-	public List<Hanzi> getAllDuyin(Map<String, String> formMap);
+	public void genQuestion(Map<String, String> formMap);
 
 }

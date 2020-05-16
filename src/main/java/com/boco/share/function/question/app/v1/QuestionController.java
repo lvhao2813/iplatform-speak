@@ -16,13 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.boco.share.framework.pagination.Pagination;
-import com.boco.share.function.question.bean.Hanzi;
 import com.boco.share.function.question.bean.Question;
 import com.boco.share.function.question.service.inter.QuestionService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 /**
@@ -39,7 +40,7 @@ public class QuestionController {
 
 	@ApiOperation(value = "查询题目列表页面")
 	@ResponseBody
-	@RequestMapping(value = "/queryQuestionList", method = RequestMethod.POST)
+	@RequestMapping(value = "/queryQuestionList", method = RequestMethod.GET)
 	public ModelAndView queryQuestionList(@RequestParam Map<String, String> formMap,
 			@ModelAttribute(value = "pagination") Pagination pagination) {
 		ModelAndView mv = new ModelAndView("function/question/list");
@@ -50,10 +51,13 @@ public class QuestionController {
 
 		return mv;
 	}
-	
+
 	@ApiOperation(value = "查询题目列表")
 	@ResponseBody
-	@RequestMapping("query")
+	@ApiImplicitParams({
+			@ApiImplicitParam(dataType = "String", paramType = "query", name = "name", value = "题目名称", required = false),
+			@ApiImplicitParam(dataType = "String", paramType = "query", name = "sortId", value = "分类id", required = false) })
+	@RequestMapping(value = "/query", method = RequestMethod.GET)
 	public ModelAndView queryManagerList(@RequestParam Map<String, String> formMap,
 			@ModelAttribute(value = "pagination") Pagination pagination) {
 
@@ -72,28 +76,25 @@ public class QuestionController {
 		return modelAndView;
 	}
 
-	@RequestMapping("insertpage")
+	@ApiOperation(value = "新增跳转页")
+	@ApiImplicitParams({
+			@ApiImplicitParam(dataType = "String", paramType = "query", name = "type", value = "题目分类", required = true) })
+	@RequestMapping(value = "/insertpage", method = RequestMethod.GET)
 	public ModelAndView insertPage(@RequestParam Map<String, String> formMap) {
-		ModelAndView mav =null;
-		switch (formMap.get("id")) {
-		case "1"://新增字
-			mav = new ModelAndView("function/questions/insertZi");
-			break;
-		case "2"://新增词
-			mav = new ModelAndView("function/questions/insertCi");
-			break;
-		case "3"://新增句子
-			mav = new ModelAndView("function/questions/insertJv");
-			break;	
-		}
+		ModelAndView mav = new ModelAndView("function/questions/insert");
+		mav.addObject("type", formMap.get("type"));
 		return mav;
 	}
-	
-	@RequestMapping("insertZi")
-	public ModelAndView insert(@RequestParam Map<String, String> formMap) {
-		ModelAndView mav = new ModelAndView("function/questions/choosePinyin");
-		List<Hanzi> duyinList = questionService.getAllDuyin(formMap);
-		mav.addObject("duoyinList",duyinList);
+
+	@ApiOperation(value = "新增题目")
+	@ApiImplicitParams({
+			@ApiImplicitParam(dataType = "String", paramType = "query", name = "type", value = "题目分类", required = true),
+			@ApiImplicitParam(dataType = "String", paramType = "query", name = "name", value = "题目名称", required = true),
+			@ApiImplicitParam(dataType = "String", paramType = "query", name = "details", value = "题目内容", required = true) })
+	@RequestMapping(value = "/genQuestion", method = RequestMethod.POST)
+	public ModelAndView genQuestion(@RequestParam Map<String, String> formMap) {
+		ModelAndView mav = new ModelAndView("function/questions/list");
+		questionService.genQuestion(formMap);
 		return mav;
 	}
 

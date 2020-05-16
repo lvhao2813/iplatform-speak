@@ -8,25 +8,6 @@
 
 
 <script type="text/javascript" th:inline="javascript">
-function ajaxIsUse(id){
-	 $.ajax({
-	  	  type: "POST",
-		  url: "/function/question/setIsUse?id="+id,
-		  cache: false,
-		  async:false,
-		  contentType : "application/x-www-form-urlencoded; charset=utf-8",
-		  success: function(html){
-		   	if(html == 'success'){
-		   		callFormSubmit();
-		   	}
-		  },
-		  error:function(html){
-		  },
-		  complete:function(){
-		  }
-	 }); 
-}
-
 function resetSearch(){
 	$("input[id='questionName']").val("");
 }
@@ -47,7 +28,7 @@ function openBatchDeletePage(){
 
 	<input style="display:none" name="deleteIds" id="deleteIds" value="">
 
-		<div id="main">
+<div id="main">
 		<div class="box">
 			<div class="title">	
 				    	<h2>当前位置：<a th:href="${session.homeUrl}">首页</a> > <a>系统管理 </a>  > <a class="active">题目录入</a></h2>				
@@ -66,69 +47,57 @@ function openBatchDeletePage(){
 		</div>
 		
 	
-			<div class="box">	            
+<div class="box">	            
 			<div class="title">	
 				    	<h2> <a class="active">题目列表</a></h2>	
 				    	<div class="operation">
-				    		<a class="parentadd"  onclick="openCommonLayer('新增记录','800px','250px','/api/v1/question/insertpage?id=1')"><img th:src="@{/images/icon-add.png}" />单字练习</a>
-				    		<a class="parentadd"  onclick="openCommonLayer('新增记录','800px','250px','/api/v1/question/insertpage?id=2')"><img th:src="@{/images/icon-add.png}" />词语练习</a>
-				    		<a class="parentadd"  onclick="openCommonLayer('新增记录','800px','250px','/api/v1/question/insertpage?id=3')"><img th:src="@{/images/icon-add.png}" />短文练习</a>	
+				    		<a class="parentadd"  onclick="openCommonLayer('新增记录','800px','250px','/api/v1/question/insertpage?type=1')"><img th:src="@{/images/icon-add.png}" />单字练习</a>
+				    		<a class="parentadd"  onclick="openCommonLayer('新增记录','800px','250px','/api/v1/question/insertpage?type=2')"><img th:src="@{/images/icon-add.png}" />词语练习</a>
+				    		<a class="parentadd"  onclick="openCommonLayer('新增记录','800px','250px','/api/v1/question/insertpage?type=3')"><img th:src="@{/images/icon-add.png}" />短文练习</a>	
 				    	    <a class="parentIframe" onclick="openBatchDeletePage()"><img th:src="@{/images/icon-del.png}" />删除</a>
 				    	</div>
 				    		
 			</div>	            
-	<div class="auto">
-			<table width="100%" cellpadding="0" cellspacing="0" class="user-list mt10">
-	       			<tr>
-			       			<th width="30">
-								<input type="checkbox" class="check-all" id="mainCheckbox" name="mainCheckbox"
-													onClick="selectedAllCheckbox()" />
-							</th>
-       						<th>题目名称</th>
-							<th>创建时间</th>
-							<th>排序</th>
-							<th>对应音频</th>
-							<th>操作</th>
-	       			</tr>
-	       			<tr th:each="question : ${resultList}">
-						<td align="center">
-							<input type="checkbox" id="checkboxId"  th:name="check"  th:value="${question['id']}" />
-						</td>
-						<td th:text="${question['name']}"></td>
-						<td th:text="${question['createDate']}"></td>
-						<td th:text="${question['sortId']}"></td>
-						<td th:text="${question['attachmentUnitId']}"></td>
-						
-						<td align="center">
-
-						<a href="#" class="c-green parentedit" th:onclick="'javascript:openLargeEditLayer(\'/privilege/question/updatepage?ID='+${question['id']}+'\')'">编辑</a>
-						<a href="#" class="color-red parentIframe" th:onclick="'javascript:openDeleteLayer(\'/privilege/question/deletepage?deleteUrl=/privilege/user/delete&deleteId='+${question['id']}+'\')'">删除</a> 
-						</td>
-					</tr>
-	       		
-	       		</table>
-		</div>
+			<div class="auto">
+					<table width="100%" cellpadding="0" cellspacing="0" class="user-list mt10">
+			       			<tr>
+					       			<th width="30">
+										<input type="checkbox" class="check-all" id="mainCheckbox" name="mainCheckbox"
+															onClick="selectedAllCheckbox()" />
+									</th>
+		       						<th>题目名称</th>
+									<th>创建时间</th>
+									<th>排序</th>
+									<th>对应音频</th>
+									<th>操作</th>
+			       			</tr>
+			       			<tr th:each="question : ${resultList}">
+								<td align="center">
+									<input type="checkbox" id="checkboxId"  th:name="check"  th:value="${question['id']}" />
+								</td>
+								<td th:text="${question['name']}"></td>
+								<td th:text="${question['createDate']}"></td>
+								<td th:text="${question['sortId']}"></td>
+								<td th:text="${question['attachmentUnitId']}"></td>
+								
+								<td align="center">
+		
+								<a href="#" class="c-green parentedit" th:onclick="'javascript:openLargeEditLayer(\'/privilege/question/updatepage?ID='+${question['id']}+'\')'">编辑</a>
+								<a href="#" class="color-red parentIframe" th:onclick="'javascript:openDeleteLayer(\'/privilege/question/deletepage?deleteUrl=/privilege/user/delete&deleteId='+${question['id']}+'\')'">删除</a> 
+								</td>
+							</tr>
+			       		
+			       		</table>
+				</div>
 	
 	    	<div th:include="/common/page_control"></div>
 	    
-			</div>
-		</div>
+</div>
+</div>
 		
 		<script type="text/javascript">
 			function openLargeEditLayer(url){
 				openCommonLayer('编辑记录','400px','250px',url);
-			}
-			
-			function openSelectMenuLayer(url){
-				openCommonLayer('角色菜单','850px','480px',url+"&"+Math.random());
-			}
-			
-			function openSelectManagerLayer(url){
-				openCommonLayer('绑定用户','900px','500px',url+"&"+Math.random());
-			}
-			
-			function openSelectTargetLayer(url){
-				openCommonLayer('绑定指标','850px','500px',url+"&"+Math.random());
 			}
 		</script>
 	</form>

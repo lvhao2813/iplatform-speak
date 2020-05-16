@@ -4,7 +4,12 @@
 package com.boco.share.function.question.bean;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import com.boco.share.framework.common.UuidUtil;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -27,36 +32,22 @@ public class Question implements Serializable {
 	@ApiModelProperty(value = "创建时间")
 	private Date createDate;
 
-	@ApiModelProperty(value = "排序id")
+	@ApiModelProperty(value = "分类id")
 	private String sortId;
-	
+
+	@ApiModelProperty(value = "问题内容明细分组")
+	private List<QuestionDetail> details = new ArrayList<QuestionDetail>();
+
 	@ApiModelProperty(value = "语音附件包id")
 	private String attachmentUnitId;
 
-	
 	public String getAttachmentUnitId() {
 		return attachmentUnitId;
 	}
 
-
 	public void setAttachmentUnitId(String attachmentUnitId) {
 		this.attachmentUnitId = attachmentUnitId;
 	}
-
-
-	public Question() {
-	}
-
-
-	public Question(String id, String name, Date createDate, String sortId, String attachmentUnitId) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.createDate = createDate;
-		this.sortId = sortId;
-		this.attachmentUnitId = attachmentUnitId;
-	}
-
 
 	public String getId() {
 		return id;
@@ -90,8 +81,12 @@ public class Question implements Serializable {
 		this.sortId = sortId;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+	public List<QuestionDetail> getDetails() {
+		return details;
+	}
+
+	public void setDetails(List<QuestionDetail> details) {
+		this.details = details;
 	}
 
 }

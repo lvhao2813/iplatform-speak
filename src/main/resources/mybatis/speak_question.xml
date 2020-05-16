@@ -27,4 +27,42 @@
 		 from ods_questions
 	</select>
 	
+	<insert id="saveQuestion" parameterType="com.boco.share.function.question.bean.Question">
+  		insert into ods_questions(id, name, create_date, sort_id) 
+  		values ( #{id}, #{name}, #{createDate}, #{sortId} )
+	</insert>
+	
+	<insert id="saveQuestionDetails" parameterType="java.util.List">
+  		insert into ods_questions_detail(id, word, ord, questions_id) 
+  		values 
+		<foreach collection ="list" item="item" index= "index" separator =",">
+          (
+           #{item.id}, #{item.word}, #{item.ord}, #{item.questionId}
+           )
+        </foreach >
+
+	</insert>
+	<insert id="saveChineseUnits" parameterType="java.util.List">
+  		insert into ods_s_chinese_unit(id, questions_detail_id, ord, chinese_id) 
+  		values 
+		<foreach collection ="list" item="item" index= "index" separator =",">
+          (
+           #{item.id}, #{item.questionsDetailId}, #{item.ord}, #{item.chineseId}
+           )
+        </foreach >
+
+	</insert>
+	
+	<insert id="saveChines" parameterType="com.boco.share.function.question.bean.Chinese">
+  		insert into ods_s_chinese(id, chinese, pinyin, hzAndpy) 
+  		values ( #{id}, #{chinese}, #{pinyin}, #{hzAndpy} )
+	</insert>
+	
+	<select id="getOneChineseId" resultType="String">
+		select id id
+		 from ods_s_chinese where hzAndpy = #{hanziAndPy}
+	</select>
+	
+	
+	
 </mapper>
