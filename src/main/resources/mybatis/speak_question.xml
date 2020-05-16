@@ -3,7 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.boco.share.function.question.dao.QuestionMapper">
 
-	<resultMap type="com.boco.share.function.common.bean.Sort" id="question">
+	<resultMap type="com.boco.share.function.common.bean.Sort" id="sort">
 		<result column="ID" property="id" jdbcType="VARCHAR" />
 		<result column="NAME" property="name" jdbcType="VARCHAR" />
 		<result column="CODE" property="code" jdbcType="VARCHAR" />
@@ -12,5 +12,19 @@
 	<select id="queryQuestionSorts" resultMap="question">
 		select id id, name name, code code from ods_c_sort where type = 'question'
 	</select>
-
+	
+	<resultMap type="com.boco.share.function.question.bean.Question" id="question">
+		<result column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="CREATEDATE" property="createDate" jdbcType="DATE" />
+		<result column="SORTID" property="sortId" jdbcType="VARCHAR" />
+		<result column="ATTACHMENTUNITID" property="attachmentUnitId" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="loadQuestions" resultMap="question">
+		select id id, name name, create_date createDate,
+			   sort_id sortId,attachment_unit_id attachmentUnitId
+		 from ods_questions
+	</select>
+	
 </mapper>

@@ -29,8 +29,36 @@ public class Question implements Serializable {
 	@ApiModelProperty(value = "创建时间")
 	private Date createDate;
 
-	@ApiModelProperty(value = "分类")
-	private Sort sort;
+	@ApiModelProperty(value = "排序id")
+	private String sortId;
+	
+	@ApiModelProperty(value = "语音附件包id")
+	private String attachmentUnitId;
+
+	
+	public String getAttachmentUnitId() {
+		return attachmentUnitId;
+	}
+
+
+	public void setAttachmentUnitId(String attachmentUnitId) {
+		this.attachmentUnitId = attachmentUnitId;
+	}
+
+
+	public Question() {
+	}
+
+
+	public Question(String id, String name, Date createDate, String sortId, String attachmentUnitId) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.createDate = createDate;
+		this.sortId = sortId;
+		this.attachmentUnitId = attachmentUnitId;
+	}
+
 
 	public String getId() {
 		return id;
@@ -56,12 +84,16 @@ public class Question implements Serializable {
 		this.createDate = createDate;
 	}
 
-	public Sort getSort() {
-		return sort;
+	public String getSortId() {
+		return sortId;
 	}
 
-	public void setSort(Sort sort) {
-		this.sort = sort;
+	public void setSortId(String sortId) {
+		this.sortId = sortId;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 }

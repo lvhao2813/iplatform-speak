@@ -11,7 +11,7 @@
 function ajaxIsUse(id){
 	 $.ajax({
 	  	  type: "POST",
-		  url: "/privilege/role/setIsUse?id="+id,
+		  url: "/function/question/setIsUse?id="+id,
 		  cache: false,
 		  async:false,
 		  contentType : "application/x-www-form-urlencoded; charset=utf-8",
@@ -28,11 +28,11 @@ function ajaxIsUse(id){
 }
 
 function resetSearch(){
-	$("input[id='roleName']").val("");
+	$("input[id='questionName']").val("");
 }
 
 function openBatchDeletePage(){
-	deleteData('/privilege/role/batchDeletePage?deleteUrl=/privilege/role/batchDelete');
+	deleteData('/privilege/role/batchDeletePage?deleteUrl=/privilege/question/batchDelete');
 }
 </script>
 
@@ -43,7 +43,7 @@ function openBatchDeletePage(){
 <div th:insert="/common/common_index :: index_head"></div>
 <div th:include="/common/onload_list_js :: loadJS"></div>
 
-<form id="callForm" name="callForm" th:action="@{/privilege/addquestion/query}" th:method="post">
+<form id="callForm" name="callForm" th:action="@{/api/v1/question/query}" th:method="post">
 
 	<input style="display:none" name="deleteIds" id="deleteIds" value="">
 
@@ -55,7 +55,7 @@ function openBatchDeletePage(){
 						<table width="100%" cellpadding="0" cellspacing="0" class="text-table mt10">
 				            <tr>
 					            <th width="8%">题目关键字：</th>
-					            <td width="15%"><input type="text"  id="roleName"  name="ROLE_NAME" th:value="${formMap['ROLE_NAME']}"></td>					
+					            <td width="15%"><input type="text"  id="questionName"  name="QUESTION_NAME" th:value="${formMap['QUESTION_NAME']}"></td>					
 					           <td width="38%">
 						           <a th:onclick="'javascript:callFormSubmit()'">搜索</a>&nbsp;&nbsp;
 						           <a th:onclick="'javascript:resetSearch()'">重置</a>
@@ -71,9 +71,9 @@ function openBatchDeletePage(){
 			<div class="title">	
 				    	<h2> <a class="active">题目列表</a></h2>	
 				    	<div class="operation">
-				    		<a class="parentadd"  onclick="openCommonLayer('新增记录','800px','250px','/privilege/addquestion/insertpage')"><img th:src="@{/images/icon-add.png}" />新增单音节练习</a>
-				    		<a class="parentadd"  onclick="openCommonLayer('新增记录','800px','250px','/privilege/addquestion/insertpage')"><img th:src="@{/images/icon-add.png}" />新增多音节练习</a>
-				    		<a class="parentadd"  onclick="openCommonLayer('新增记录','800px','250px','/privilege/addquestion/insertpage')"><img th:src="@{/images/icon-add.png}" />新增句子练习</a>	
+				    		<a class="parentadd"  onclick="openCommonLayer('新增记录','800px','250px','/api/v1/question/insertpage')"><img th:src="@{/images/icon-add.png}" />单字练习</a>
+				    		<a class="parentadd"  onclick="openCommonLayer('新增记录','800px','250px','/api/v1/question/insertpage')"><img th:src="@{/images/icon-add.png}" />词语练习</a>
+				    		<a class="parentadd"  onclick="openCommonLayer('新增记录','800px','250px','/api/v1/question/insertpage')"><img th:src="@{/images/icon-add.png}" />短文练习</a>	
 				    	    <a class="parentIframe" onclick="openBatchDeletePage()"><img th:src="@{/images/icon-del.png}" />删除</a>
 				    	</div>
 				    		
@@ -85,32 +85,25 @@ function openBatchDeletePage(){
 								<input type="checkbox" class="check-all" id="mainCheckbox" name="mainCheckbox"
 													onClick="selectedAllCheckbox()" />
 							</th>
-       						<th>角色名称</th>
-							<th>角色描述</th>
-						<!-- 		<th>角色公司</th> -->
-							<th>角色编码</th>
+       						<th>题目名称</th>
+							<th>创建时间</th>
+							<th>排序</th>
+							<th>对应音频</th>
 							<th>操作</th>
 	       			</tr>
-	       			<tr th:each="role : ${resultList}">
+	       			<tr th:each="question : ${resultList}">
 						<td align="center">
-							<input type="checkbox" id="checkboxId"  th:name="check"  th:value="${role['id']}" />
+							<input type="checkbox" id="checkboxId"  th:name="check"  th:value="${question['id']}" />
 						</td>
-						<td th:text="${role['name']}"></td>
-						<!-- <td th:text="${priRoleBean['orgName']}"></td> -->
-						<td th:text="${role['description']}"></td>
-						<!--
-						<td>
-							<span th:text="${role['status']== 'Y'}? '禁用':'可用'"></span>
-							<a href="#" th:class="${role['status']== 'Y'}? 'color-red':'c-blue'" th:onclick="'javascript:ajaxIsUse(\''+${role['id']}+'\')'" th:text="${role['status'] == 'Y'}? '[ 可用 ]':'[ 禁用 ]'"></a>
-						</td>
-						-->
-						<td th:text="${role['code']}"></td>
+						<td th:text="${question['name']}"></td>
+						<td th:text="${question['createDate']}"></td>
+						<td th:text="${question['sortId']}"></td>
+						<td th:text="${question['attachmentUnitId']}"></td>
+						
 						<td align="center">
-						<a href="#" class="c-blue parentyh" th:onclick="'javascript:openSelectTargetLayer(\'/privilege/role/gotoSelectTargetPage?ROLE_ID='+${role['id']}+'\')'" >绑定指标</a>
-						<a href="#" class="c-blue parentyh" th:onclick="'javascript:openSelectManagerLayer(\'/privilege/role/gotoSelectManagerPage?ROLE_ID='+${role['id']}+'\')'" >绑定用户</a>
-						<a href="#" class="c-purple parentmenu" th:onclick="'javascript:openSelectMenuLayer(\'/privilege/role/gotoSelectMenuPage?ROLE_ID='+${role['id']}+'\')'" >分配菜单</a>
-						<a href="#" class="c-green parentedit" th:onclick="'javascript:openLargeEditLayer(\'/privilege/role/updatepage?ROLE_ID='+${role['id']}+'\')'">编辑</a> 
-						<a href="#" class="color-red parentIframe" th:onclick="'javascript:openDeleteLayer(\'/privilege/role/deletepage?deleteUrl=/privilege/role/delete&deleteId='+${role['id']}+'\')'">删除</a> 
+
+						<a href="#" class="c-green parentedit" th:onclick="'javascript:openLargeEditLayer(\'/privilege/question/updatepage?ID='+${question['id']}+'\')'">编辑</a>
+						<a href="#" class="color-red parentIframe" th:onclick="'javascript:openDeleteLayer(\'/privilege/question/deletepage?deleteUrl=/privilege/user/delete&deleteId='+${question['id']}+'\')'">删除</a> 
 						</td>
 					</tr>
 	       		
