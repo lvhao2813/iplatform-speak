@@ -43,8 +43,8 @@ public class PinYinUtil {
 		}
 		String[] pinyins = null;
 		try {
-			String pinyinString = PinyinHelper.convertToPinyinString(sInput, ",", PinyinFormat.WITH_TONE_MARK);
-			pinyins = pinyinString.split(",");
+			String pinyinString = PinyinHelper.convertToPinyinString(sInput, "-", PinyinFormat.WITH_TONE_MARK);
+			pinyins = pinyinString.split("-");
 			System.out.println(pinyinString);
 		} catch (PinyinException e) {
 			e.printStackTrace();

@@ -34,7 +34,7 @@ public class QuestionServiceImpl implements QuestionService {
 	@Autowired
 	private QuestionMapper mapper;
 
-//	private static final Map<String, Chinese> chineses = new HashMap<String, Chinese>();
+	//private static final Map<String, Chinese> chineses = new HashMap<String, Chinese>();
 
 	@Override
 	public List<Sort> queryQuestionSorts() {
@@ -63,14 +63,103 @@ public class QuestionServiceImpl implements QuestionService {
 			saveSingleDetail(question.getId(), formMap.get("details"));
 			break;
 		case "2":
-
+			saveMultiWrodDetail(question.getId(), formMap.get("details"));
 			break;
 		case "3":
-
+			saveSentenceDetail(question.getId(), formMap.get("details"));
 			break;
 		default:
 			break;
 		}
+	}
+
+	/**
+	 * 保存短文题目
+	 * 
+	 * @param questionId 问题对象id
+	 * @param content    题目内容
+	 */
+	private void saveSentenceDetail(String questionId, String content) {
+		/*
+		 * 	短文按段落在 detail表里排序，一段相当于词组练习的一个词，以便后期取用有序。
+		 */
+		// 将传来的content字符串分割为单个词语
+		String[] paragraphs = content.split("\r\n");
+
+		// 题目内容分类明细
+		List<QuestionDetail> details = new ArrayList<QuestionDetail>();
+		// 明细对应的汉字包
+		List<ChineseUnit> units = new ArrayList<ChineseUnit>();
+
+		for (int i = 0; i < paragraphs.length; ++i) {
+			String paragraph = paragraphs[i]; // 拿到一段话
+			String[] paragraphPinyin = PinYinUtil.getPinyinByWord(paragraph);
+
+			// detail表里 是按 "我们" "世界" 存的
+			QuestionDetail detail = new QuestionDetail();
+			String detailId = UuidUtil.genUUID();
+			detail.setId(detailId);
+			detail.setQuestionId(questionId);
+			detail.setWord(paragraph);
+			detail.setOrd(i + 1);
+			details.add(detail);
+			char[] singleWords = paragraph.toCharArray(); // 最后ChineseUnit 和 Chinese 表还存的是单个的字
+			for (int j = 0; j < singleWords.length; ++j) {
+				String singleWord = String.valueOf(singleWords[j]);
+				// 对应单字，一个detail是多个字，这里拆开，对应的汉字包是一个
+				ChineseUnit unit = new ChineseUnit();
+				unit.setId(UuidUtil.genUUID());
+				unit.setQuestionsDetailId(detailId);
+				unit.setOrd(j + 1);
+				unit.setChineseId(getOneChineseId(singleWord, paragraphPinyin[j]));
+				units.add(unit);
+			}
+		}
+		mapper.saveQuestionDetails(details);
+		mapper.saveChineseUnits(units);
+	}
+
+	/**
+	 * 保存词语题目
+	 * 
+	 * @param questionId 问题对象id
+	 * @param content    题目内容
+	 */
+	private void saveMultiWrodDetail(String questionId, String content) {
+		// 将传来的content字符串分割为单个词语
+		String[] multiWords = content.split("，");
+
+		// 题目内容分类明细
+		List<QuestionDetail> details = new ArrayList<QuestionDetail>();
+		// 明细对应的汉字包
+		List<ChineseUnit> units = new ArrayList<ChineseUnit>();
+
+		for (int i = 0; i < multiWords.length; ++i) {
+			String multiWord = multiWords[i]; // 拿到要存的那个词 "我的"
+			String[] multiPinyin = PinYinUtil.getPinyinByWord(multiWord);
+
+			// detail表里 是按 "我们" "世界" 存的
+			QuestionDetail detail = new QuestionDetail();
+			String detailId = UuidUtil.genUUID();
+			detail.setId(detailId);
+			detail.setQuestionId(questionId);
+			detail.setWord(multiWord);
+			detail.setOrd(i + 1);
+			details.add(detail);
+			char[] singleWords = multiWord.toCharArray(); // 最后ChineseUnit 和 Chinese 表还存的是单个的字
+			for (int j = 0; j < singleWords.length; ++j) {
+				String singleWord = String.valueOf(singleWords[j]);
+				// 对应单字，一个detail是多个字，这里拆开，对应的汉字包是一个
+				ChineseUnit unit = new ChineseUnit();
+				unit.setId(UuidUtil.genUUID());
+				unit.setQuestionsDetailId(detailId);
+				unit.setOrd(j + 1);
+				unit.setChineseId(getOneChineseId(singleWord, multiPinyin[j]));
+				units.add(unit);
+			}
+		}
+		mapper.saveQuestionDetails(details);
+		mapper.saveChineseUnits(units);
 	}
 
 	/**
