@@ -47,10 +47,10 @@
 				<th>拼音</th>
 				<th>附件</th>
 			</tr>
-			<tr  th:each="chinese : ${question.details}">
-				<td>1</td>			
-				<td onclick = "gotoChoose()" th:text="${chinese.chinese}"></td>			
-				<td onclick = "gotoChoose()" th:text="${chinese.pinyin}"></td>			
+			<tr  th:each="chinese,each : ${question.details}">
+				<td th:text="${each.count}"></td>			
+				<td onclick = "gotoChoose()" th:text="${chinese.chinese}" th:onclick="'javascript:openCommonLayer(\'/api/v1/question/choosepage?CHINESEID='+${chinese.chinese}+'\')'"></td>			
+				<td onclick = "gotoChoose()" th:text="${chinese.pinyin}" th:onclick="'javascript:openCommonLayer(\'/api/v1/question/choosepage?CHINESEID='+${chinese.chinese}+'\')'"></td>			
 				<td>上传</td>			
 			</tr>
 		</table>
@@ -60,6 +60,11 @@
 	    
 </div>
 </div>
+	<script type="text/javascript">
+		function openLargeEditLayer(url){
+			openCommonLayer('编辑记录','500px','300px',url);
+		}
+	</script>
 </form>
 <div th:insert="/common/common_index :: index_foot"></div>
 </body>

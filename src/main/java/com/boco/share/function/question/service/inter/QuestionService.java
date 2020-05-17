@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.boco.share.function.common.bean.Sort;
 import com.boco.share.function.question.bean.ApiQuestion;
+import com.boco.share.function.question.bean.Chinese;
 import com.boco.share.function.question.bean.Question;
 
 /**
@@ -58,4 +59,9 @@ public interface QuestionService {
 	 * @param deleteId 要删除的 勾选的 question id
 	 */
 	public void batchDeleteQuestions(String[] deleteIds);
+	
+	/**
+	 * 	通过单个单字，在 chinese 表中找到所有的候选读音
+	 */
+	public List<Chinese> getAllChooseFromChinese(Map<String, String> formMap);
 }

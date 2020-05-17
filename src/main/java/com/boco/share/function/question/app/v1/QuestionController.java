@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.boco.share.framework.pagination.Pagination;
+import com.boco.share.function.question.bean.ApiQuestion;
+import com.boco.share.function.question.bean.Chinese;
 import com.boco.share.function.question.bean.Question;
 import com.boco.share.function.question.service.inter.QuestionService;
 import com.github.pagehelper.PageHelper;
@@ -89,7 +91,8 @@ public class QuestionController {
 	@RequestMapping(value = "/info", method = RequestMethod.POST)
 	public ModelAndView info(@RequestParam Map<String, String> formMap) {
 		ModelAndView mav = new ModelAndView("function/questions/info");
-		mav.addObject("question", questionService.info(formMap));
+		ApiQuestion question = questionService.info(formMap);
+		mav.addObject("question", question );
 		return mav;
 	}
 
@@ -121,5 +124,17 @@ public class QuestionController {
 	@ResponseBody
 	public void batchDelete(String[] deleteIds) {
 		questionService.batchDeleteQuestions(deleteIds);
+	}
+	
+	@ApiOperation(value = "编辑字的读音跳转页")
+	@ApiImplicitParams({
+			@ApiImplicitParam(dataType = "String", paramType = "query", name = "chinese", value = "点击的汉字", required = true) })
+	@RequestMapping(value = "/choosepage", method = RequestMethod.GET)
+	public ModelAndView choosePage(@RequestParam Map<String, String> formMap) {
+		//TODO 不能往info里跳
+		ModelAndView mav = new ModelAndView("function/questions/info");
+		List<Chinese> chineses = questionService.getAllChooseFromChinese(formMap);
+		mav.addObject("chineses", chineses);
+		return mav;
 	}
 }

@@ -101,6 +101,11 @@ public class QuestionServiceImpl implements QuestionService {
 		Question question = mapper.queryQuestionById(formMap.get("questionId"));
 		return converterToApiQuestion(question);
 	}
+	
+	@Override
+	public List<Chinese> getAllChooseFromChinese(Map<String, String> formMap){
+		return null;
+	}
 
 	/**
 	 * 将question数据库对象，转换成前台展示对象
@@ -141,7 +146,6 @@ public class QuestionServiceImpl implements QuestionService {
 							c.setPinyin(unit.getChinese().getPinyin());
 							details.add(c);
 						}
-
 					}
 				}
 			}
