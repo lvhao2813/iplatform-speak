@@ -3,9 +3,7 @@
  */
 package com.boco.share.function.question.service.impl;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -16,9 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alibaba.druid.util.StringUtils;
 import com.boco.share.framework.common.UuidUtil;
 import com.boco.share.function.common.bean.Sort;
+import com.boco.share.function.question.bean.ApiChineseDetail;
+import com.boco.share.function.question.bean.ApiQuestion;
 import com.boco.share.function.question.bean.Chinese;
 import com.boco.share.function.question.bean.ChineseUnit;
-import com.boco.share.function.question.bean.Hanzi;
 import com.boco.share.function.question.bean.Question;
 import com.boco.share.function.question.bean.QuestionDetail;
 import com.boco.share.function.question.dao.QuestionMapper;
@@ -35,8 +34,6 @@ public class QuestionServiceImpl implements QuestionService {
 	@Autowired
 	private QuestionMapper mapper;
 
-	//private static final Map<String, Chinese> chineses = new HashMap<String, Chinese>();
-
 	@Override
 	public List<Sort> queryQuestionSorts() {
 		return mapper.queryQuestionSorts();
@@ -44,17 +41,8 @@ public class QuestionServiceImpl implements QuestionService {
 
 	@Override
 	public List<Question> loadQuestions(Map<String, String> formMap) {
-		//对Question对象的日期格式化
-		List<Question> questions =mapper.loadQuestions(formMap);
-		dateToString(questions);
+		List<Question> questions = mapper.loadQuestions(formMap);
 		return questions;
-	}
-	
-	private void dateToString(List<Question> questions) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		for(Question question:questions) {
-			question.setFormatDate(sdf.format(question.getCreateDate()));
-		}
 	}
 
 	@Override
@@ -64,7 +52,6 @@ public class QuestionServiceImpl implements QuestionService {
 		Question question = new Question();
 		question.setId(UuidUtil.genUUID());
 		question.setName(formMap.get("name"));
-		question.setCreateDate(new Date());
 		question.setSortId(formMap.get("type"));
 		mapper.saveQuestion(question);
 		// 保存题目分组明细
@@ -84,6 +71,80 @@ public class QuestionServiceImpl implements QuestionService {
 		}
 	}
 
+	@Override
+	@Transactional
+	public void deleteQuestion(String deleteId) {
+		// 删除三个表
+		// question表 通过 deleteId
+		// question_detail 表 通过 其 question_id 为 deleteId
+		// chinese_unit 表 通过 查表 question_detail 得到 所有要删除的 question_detail_id
+
+		// 得到要删除 chinese_unit表中 的所有 question_detail_id
+		List<String> deleteDetailIds = mapper.queryDetialIdByQuestId(deleteId);
+
+		// 删除的时候最好从底层表 向 上层表删
+		mapper.deleteUnitByDetailId(deleteDetailIds);
+		mapper.deleteDetailByQuetionId(deleteId);
+		mapper.deleteQuestionById(deleteId);
+	}
+
+	@Override
+	public void batchDeleteQuestions(String[] deleteIds) {
+		// 因为逻辑和单个删除几乎一样,就直接用 单个删除了
+		for (String deleteId : deleteIds) {
+			deleteQuestion(deleteId);
+		}
+	}
+
+	@Override
+	public ApiQuestion info(Map<String, String> formMap) {
+		Question question = mapper.queryQuestionById(formMap.get("questionId"));
+		return converterToApiQuestion(question);
+	}
+
+	/**
+	 * 将question数据库对象，转换成前台展示对象
+	 * 
+	 * @param question
+	 * @return
+	 */
+	private ApiQuestion converterToApiQuestion(Question question) {
+		ApiQuestion result = new ApiQuestion();
+		result.setId(question.getId());
+		result.setCreateDate(question.getCreateDate());
+		result.setName(question.getName());
+		result.setSortName(question.getSortName());
+		//构建题目全内容
+		StringBuffer conent = new StringBuffer();
+		//构建汉字包
+		List<ApiChineseDetail> details = new ArrayList<ApiChineseDetail>();
+		
+		if(!question.getDetails().isEmpty()) {
+			for(QuestionDetail queDetail : question.getDetails()) {
+				conent.append(queDetail.getWord());
+				if(!queDetail.getDetails().isEmpty()) {
+					for(ChineseUnit unit : queDetail.getDetails()) {
+						if(unit.getChinese() == null) {
+							continue;
+						}else {
+							ApiChineseDetail c = new ApiChineseDetail();
+							c.setChineseId(unit.getChinese().getId());
+							c.setChineseUnitId(unit.getId());
+							c.setChinese(unit.getChinese().getChinese());
+							c.setPinyin(unit.getChinese().getPinyin());
+							details.add(c);
+						}
+						
+					}
+				}
+			}
+		}
+		
+		result.setConent(conent.toString());
+		result.setDetails(details);
+		return result;
+	}
+
 	/**
 	 * 保存短文题目
 	 * 
@@ -92,7 +153,7 @@ public class QuestionServiceImpl implements QuestionService {
 	 */
 	private void saveSentenceDetail(String questionId, String content) {
 		/*
-		 * 	短文按段落在 detail表里排序，一段相当于词组练习的一个词，以便后期取用有序。
+		 * 短文按段落在 detail表里排序，一段相当于词组练习的一个词，以便后期取用有序。
 		 */
 		// 将传来的content字符串分割为单个词语
 		String[] paragraphs = content.split("\r\n");
@@ -235,39 +296,4 @@ public class QuestionServiceImpl implements QuestionService {
 
 	}
 
-	/**
-	 * 获取多个汉字的id
-	 * 
-	 * @param hanziAndPy 汉字+拼音 例如：中_zhong
-	 * @return chinese对象id
-	 */
-	private List<String> getListChineseId(List<String> hanziAndPys) {
-		// TODO 补充
-		return null;
-	}
-	
-	@Override
-	@Transactional
-	public void deleteQuestion(String deleteId) {
-		// 删除三个表   
-		// question表  通过  deleteId
-		// question_detail 表 通过  其 question_id 为 deleteId
-		// chinese_unit 表 通过 查表 question_detail 得到 所有要删除的 question_detail_id
-		
-		// 得到要删除 chinese_unit表中  的所有 question_detail_id 
-		List<String> deleteDetailIds = mapper.queryDetialIdByQuestId(deleteId);
-	
-		//删除的时候最好从底层表 向 上层表删
-		mapper.deleteUnitByDetailId(deleteDetailIds);
-		mapper.deleteDetailByQuetionId(deleteId);
-		mapper.deleteQuestionById(deleteId);
-	}
-
-	@Override
-	public void batchDeleteQuestions(String[] deleteIds) {
-		//因为逻辑和单个删除几乎一样,就直接用 单个删除了
-		for(String deleteId :deleteIds) {
-			deleteQuestion(deleteId);
-		}
-	}
 }

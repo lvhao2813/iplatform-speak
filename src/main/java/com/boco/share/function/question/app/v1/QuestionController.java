@@ -79,9 +79,17 @@ public class QuestionController {
 			@ApiImplicitParam(dataType = "String", paramType = "query", name = "name", value = "题目名称", required = true),
 			@ApiImplicitParam(dataType = "String", paramType = "query", name = "details", value = "题目内容", required = true) })
 	@RequestMapping(value = "/genQuestion", method = RequestMethod.POST)
-	public ModelAndView genQuestion(@RequestParam Map<String, String> formMap) {
-		ModelAndView mav = new ModelAndView("function/questions/list");
+	public void genQuestion(@RequestParam Map<String, String> formMap) {
 		questionService.genQuestion(formMap);
+	}
+	
+	@ApiOperation(value = "题目编辑页面")
+	@ApiImplicitParams({
+		@ApiImplicitParam(dataType = "String", paramType = "query", name = "questionId", value = "题目id", required = true)})
+	@RequestMapping(value = "/info", method = RequestMethod.POST)
+	public ModelAndView info(@RequestParam Map<String, String> formMap) {
+		ModelAndView mav = new ModelAndView("function/questions/info");
+		mav.addObject("question", questionService.info(formMap));
 		return mav;
 	}
 
@@ -96,6 +104,8 @@ public class QuestionController {
 	@ApiOperation(value = "删除跳转页")
 	@RequestMapping("/delete")
 	@ResponseBody
+	@ApiImplicitParams({
+		@ApiImplicitParam(dataType = "String", paramType = "query", name = "deleteId", value = "题目id", required = true) })
 	public void delete(@RequestParam Map<String, String> formMap) {
 		questionService.deleteQuestion(formMap.get("deleteId"));
 	}

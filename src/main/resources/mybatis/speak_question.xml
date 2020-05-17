@@ -18,14 +18,15 @@
 		<result column="NAME" property="name" jdbcType="VARCHAR" />
 		<result column="CREATEDATE" property="createDate" jdbcType="TIMESTAMP" />
 		<result column="SORTID" property="sortId" jdbcType="VARCHAR" />
+		<result column="SORTNAME" property="sortName" jdbcType="VARCHAR" />
 		<result column="ATTACHMENTUNITID" property="attachmentUnitId" jdbcType="VARCHAR" />
 	</resultMap>
 	
 	<select id="loadQuestions" resultMap="question">
-		select id id, name name, create_date createDate,
-			   sort_id sortId,attachment_unit_id attachmentUnitId
+		select t.id id, t.name name, DATE_FORMAT(t.create_date,'%Y-%m-%d') createDate,
+			   t.sort_id sortId, s.name sortName,t.attachment_unit_id attachmentUnitId
 		 from ods_questions t
-		 where 1=1
+		 left join ods_c_sort s on s.id = t.sort_id
 		 <if test="SORT_ID != null and SORT_ID !=''">
 			and t.sort_id = #{SORT_ID}
 		</if>
@@ -37,7 +38,7 @@
 	
 	<insert id="saveQuestion" parameterType="com.boco.share.function.question.bean.Question">
   		insert into ods_questions(id, name, create_date, sort_id) 
-  		values ( #{id}, #{name}, #{createDate}, #{sortId} )
+  		values ( #{id}, #{name}, NOW(), #{sortId} )
 	</insert>
 	
 	<insert id="saveQuestionDetails" parameterType="java.util.List">
@@ -102,4 +103,68 @@
 		delete from ods_questions where id = #{deleteId}
 	</update>
 	
+	
+	<resultMap type="com.boco.share.function.question.bean.Question" id="question2">
+		<result column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="CREATEDATE" property="createDate" jdbcType="TIMESTAMP" />
+		<result column="SORTID" property="sortId" jdbcType="VARCHAR" />
+		<result column="SORTNAME" property="sortName" jdbcType="VARCHAR" />
+		<result column="ATTACHMENTUNITID" property="attachmentUnitId" jdbcType="VARCHAR" />
+		<collection property="details" column="{id=id}" select="queryQueDetailByQueId"/>
+	</resultMap>
+	<resultMap type="com.boco.share.function.question.bean.QuestionDetail" id="questionDetail2">
+		<result column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="WORD" property="word" jdbcType="VARCHAR" />
+		<result column="ORD" property="ord" jdbcType="INTEGER" />
+		<collection property="details" column="{id=id}" select="queryChinaUnitByQueDetailId" />
+	</resultMap>
+	<resultMap type="com.boco.share.function.question.bean.ChineseUnit" id="chineseUnit2">
+		<result column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="CHINESEID" property="chineseId" jdbcType="VARCHAR" />
+		<result column="ORD" property="ord" jdbcType="INTEGER" />
+		<collection property="chinese" column="{chineseId=chineseId}" select="queryChineseById" />
+	</resultMap>
+	<resultMap type="com.boco.share.function.question.bean.Chinese" id="chinese2">
+		<result column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="CHINESE" property="chinese" jdbcType="VARCHAR" />
+		<result column="PINYIN" property="pinyin" jdbcType="TIMESTAMP" />
+	</resultMap>
+	
+	<select id="queryQuestionById" resultMap="question2">
+		select t.id id, t.name name, DATE_FORMAT(t.create_date,'%Y-%m-%d') createDate,
+			   t.sort_id sortId, s.name sortName,t.attachment_unit_id attachmentUnitId
+		 from ods_questions t
+		 left join ods_c_sort s on s.id = t.sort_id
+		 where 1 = 1
+		 <if test="questionId != null and questionId !=''">
+			and t.id = #{questionId}
+		</if>
+	</select>
+	<select id="queryQueDetailByQueId" resultMap="questionDetail2">
+		select id id, word word, ord
+		 from ods_questions_detail
+		 where 1 = 1
+		 <if test="id != null and id !=''">
+			and questions_id = #{id}
+		</if>
+		 order by ord
+	</select>
+	<select id="queryChinaUnitByQueDetailId" resultMap="chineseUnit2">
+		select id id, chinese_id chineseId, ord ord
+		 from ods_s_chinese_unit
+		 where 1 = 1
+		 <if test="id != null and id !=''">
+			and questions_detail_id = #{id}
+		</if>
+		 order by ord
+	</select>
+	<select id="queryChineseById" resultMap="chinese2">
+		select id id, chinese chinese, pinyin pinyin
+		 from ods_s_chinese
+		 where 1 = 1
+		 <if test="chineseId != null and chineseId !=''">
+			and id = #{chineseId}
+		</if>
+	</select>
 </mapper>

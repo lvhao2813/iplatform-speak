@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<div th:insert="/common/common_css :: privilege"></div>
+<script type="text/javascript" th:inline="javascript">
+
+</script>
+</head>
+<body>
+<div th:insert="/common/common_index :: index_head"></div>
+<div th:include="/common/onload_list_js :: loadJS"></div>
+
+<form id="callForm" name="callForm" th:method="post">
+<div id="main">
+<div class="box">
+	<div class="title">	
+		<h2>当前位置：<a th:href="${session.homeUrl}">首页</a> > <a>系统管理 </a>  > <a>题目录入</a>  > <a class="active">题目详情</a></h2>				
+	</div>
+	<table width="100%" cellpadding="0" cellspacing="0" class="text-table mt10">
+		<tr>
+			<th width="8%">题目：</th>
+			<td width="15%"><input type="text"  id="name"  name="name" th:value="${question.name}"></td>
+			<th width="8%">题目类型：</th>
+			<td width="15%"><input type="text"  id="sortName"  name="sortName" th:value="${question.sortName}"></td>
+			<th width="8%">创建时间：</th>
+			<td width="15%"><input type="text"  id="createDate"  name="createDate" th:value="${question.createDate}"></td>
+		</tr>
+	</table>
+</div>
+	
+<div class="box">	            
+	<div class="title">	
+			<h2> <a class="active">题目内容</a></h2>	
+	</div>	            
+	<div class="auto">
+		<table width="100%" cellpadding="0" cellspacing="0" class="user-list mt10">
+			<tr th:each="chinese : ${question.details}">
+				<td><ruby th:text="${chinese.chinese}"></ruby><rt th:text="${chinese.pinyin}"></rt></td>			
+			</tr>
+		</table>
+	</div>
+	
+<div th:include="/common/page_control"></div>
+	    
+</div>
+</div>
+</form>
+<div th:insert="/common/common_index :: index_foot"></div>
+</body>
+</html>
+

@@ -4,6 +4,8 @@
 package com.boco.share.function.question.bean;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -13,7 +15,7 @@ import io.swagger.annotations.ApiModelProperty;
  *
  */
 @ApiModel(value = "汉字工具", description = "汉字工具表")
-public class ChineseUnit implements Serializable{
+public class ChineseUnit implements Serializable {
 
 	private static final long serialVersionUID = -9164558598539568966L;
 
@@ -28,6 +30,9 @@ public class ChineseUnit implements Serializable{
 
 	@ApiModelProperty(value = "汉字排序")
 	private int ord;
+
+	@ApiModelProperty(value = "汉字")
+	private Chinese chinese = new Chinese();
 
 	public String getId() {
 		return id;
@@ -60,5 +65,14 @@ public class ChineseUnit implements Serializable{
 	public void setOrd(int ord) {
 		this.ord = ord;
 	}
+
+	public Chinese getChinese() {
+		return chinese;
+	}
+
+	public void setChinese(Chinese chinese) {
+		this.chinese = chinese;
+	}
+
 
 }

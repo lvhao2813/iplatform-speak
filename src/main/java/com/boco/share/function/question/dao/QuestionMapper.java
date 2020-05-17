@@ -34,7 +34,7 @@ public interface QuestionMapper {
 	 * 
 	 */
 	public List<Question> loadQuestions(Map<String, String> formMap);
-
+	
 	/**
 	 * 保存题目
 	 * 
@@ -94,4 +94,10 @@ public interface QuestionMapper {
 	 * @return
 	 */
 	public void deleteQuestionById(@Param("deleteId") String deleteId);
+	
+	/**
+	 * 通过 question_id 查询question对象
+	 * @return
+	 */
+	public Question queryQuestionById(@Param("questionId") String questionId);
 }

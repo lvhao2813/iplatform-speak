@@ -23,12 +23,15 @@ public class QuestionDetail implements Serializable {
 
 	@ApiModelProperty(value = "题目内容分组内容")
 	private String word;
-	
+
 	@ApiModelProperty(value = "排序")
 	private Integer ord;
 
 	@ApiModelProperty(value = "问题id")
 	private String questionId;
+
+	@ApiModelProperty(value = "汉字")
+	private List<ChineseUnit> details = new ArrayList<ChineseUnit>();
 
 	public String getId() {
 		return id;
@@ -60,6 +63,14 @@ public class QuestionDetail implements Serializable {
 
 	public void setQuestionId(String questionId) {
 		this.questionId = questionId;
+	}
+
+	public List<ChineseUnit> getDetails() {
+		return details;
+	}
+
+	public void setDetails(List<ChineseUnit> details) {
+		this.details = details;
 	}
 
 }
