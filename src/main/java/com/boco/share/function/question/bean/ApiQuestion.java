@@ -29,7 +29,7 @@ public class ApiQuestion {
 	private String sortName;
 
 	@ApiModelProperty(value = "题目全内容")
-	private String conent;
+	private String content;
 
 	@ApiModelProperty(value = "题目全内容，字对象")
 	private List<ApiChineseDetail> details = new ArrayList<ApiChineseDetail>();
@@ -66,12 +66,12 @@ public class ApiQuestion {
 		this.sortName = sortName;
 	}
 
-	public String getConent() {
-		return conent;
+	public String getContent() {
+		return content;
 	}
 
-	public void setConent(String conent) {
-		this.conent = conent;
+	public void setContent(String content) {
+		this.content = content;
 	}
 
 	public List<ApiChineseDetail> getDetails() {

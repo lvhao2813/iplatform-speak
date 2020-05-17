@@ -114,19 +114,26 @@ public class QuestionServiceImpl implements QuestionService {
 		result.setCreateDate(question.getCreateDate());
 		result.setName(question.getName());
 		result.setSortName(question.getSortName());
-		//构建题目全内容
+		// 构建题目全内容
 		StringBuffer conent = new StringBuffer();
-		//构建汉字包
+		// 构建汉字包
 		List<ApiChineseDetail> details = new ArrayList<ApiChineseDetail>();
-		
-		if(!question.getDetails().isEmpty()) {
-			for(QuestionDetail queDetail : question.getDetails()) {
-				conent.append(queDetail.getWord());
-				if(!queDetail.getDetails().isEmpty()) {
-					for(ChineseUnit unit : queDetail.getDetails()) {
-						if(unit.getChinese() == null) {
+
+		if (!question.getDetails().isEmpty()) {
+			int i = 0;
+			for (QuestionDetail queDetail : question.getDetails()) {
+				// 词语练习添加逗号
+				if ("2".equals(question.getSortId())) {
+					conent.append(i > 0 ? "，" : "").append(queDetail.getWord());
+				} else {
+					conent.append(queDetail.getWord());
+				}
+				i++;
+				if (!queDetail.getDetails().isEmpty()) {
+					for (ChineseUnit unit : queDetail.getDetails()) {
+						if (unit.getChinese() == null) {
 							continue;
-						}else {
+						} else {
 							ApiChineseDetail c = new ApiChineseDetail();
 							c.setChineseId(unit.getChinese().getId());
 							c.setChineseUnitId(unit.getId());
@@ -134,13 +141,13 @@ public class QuestionServiceImpl implements QuestionService {
 							c.setPinyin(unit.getChinese().getPinyin());
 							details.add(c);
 						}
-						
+
 					}
 				}
 			}
 		}
-		
-		result.setConent(conent.toString());
+
+		result.setContent(conent.toString());
 		result.setDetails(details);
 		return result;
 	}
