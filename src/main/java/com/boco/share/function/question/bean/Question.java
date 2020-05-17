@@ -7,9 +7,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
-import com.boco.share.framework.common.UuidUtil;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -40,6 +39,16 @@ public class Question implements Serializable {
 
 	@ApiModelProperty(value = "语音附件包id")
 	private String attachmentUnitId;
+
+	private String formatDate;
+
+	public String getFormatDate() {
+		return formatDate;
+	}
+
+	public void setFormatDate(String formatDate) {
+		this.formatDate = formatDate;
+	}
 
 	public String getAttachmentUnitId() {
 		return attachmentUnitId;

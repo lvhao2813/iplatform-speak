@@ -13,7 +13,7 @@ function resetSearch(){
 }
 
 function openBatchDeletePage(){
-	deleteData('/function/question/batchDeletePage?deleteUrl=/privilege/question/batchDelete');
+	deleteData('/api/v1/question/batchDeletePage?deleteUrl=/api/v1/question/batchDelete');
 }
 </script>
 
@@ -24,7 +24,7 @@ function openBatchDeletePage(){
 <div th:insert="/common/common_index :: index_head"></div>
 <div th:include="/common/onload_list_js :: loadJS"></div>
 
-<form id="callForm" name="callForm" th:action="@{/api/v1/question/query}" th:method="post">
+<form id="callForm" name="callForm" th:action="@{/api/v1/question/query}" th:method="get">
 
 	<input style="display:none" name="deleteIds" id="deleteIds" value="">
 
@@ -38,7 +38,8 @@ function openBatchDeletePage(){
 					            <th width="8%">题目关键字：</th>
 					            <td width="15%"><input type="text"  id="questionName"  name="QUESTION_NAME" th:value="${formMap['QUESTION_NAME']}"></td>
 					            <td>
-					         		<select name ="SEARCH_TYPE">
+					         		<select name ="SORT_ID">
+					         			<option value="">选择分类</option>
 					              		<option th:each="sort : ${questionSort}" th:value="${sort.id}" th:text="${sort.name}">
 					            	</select>
 					            </td>
@@ -66,30 +67,29 @@ function openBatchDeletePage(){
 			<div class="auto">
 					<table width="100%" cellpadding="0" cellspacing="0" class="user-list mt10">
 			       			<tr>
-					       			<th width="30">
-										<input type="checkbox" class="check-all" id="mainCheckbox" name="mainCheckbox"
-															onClick="selectedAllCheckbox()" />
-									</th>
-		       						<th>题目名称</th>
-									<th>题目类型</th>
-									<th>创建时间</th>
-									<th>操作</th>
+				       			<th width="30">
+									<input type="checkbox" class="check-all" id="mainCheckbox" name="mainCheckbox"
+														onClick="selectedAllCheckbox()" />
+								</th>
+	       						<th>题目名称</th>
+								<th>题目类型</th>
+								<th>创建时间</th>
+								<th>操作</th>
 			       			</tr>
 			       			<tr th:each="question : ${resultList}">
 								<td align="center">
 									<input type="checkbox" id="checkboxId"  th:name="check"  th:value="${question['id']}" />
 								</td>
 								<td th:text="${question['name']}"></td>
-<!-- 								<td th:text="${question['sortId']=='1'? '单字练习':(question['sortId']=='2'?词语练习'：'短文练习')}"></td> -->
 								<td th:if="${question['sortId'] == '1'}">单字练习</td>
 								<td th:if="${question['sortId'] == '2'}">词语练习</td>
 								<td th:if="${question['sortId'] == '3'}">短文练习</td>
-								<td th:text="${question['createDate']}"></td>
+								
+								<td th:text="${question['formatDate']}"></td>
 								
 								<td align="center">
-		
-								<a href="#" class="c-green parentedit" th:onclick="'javascript:openLargeEditLayer(\'/privilege/question/updatepage?ID='+${question['id']}+'\')'">编辑</a>
-								<a href="#" class="color-red parentIframe" th:onclick="'javascript:openDeleteLayer(\'/privilege/question/deletepage?deleteUrl=/privilege/user/delete&deleteId='+${question['id']}+'\')'">删除</a> 
+								<a href="#" class="c-green parentedit" th:onclick="'javascript:openLargeEditLayer(\'/api/v1/question/updatepage?ID='+${question['id']}+'\')'">编辑</a>
+								<a href="#" class="color-red parentIframe" th:onclick="'javascript:openDeleteLayer(\'/api/v1/question/deletepage?deleteUrl=/api/v1/question/delete&deleteId='+${question['id']}+'\')'">删除</a> 
 								</td>
 							</tr>
 			       		

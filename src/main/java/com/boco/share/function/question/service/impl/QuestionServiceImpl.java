@@ -3,6 +3,7 @@
  */
 package com.boco.share.function.question.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -43,7 +44,17 @@ public class QuestionServiceImpl implements QuestionService {
 
 	@Override
 	public List<Question> loadQuestions(Map<String, String> formMap) {
-		return mapper.loadQuestions(formMap);
+		//对Question对象的日期格式化
+		List<Question> questions =mapper.loadQuestions(formMap);
+		dateToString(questions);
+		return questions;
+	}
+	
+	private void dateToString(List<Question> questions) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		for(Question question:questions) {
+			question.setFormatDate(sdf.format(question.getCreateDate()));
+		}
 	}
 
 	@Override
@@ -234,5 +245,29 @@ public class QuestionServiceImpl implements QuestionService {
 		// TODO 补充
 		return null;
 	}
+	
+	@Override
+	@Transactional
+	public void deleteQuestion(String deleteId) {
+		// 删除三个表   
+		// question表  通过  deleteId
+		// question_detail 表 通过  其 question_id 为 deleteId
+		// chinese_unit 表 通过 查表 question_detail 得到 所有要删除的 question_detail_id
+		
+		// 得到要删除 chinese_unit表中  的所有 question_detail_id 
+		List<String> deleteDetailIds = mapper.queryDetialIdByQuestId(deleteId);
+	
+		//删除的时候最好从底层表 向 上层表删
+		mapper.deleteUnitByDetailId(deleteDetailIds);
+		mapper.deleteDetailByQuetionId(deleteId);
+		mapper.deleteQuestionById(deleteId);
+	}
 
+	@Override
+	public void batchDeleteQuestions(String[] deleteIds) {
+		//因为逻辑和单个删除几乎一样,就直接用 单个删除了
+		for(String deleteId :deleteIds) {
+			deleteQuestion(deleteId);
+		}
+	}
 }

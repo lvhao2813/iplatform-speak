@@ -43,7 +43,7 @@ public class QuestionController {
 	@ApiImplicitParams({
 			@ApiImplicitParam(dataType = "String", paramType = "query", name = "name", value = "题目名称", required = false),
 			@ApiImplicitParam(dataType = "String", paramType = "query", name = "sortId", value = "分类id", required = false) })
-	@RequestMapping(value = "/query")
+	@RequestMapping(value = "/query",method = RequestMethod.GET)
 	public ModelAndView queryManagerList(@RequestParam Map<String, String> formMap,
 			@ModelAttribute(value = "pagination") Pagination pagination) {
 
@@ -85,4 +85,31 @@ public class QuestionController {
 		return mav;
 	}
 
+	@ApiOperation(value = "删除跳转页")
+	@RequestMapping("/deletepage")
+	public ModelAndView deletePage(@RequestParam Map<String, String> formMap) {
+		ModelAndView modelAndView = new ModelAndView("common/delete");
+		modelAndView.addObject("formMap", formMap);
+		return modelAndView;
+	}
+	
+	@ApiOperation(value = "删除跳转页")
+	@RequestMapping("/delete")
+	@ResponseBody
+	public void delete(@RequestParam Map<String, String> formMap) {
+		questionService.deleteQuestion(formMap.get("deleteId"));
+	}
+	
+	@RequestMapping("batchDeletePage")
+	public ModelAndView batchDeletePage(@RequestParam Map<String, String> formMap) {
+		ModelAndView modelAndView = new ModelAndView("common/batch_delete");
+		modelAndView.addObject("formMap", formMap);
+		return modelAndView;
+	}
+
+	@RequestMapping("batchDelete")
+	@ResponseBody
+	public void batchDelete(String[] deleteIds) {
+		questionService.batchDeleteQuestions(deleteIds);
+	}
 }

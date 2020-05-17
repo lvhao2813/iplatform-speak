@@ -16,7 +16,7 @@
 	<resultMap type="com.boco.share.function.question.bean.Question" id="question">
 		<result column="ID" property="id" jdbcType="VARCHAR" />
 		<result column="NAME" property="name" jdbcType="VARCHAR" />
-		<result column="CREATEDATE" property="createDate" jdbcType="DATE" />
+		<result column="CREATEDATE" property="createDate" jdbcType="TIMESTAMP" />
 		<result column="SORTID" property="sortId" jdbcType="VARCHAR" />
 		<result column="ATTACHMENTUNITID" property="attachmentUnitId" jdbcType="VARCHAR" />
 	</resultMap>
@@ -24,7 +24,15 @@
 	<select id="loadQuestions" resultMap="question">
 		select id id, name name, create_date createDate,
 			   sort_id sortId,attachment_unit_id attachmentUnitId
-		 from ods_questions
+		 from ods_questions t
+		 where 1=1
+		 <if test="SORT_ID != null and SORT_ID !=''">
+			and t.sort_id = #{SORT_ID}
+		</if>
+		<if test="QUESTION_NAME != null and QUESTION_NAME !=''">
+			and t.name like concat('%',#{QUESTION_NAME},'%')	
+		</if>
+		order by t.create_date desc
 	</select>
 	
 	<insert id="saveQuestion" parameterType="com.boco.share.function.question.bean.Question">
@@ -64,5 +72,34 @@
 	</select>
 	
 	
+	<resultMap type="com.boco.share.function.question.bean.QuestionDetail" id="questiondetail">
+		<result column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="WORD" property="word" jdbcType="VARCHAR" />
+		<result column="ORD" property="ord" jdbcType="INTEGER" />
+		<result column="QUESTION_ID" property="questionId" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="queryDetialIdByQuestId" resultType="String">
+		select id id
+		from ods_questions_detail
+		where questions_id = #{deleteId}
+	</select>
+	
+	<update id="deleteUnitByDetailId" parameterType="java.util.List">
+		delete from ods_s_chinese_unit where 
+		questions_detail_id in (
+		<foreach collection ="list" item="item" index= "index" separator =",">
+           #{item}
+        </foreach >
+		)
+	</update>
+	
+	<update id="deleteDetailByQuetionId" parameterType="String">
+		delete from ods_questions_detail where questions_id = #{deleteId}
+	</update>
+	
+	<update id="deleteQuestionById" parameterType="String">
+		delete from ods_questions where id = #{deleteId}
+	</update>
 	
 </mapper>

@@ -27,9 +27,6 @@ public class QuestionDetail implements Serializable {
 	@ApiModelProperty(value = "排序")
 	private Integer ord;
 
-	@ApiModelProperty(value = "分组内容对应的汉字包")
-	private List<Chinese> chineseUnit = new ArrayList<Chinese>();
-
 	@ApiModelProperty(value = "问题id")
 	private String questionId;
 
@@ -49,14 +46,6 @@ public class QuestionDetail implements Serializable {
 		this.word = word;
 	}
 
-	public List<Chinese> getChineseUnit() {
-		return chineseUnit;
-	}
-
-	public void setChineseUnit(List<Chinese> chineseUnit) {
-		this.chineseUnit = chineseUnit;
-	}
-	
 	public Integer getOrd() {
 		return ord;
 	}

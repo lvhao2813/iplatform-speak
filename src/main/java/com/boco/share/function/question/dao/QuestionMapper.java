@@ -71,4 +71,27 @@ public interface QuestionMapper {
 	 */
 	public List<String> getListChineseId(List<String> hanziAndPy);
 
+	/**
+	 * 通过 question_id 查询所有的 question_detail_id
+	 * @return
+	 */
+	public List<String> queryDetialIdByQuestId(@Param("deleteId")String deleteId);
+	
+	/**
+	 * 通过  DetailId 删除 chinese_unit 表记录
+	 * @return
+	 */
+	public void deleteUnitByDetailId(List<String> deleteDetailIds);
+	
+	/**
+	 * 通过 question_id 删除  question_detail 表记录
+	 * @return
+	 */
+	public void deleteDetailByQuetionId(@Param("deleteId") String deleteId);
+	
+	/**
+	 * 通过 question_id 删除 question 记录
+	 * @return
+	 */
+	public void deleteQuestionById(@Param("deleteId") String deleteId);
 }

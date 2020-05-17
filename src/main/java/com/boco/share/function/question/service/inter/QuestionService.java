@@ -34,5 +34,16 @@ public interface QuestionService {
 	 * @return
 	 */
 	public void genQuestion(Map<String, String> formMap);
-
+	
+	/**
+	 * 根据选定Id删除题目
+	 * @param deleteId 要删除的question id
+	 */
+	public void deleteQuestion(String deleteId);
+	
+	/**
+	 * 批量删除题目
+	 * @param deleteId 要删除的 勾选的 question id
+	 */
+	public void batchDeleteQuestions(String[] deleteIds);
 }
