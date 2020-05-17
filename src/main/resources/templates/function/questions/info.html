@@ -24,9 +24,9 @@
 			<th width="8%">题目：</th>
 			<td width="15%"><input type="text"  id="name"  name="name" th:value="${question.name}"></td>
 			<th width="8%">题目类型：</th>
-			<td width="15%"><input type="text"  id="sortName"  name="sortName" th:value="${question.sortName}"></td>
+			<td width="15%"><input type="text"  id="sortName"  name="sortName" th:value="${question.sortName}" readonly =true></td>
 			<th width="8%">创建时间：</th>
-			<td width="15%"><input type="text"  id="createDate"  name="createDate" th:value="${question.createDate}"></td>
+			<td width="15%"><input type="text"  id="createDate"  name="createDate" th:value="${question.createDate}" readonly =true></td>
 		</tr>
 	</table>
 </div>
@@ -38,7 +38,7 @@
 	<div class="auto">
 		<table width="100%" cellpadding="0" cellspacing="0" class="user-list mt10">
 			<tr th:each="chinese : ${question.details}">
-				<td><ruby th:text="${chinese.chinese}"></ruby><rt th:text="${chinese.pinyin}"></rt></td>			
+				<td onclick = "gotoChoose()"><ruby th:text="${chinese.chinese}" ></ruby><rt th:text="${chinese.pinyin}"></rt></td>			
 			</tr>
 		</table>
 	</div>
