@@ -38,26 +38,12 @@ public class QuestionController {
 	@Autowired
 	private QuestionService questionService;
 
-	@ApiOperation(value = "查询题目列表页面")
-	@ResponseBody
-	@RequestMapping(value = "/queryQuestionList", method = RequestMethod.GET)
-	public ModelAndView queryQuestionList(@RequestParam Map<String, String> formMap,
-			@ModelAttribute(value = "pagination") Pagination pagination) {
-		ModelAndView mv = new ModelAndView("function/question/list");
-		// 题目分类下拉框
-		mv.addObject("questionSort", questionService.queryQuestionSorts());
-
-		mv.addObject("formMap", formMap);
-
-		return mv;
-	}
-
 	@ApiOperation(value = "查询题目列表")
 	@ResponseBody
 	@ApiImplicitParams({
 			@ApiImplicitParam(dataType = "String", paramType = "query", name = "name", value = "题目名称", required = false),
 			@ApiImplicitParam(dataType = "String", paramType = "query", name = "sortId", value = "分类id", required = false) })
-	@RequestMapping(value = "/query", method = RequestMethod.GET)
+	@RequestMapping(value = "/query")
 	public ModelAndView queryManagerList(@RequestParam Map<String, String> formMap,
 			@ModelAttribute(value = "pagination") Pagination pagination) {
 
@@ -72,7 +58,8 @@ public class QuestionController {
 		modelAndView.addObject("resultList", resultList);
 		modelAndView.addObject("pagination", pagination);
 		modelAndView.addObject("formMap", formMap);
-
+		
+		modelAndView.addObject("questionSort", questionService.queryQuestionSorts());
 		return modelAndView;
 	}
 

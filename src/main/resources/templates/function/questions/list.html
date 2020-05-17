@@ -36,7 +36,12 @@ function openBatchDeletePage(){
 						<table width="100%" cellpadding="0" cellspacing="0" class="text-table mt10">
 				            <tr>
 					            <th width="8%">题目关键字：</th>
-					            <td width="15%"><input type="text"  id="questionName"  name="QUESTION_NAME" th:value="${formMap['QUESTION_NAME']}"></td>					
+					            <td width="15%"><input type="text"  id="questionName"  name="QUESTION_NAME" th:value="${formMap['QUESTION_NAME']}"></td>
+					            <td>
+					         		<select name ="SEARCH_TYPE">
+					              		<option th:each="sort : ${questionSort}" th:value="${sort.id}" th:text="${sort.name}">
+					            	</select>
+					            </td>
 					           <td width="38%">
 						           <a th:onclick="'javascript:callFormSubmit()'">搜索</a>&nbsp;&nbsp;
 						           <a th:onclick="'javascript:resetSearch()'">重置</a>
@@ -66,9 +71,8 @@ function openBatchDeletePage(){
 															onClick="selectedAllCheckbox()" />
 									</th>
 		       						<th>题目名称</th>
+									<th>题目类型</th>
 									<th>创建时间</th>
-									<th>排序</th>
-									<th>对应音频</th>
 									<th>操作</th>
 			       			</tr>
 			       			<tr th:each="question : ${resultList}">
@@ -76,9 +80,11 @@ function openBatchDeletePage(){
 									<input type="checkbox" id="checkboxId"  th:name="check"  th:value="${question['id']}" />
 								</td>
 								<td th:text="${question['name']}"></td>
+<!-- 								<td th:text="${question['sortId']=='1'? '单字练习':(question['sortId']=='2'?词语练习'：'短文练习')}"></td> -->
+								<td th:if="${question['sortId'] == '1'}">单字练习</td>
+								<td th:if="${question['sortId'] == '2'}">词语练习</td>
+								<td th:if="${question['sortId'] == '3'}">短文练习</td>
 								<td th:text="${question['createDate']}"></td>
-								<td th:text="${question['sortId']}"></td>
-								<td th:text="${question['attachmentUnitId']}"></td>
 								
 								<td align="center">
 		
