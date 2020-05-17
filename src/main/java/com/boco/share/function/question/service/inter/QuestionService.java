@@ -6,6 +6,8 @@ package com.boco.share.function.question.service.inter;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.boco.share.function.common.bean.Sort;
 import com.boco.share.function.question.bean.ApiQuestion;
 import com.boco.share.function.question.bean.Chinese;
@@ -36,7 +38,7 @@ public interface QuestionService {
 	 * @param formMap type-题目分类,name-题目名称,details-题目内容
 	 * @return
 	 */
-	public void genQuestion(Map<String, String> formMap);
+	public void genQuestion(Map<String, String> formMap, MultipartFile file) throws Exception;
 
 	/**
 	 * 根据题目id，查询详情

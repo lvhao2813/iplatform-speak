@@ -3,6 +3,10 @@
  */
 package com.boco.share.function.question.service.impl;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -10,9 +14,12 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.druid.util.StringUtils;
 import com.boco.share.framework.common.UuidUtil;
+import com.boco.share.function.common.bean.Attachment;
+import com.boco.share.function.common.bean.AttachmentUnit;
 import com.boco.share.function.common.bean.Sort;
 import com.boco.share.function.question.bean.ApiChineseDetail;
 import com.boco.share.function.question.bean.ApiQuestion;
@@ -47,12 +54,15 @@ public class QuestionServiceImpl implements QuestionService {
 
 	@Override
 	@Transactional
-	public void genQuestion(Map<String, String> formMap) {
+	public void genQuestion(Map<String, String> formMap, MultipartFile file) throws Exception {
 		// 保存题目对象
 		Question question = new Question();
 		question.setId(UuidUtil.genUUID());
 		question.setName(formMap.get("name"));
 		question.setSortId(formMap.get("type"));
+		if(file != null) {
+			question.setAttachmentUnitId(uploadFile(file));
+		}
 		mapper.saveQuestion(question);
 		// 保存题目分组明细
 		String type = formMap.get("type");
@@ -107,6 +117,31 @@ public class QuestionServiceImpl implements QuestionService {
 		return null;
 	}
 
+	/**
+	 * 上传附件，返回附件包
+	 * @param file
+	 * @return
+	 * @throws IOException
+	 */
+	private String uploadFile(MultipartFile file) throws IOException {
+		//保存文件到本地磁盘,同时生成对象，保存路径方便后续取
+		byte[] bytes = file.getBytes();
+        Path path = Paths.get("E:\\fileUpload/" + file.getOriginalFilename());
+        Files.write(path, bytes);
+		//保存对应的附件对象
+        AttachmentUnit unit = new AttachmentUnit();
+        String unitId = UuidUtil.genUUID();
+        unit.setId(unitId);
+        //save
+        Attachment attachment = new Attachment();
+        attachment.setId(UuidUtil.genUUID());
+        attachment.setName(file.getName());
+        attachment.setPath("E:\\fileUpload/" + file.getOriginalFilename());
+        attachment.setAttachmentUnitId(unitId);
+        //save
+        return unitId;
+	}
+	
 	/**
 	 * 将question数据库对象，转换成前台展示对象
 	 * 

@@ -13,7 +13,7 @@
 <div th:insert="/common/common_index :: index_head"></div>
 <div th:include="/common/onload_list_js :: loadJS"></div>
 
-<form id="callForm" name="callForm" th:method="post">
+<form id="callForm" name="callForm" th:method="post" enctype="multipart/form-data">
 <div id="main">
 <div class="box">
 	<div class="title">	
@@ -49,19 +49,19 @@
 			</tr>
 			<tr  th:each="chinese,each : ${question.details}">
 				<td th:text="${each.count}"></td>			
-				<td onclick = "gotoChoose()" th:text="${chinese.chinese}" th:onclick="'javascript:openCommonLayer(\'/api/v1/question/choosepage?CHINESEID='+${chinese.chinese}+'\')'"></td>			
-				<td onclick = "gotoChoose()" th:text="${chinese.pinyin}" th:onclick="'javascript:openCommonLayer(\'/api/v1/question/choosepage?CHINESEID='+${chinese.chinese}+'\')'"></td>			
-				<td>上传</td>			
+				<td th:text="${chinese.chinese}" th:onclick="'javascript:openCommonLayer2(\'/api/v1/question/choosepage?CHINESEID='+${chinese.chinese}+'\')'"></td>			
+				<td th:text="${chinese.pinyin}" th:onclick="'javascript:openCommonLayer2(\'/api/v1/question/choosepage?CHINESEID='+${chinese.chinese}+'\')'"></td>			
+				<td><input type="file" name="chineseMp3" /><button type="submit">上传</button></td>			
 			</tr>
 		</table>
 	</div>
 	
-<div th:include="/common/page_control"></div>
+<!--这里page页面报错了所以没有继续往下加载到下面的openCommonLayer2  <div th:include="/common/page_control"></div>-->
 	    
 </div>
 </div>
 	<script type="text/javascript">
-		function openLargeEditLayer(url){
+		function openCommonLayer2(url){
 			openCommonLayer('编辑记录','500px','300px',url);
 		}
 	</script>

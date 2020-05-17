@@ -16,13 +16,20 @@
 		<th width="15%"><span>*</span>题目名称：</th>
 		<td><input type="text" name="name" class="input1"/></td>
 	</tr>
-	<tr>
+	<!-- 4是命题 只需要录入名称即可 -->
+	<tr th:if="${type != '4'}>
 		<th th:if="${type == '1'}">单字题目内容：</th>
 		<th th:if="${type == '2'}">词语题目内容<br/>请以中文逗号(，)<br/>分隔词组：</th>
 		<th th:if="${type == '3'}">短文题目内容：</th>
 		<td colspan="3">
 			<textarea name="details"  rows="6"></textarea>
 		</td>		
+	</tr>
+	<tr th:if="${type == '3' or type == '4'}>
+		<th>请上传音频文件：</th>
+		<td colspan="3">
+			<input type="file" name="mp3" />
+		</td>	
 	</tr>
   </table>
 </div>

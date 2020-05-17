@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.boco.share.framework.pagination.Pagination;
@@ -81,8 +82,8 @@ public class QuestionController {
 			@ApiImplicitParam(dataType = "String", paramType = "query", name = "name", value = "题目名称", required = true),
 			@ApiImplicitParam(dataType = "String", paramType = "query", name = "details", value = "题目内容", required = true) })
 	@RequestMapping(value = "/genQuestion", method = RequestMethod.POST)
-	public void genQuestion(@RequestParam Map<String, String> formMap) {
-		questionService.genQuestion(formMap);
+	public void genQuestion(@RequestParam Map<String, String> formMap, @RequestParam("file") MultipartFile file) throws Exception {
+		questionService.genQuestion(formMap, file);
 	}
 	
 	@ApiOperation(value = "题目编辑页面")
