@@ -47,14 +47,15 @@
 			$.ajax({
 			    url: contextPath + 'confirmpinyin',
 			    data: {
-			    		chineseUnitId: chineseUnitId,
-			    		chinese: chinese,
-			    		pinyin: pinyin
+			    		UNITID: chineseUnitId,
+			    		CHINESE: chinese,
+			    		PINYIN: pinyin
 			    	},
 			    type: "POST",
 			    dataType: "json",
 			    success: function(data) {
 			    	closeCurrentLayer();
+			    	closeLayerAndRefresh();
 			    }
 			   });
 		}
