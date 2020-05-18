@@ -143,8 +143,8 @@ public class QuestionController {
 	@ApiImplicitParams({
 		@ApiImplicitParam(dataType = "String", paramType = "query", name = "unitId", value = "修改字unitId", required = true),
 		@ApiImplicitParam(dataType = "String", paramType = "query", name = "PinYin", value = "选择的拼音", required = true) })
-	@RequestMapping(value = "/confirmpinyin", method = RequestMethod.GET)
-	public void confirmpinyin(@RequestParam Map<String, String> formMap, @RequestParam("file") MultipartFile file) throws Exception {
+	@RequestMapping(value = "/confirmpinyin", method = RequestMethod.POST)
+	public void confirmpinyin(@RequestParam Map<String, String> formMap) throws Exception {
 		questionService.changePinYin(formMap);
 	}
 }

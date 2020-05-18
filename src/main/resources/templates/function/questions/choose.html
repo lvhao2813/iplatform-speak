@@ -26,7 +26,7 @@
 				<td th:text="${pinyin}"></td>
 				<!-- 				这里需要传 unitId 、字  、字的正确读音  -->
 				<!-- 				假设为        UNITID 、CHINESE 、PINYIN  -->
-				<td th:onclick="'javascript:clickSave(\'/api/v1/question/confirmpinyin\')'">单击即可选择此读音</td>
+				<td th:onclick="'javascript:clickSave(\''+${formMap.UNITID}+'\',\''+${formMap.CHINESE}+'\',\''+${pinyin}+'\')'">确定</td>
 			</tr>
 		</table>
 
@@ -43,10 +43,14 @@
 
 	<div th:include="/common/onload_layer_js :: loadJS"></div>
 	<script type="text/javascript">
-		function clickSave(){
+		function clickSave(chineseUnitId, chinese, pinyin){
 			$.ajax({
-			    url: "/greet",
-			    data: {name: 'jenny'},
+			    url: contextPath + 'confirmpinyin',
+			    data: {
+			    		chineseUnitId: chineseUnitId,
+			    		chinese: chinese,
+			    		pinyin: pinyin
+			    	},
 			    type: "POST",
 			    dataType: "json",
 			    success: function(data) {
