@@ -6,6 +6,8 @@ package com.boco.share.function.question.app.v1;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.boco.share.framework.pagination.Pagination;
@@ -82,7 +85,12 @@ public class QuestionController {
 			@ApiImplicitParam(dataType = "String", paramType = "query", name = "name", value = "题目名称", required = true),
 			@ApiImplicitParam(dataType = "String", paramType = "query", name = "details", value = "题目内容", required = true) })
 	@RequestMapping(value = "/genQuestion", method = RequestMethod.POST)
-	public void genQuestion(@RequestParam Map<String, String> formMap, @RequestParam("file") MultipartFile file) throws Exception {
+	public void genQuestion(HttpServletRequest request, @RequestParam Map<String, String> formMap) throws Exception {
+//		List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
+		MultipartFile file = null;
+		if(request instanceof StandardMultipartHttpServletRequest) {
+			file = ((StandardMultipartHttpServletRequest) request).getFile("file");
+		}
 		questionService.genQuestion(formMap, file);
 	}
 	
