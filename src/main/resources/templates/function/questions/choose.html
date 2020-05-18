@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+	<link th:href="@{/css/common.css}" rel="stylesheet" />
+	<link th:href="@{/css/syle.css}" rel="stylesheet" />
+	<link th:href="@{~/js/layer/skin/layer.css}" rel="stylesheet"/>
+</head>
+<body id="bg-white">
+
+<form id="callForm" name="callForm"  action="" th:method="get">
+<!-- 	<div class="auto"> -->
+		<table width="100%" cellpadding="0" cellspacing="0" class="user-list mt10">
+			<tr>
+				<th width="30">序号</th>
+	       		<th>汉字</th>
+	       		<th>拼音</th>
+				<th>说明</th>
+			</tr>
+			
+			<tr  th:each="pinyin,each : ${pinYins}">
+				<td th:text="${each.count}"></td>		
+				<td th:text="${formMap.CHINESE}" ></td>		
+				<td th:text="${pinyin}" ></td>			
+<!-- 				这里需要传 unitId 、字  、字的正确读音  -->
+<!-- 				假设为        UNITID 、CHINESE 、PINYIN  -->
+				<td th:onclick="jqueryAjaxSubmit('/api/v1/question/confirmpinyin');">单击即可选择此读音</td>					
+			</tr>
+		</table>
+
+<!-- </div> -->
+
+<div class="tc-tip" id="tipsId" style="display:none"><img th:src="@{/images/icon-tip.png}"/>您还有必填项未填。</div>
+		<div class="tc-bottom">
+<!-- 			<a onclick="submitUpdate()" id="submitBtn">确定</a>  -->
+			<a th:onclick="'javascript:closeCurrentLayer()'">取消</a>
+		</div>
+	</form>
+
+<div th:include="/common/onload_layer_js :: loadJS"></div>
+	<script type="text/javascript">
+		function submitUpdate(url){
+			response.redirect(url)
+		}
+	</script>
+</body>
+</html>
+	

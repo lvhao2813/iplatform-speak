@@ -167,4 +167,11 @@
 			and id = #{chineseId}
 		</if>
 	</select>
+	
+	<update id="updateChineseUnit">
+		update ods_s_chinese_unit t set 
+		t.chinese_id = #{chineseId}
+		where t.id = #{UNITID}
+	</update>
+	
 </mapper>

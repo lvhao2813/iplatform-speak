@@ -100,4 +100,10 @@ public interface QuestionMapper {
 	 * @return
 	 */
 	public Question queryQuestionById(@Param("questionId") String questionId);
+	
+	
+	/**
+	 * 通过 chinese_unid_id 修改 chinese_id
+	 */
+	public void updateChineseUnit(Map<String, String> formMap);
 }

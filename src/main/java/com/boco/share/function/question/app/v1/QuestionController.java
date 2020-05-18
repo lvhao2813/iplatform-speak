@@ -132,10 +132,19 @@ public class QuestionController {
 			@ApiImplicitParam(dataType = "String", paramType = "query", name = "chinese", value = "点击的汉字", required = true) })
 	@RequestMapping(value = "/choosepage", method = RequestMethod.GET)
 	public ModelAndView choosePage(@RequestParam Map<String, String> formMap) {
-		//TODO 不能往info里跳
-		ModelAndView mav = new ModelAndView("function/questions/info");
-		List<Chinese> chineses = questionService.getAllChooseFromChinese(formMap);
-		mav.addObject("chineses", chineses);
+		ModelAndView mav = new ModelAndView("function/questions/choose");
+		List<String> pinYins = questionService.getAllChooseFromChinese(formMap);
+		mav.addObject("formMap",formMap);
+		mav.addObject("pinYins", pinYins);
 		return mav;
+	}
+	
+	@ApiOperation(value = "确定读音")
+	@ApiImplicitParams({
+		@ApiImplicitParam(dataType = "String", paramType = "query", name = "unitId", value = "修改字unitId", required = true),
+		@ApiImplicitParam(dataType = "String", paramType = "query", name = "PinYin", value = "选择的拼音", required = true) })
+	@RequestMapping(value = "/confirmpinyin", method = RequestMethod.GET)
+	public void confirmpinyin(@RequestParam Map<String, String> formMap, @RequestParam("file") MultipartFile file) throws Exception {
+		questionService.changePinYin(formMap);
 	}
 }

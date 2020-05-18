@@ -113,8 +113,21 @@ public class QuestionServiceImpl implements QuestionService {
 	}
 	
 	@Override
-	public List<Chinese> getAllChooseFromChinese(Map<String, String> formMap){
-		return null;
+	public List<String> getAllChooseFromChinese(Map<String, String> formMap){
+		char[] chars = formMap.get("CHINESE").toCharArray();
+		String[] PinYins = PinYinUtil.getPinyinBySingWord(chars[0]);
+		List<String> resultList = new ArrayList<>();
+		for(String s : PinYins) {
+			resultList.add(s);
+		}
+		return resultList;
+	}
+	
+	@Override
+	public void changePinYin(Map<String, String> formMap) {
+		String chineseId = getOneChineseId(formMap.get("CHINESE"),formMap.get("PINYIN"));
+		formMap.put("chineseId", chineseId);
+		mapper.updateChineseUnit(formMap);
 	}
 
 	/**
