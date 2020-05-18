@@ -26,7 +26,7 @@
 				<td th:text="${pinyin}"></td>
 				<!-- 				这里需要传 unitId 、字  、字的正确读音  -->
 				<!-- 				假设为        UNITID 、CHINESE 、PINYIN  -->
-				<td th:onclick="'javascript:jqueryAjaxSubmit(\'/api/v1/question/confirmpinyin\')'">单击即可选择此读音</td>
+				<td th:onclick="'javascript:clickSave(\'/api/v1/question/confirmpinyin\')'">单击即可选择此读音</td>
 			</tr>
 		</table>
 
