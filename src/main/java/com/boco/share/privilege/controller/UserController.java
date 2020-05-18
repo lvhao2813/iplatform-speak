@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -26,10 +27,17 @@ import com.boco.share.privilege.util.PrivilageConstants;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+
 /**
  * @author lv
  *
  */
+@Api(tags = "用户相关接口")
 @Controller
 @RequestMapping("/privilege/user")
 public class UserController extends BaseController implements LoginConstants, PrivilageConstants, ConfigContants {
@@ -37,6 +45,7 @@ public class UserController extends BaseController implements LoginConstants, Pr
 	@Autowired
 	private UserService userService;
 
+	@ApiOperation(value = "后台,查询用户列表")
 	@RequestMapping("query")
 	public ModelAndView queryManagerList(@RequestParam Map<String, String> formMap,
 			@ModelAttribute(value = "pagination") Pagination pagination) {
@@ -56,6 +65,7 @@ public class UserController extends BaseController implements LoginConstants, Pr
 		return modelAndView;
 	}
 
+	@ApiOperation(value = "后台,新增用户中转页")
 	@RequestMapping("insertpage")
 	public ModelAndView insertPage(@ModelAttribute(value = "User") User user) {
 		ModelAndView mav = new ModelAndView("privilege/manager/add");
@@ -63,12 +73,14 @@ public class UserController extends BaseController implements LoginConstants, Pr
 		return mav;
 	}
 
+	@ApiOperation(value = "后台,新增用户")
 	@RequestMapping("add")
 	@ResponseBody
 	public void insert(@ModelAttribute(value = "User") User user, HttpSession session) {
 		userService.insert(user);
 	}
 
+	@ApiOperation(value = "后台,更新用户中转页")
 	@RequestMapping("updatepage")
 	public ModelAndView updatePage(@RequestParam Map<String, String> formMap,
 			@ModelAttribute(value = "User") User user) {
@@ -78,12 +90,14 @@ public class UserController extends BaseController implements LoginConstants, Pr
 		return mav;
 	}
 
+	@ApiOperation(value = "1前端and后端,更新用户")
 	@RequestMapping("update")
 	@ResponseBody
-	public void update(User user) {
+	public void update(@ApiParam(name = "user", value = "用户对象对象") User user) {
 		userService.update(user);
 	}
 
+	@ApiOperation(value = "后台,删除用户中转页")
 	@RequestMapping("deletepage")
 	public ModelAndView deletePage(@RequestParam Map<String, String> formMap) {
 		ModelAndView modelAndView = new ModelAndView("common/delete");
@@ -91,12 +105,14 @@ public class UserController extends BaseController implements LoginConstants, Pr
 		return modelAndView;
 	}
 
+	@ApiOperation(value = "后台,删除用户")
 	@RequestMapping("delete")
 	@ResponseBody
 	public void delete(@RequestParam Map<String, String> formMap) {
 		userService.deleteUser(formMap.get("deleteId"));
 	}
 
+	@ApiOperation(value = "后台,批量删除中专页")
 	@RequestMapping("batchDeletePage")
 	public ModelAndView batchDeletePage(@RequestParam Map<String, String> formMap) {
 		ModelAndView modelAndView = new ModelAndView("common/batch_delete");
@@ -104,10 +120,20 @@ public class UserController extends BaseController implements LoginConstants, Pr
 		return modelAndView;
 	}
 
+	@ApiOperation(value = "后台,批量删除用户")
 	@RequestMapping("batchDelete")
 	@ResponseBody
 	public void batchDelete(String[] deleteIds) {
 		userService.batchDeleteUsers(deleteIds);
+	}
+
+	@ApiOperation(value = "0前端,通过用户编码查询用户")
+	@ApiImplicitParams({
+			@ApiImplicitParam(dataType = "String", paramType = "query", name = "code", value = "根据用户code查询用户", required = true) })
+	@RequestMapping(value = "/getUserByCode", method = RequestMethod.POST)
+	@ResponseBody
+	public User getUserByCode(@RequestParam @ApiParam(hidden = true) Map<String, String> formMap) {
+		return userService.getUserByCode(formMap.get("code"));
 	}
 
 }

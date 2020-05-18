@@ -13,13 +13,19 @@
 		<result column="EXECFREQUENCY" property="execFrequency" jdbcType="INTEGER" />
 		<result column="EFFECTIVETIME" property="effectiveTime" jdbcType="INTEGER" />
 		<result column="CREATEDATE" property="createDate" jdbcType="DATE" />
+		<collection property="sort" ofType="com.boco.share.function.common.bean.Sort">
+            <result column="CODE" property="code" jdbcType="VARCHAR" />
+            <result column="SORTNAME" property="name" jdbcType="VARCHAR" />
+        </collection>
+		
 	</resultMap>
 	
 	
 	<select id="queryGoods" resultMap="goods" parameterType="java.util.HashMap">
 		select id id, name name, price price ,unit unit,
 			   image image, create_date createDate, desciption desciption,
-			   execFrequency execFrequency, effectiveTime effectiveTime
+			   execFrequency execFrequency, effectiveTime effectiveTime,
+			   s.code code, s.sortName sortName
 		from ods_goods g
 		left join ods_c_sort s on g.sort_id = s.id and s.type = 'good'
 		where 1 = 1 

@@ -3,8 +3,6 @@
  */
 package com.boco.share.privilege.bean;
 
-import java.util.Date;
-
 import io.swagger.annotations.ApiModelProperty;
 
 /**
@@ -23,10 +21,10 @@ public class UserAvailable {
 	private Integer execFrequency;
 
 	@ApiModelProperty(value = "全真测试次数有效期")
-	private Date execTime;
+	private String execTime;
 
 	@ApiModelProperty(value = "在线学习有效期")
-	private Date lineEffectiveTime;
+	private String lineEffectiveTime;
 
 	public String getId() {
 		return id;
@@ -52,19 +50,19 @@ public class UserAvailable {
 		this.execFrequency = execFrequency;
 	}
 
-	public Date getExecTime() {
+	public String getExecTime() {
 		return execTime;
 	}
 
-	public void setExecTime(Date execTime) {
+	public void setExecTime(String execTime) {
 		this.execTime = execTime;
 	}
 
-	public Date getLineEffectiveTime() {
+	public String getLineEffectiveTime() {
 		return lineEffectiveTime;
 	}
 
-	public void setLineEffectiveTime(Date lineEffectiveTime) {
+	public void setLineEffectiveTime(String lineEffectiveTime) {
 		this.lineEffectiveTime = lineEffectiveTime;
 	}
 

@@ -12,33 +12,36 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(value = "用户对象", description = "用户对象")
 public class User {
-	
+
 	@ApiModelProperty(value = "用户id")
 	private String id;
-	
+
 	@ApiModelProperty(value = "用户名称")
 	private String name;
-	
+
 	@ApiModelProperty(value = "账户")
 	private String code;
-	
+
 	@ApiModelProperty(value = "电话")
 	private String phone;
-	
+
 	@ApiModelProperty(value = "是否启用")
 	private String activeFlag;
-	
+
 	@ApiModelProperty(value = "是否管理员")
 	private String manager;
-	
+
 	@ApiModelProperty(value = "密码")
 	private String passWord;
-	
+
 	@ApiModelProperty(value = "邮箱")
 	private String email;
-	
+
 	@ApiModelProperty(value = "描述")
 	private String descrition;
+
+	@ApiModelProperty(value = "用户权益对象")
+	private UserAvailable userAvaliable;
 
 	public String getEmail() {
 		return email;
@@ -111,6 +114,13 @@ public class User {
 	public void setPassWord(String passWord) {
 		this.passWord = passWord;
 	}
-	
-	
+
+	public UserAvailable getUserAvaliable() {
+		return userAvaliable;
+	}
+
+	public void setUserAvaliable(UserAvailable userAvaliable) {
+		this.userAvaliable = userAvaliable;
+	}
+
 }

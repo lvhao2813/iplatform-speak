@@ -19,8 +19,8 @@
 		<result column="ID" property="id" jdbcType="VARCHAR" />
 		<result column="VIP" property="vip" jdbcType="VARCHAR" />
 		<result column="EXECFREQUENCY" property="execFrequency" jdbcType="INTEGER" />
-		<result column="EXECTIME" property="execTime" jdbcType="DATE" />
-		<result column="LINEEFFECTIVETIME" property="lineEffectiveTime" jdbcType="DATE" />
+		<result column="EXECTIME" property="execTime" jdbcType="VARCHAR" />
+		<result column="LINEEFFECTIVETIME" property="lineEffectiveTime" jdbcType="VARCHAR" />
 	</resultMap>
 		
 	<select id="loadUsers" parameterType="java.util.HashMap" resultMap="user">
@@ -49,6 +49,12 @@
 				and t.id = #{ID}
 			</if>
 	  </select>
+	  
+	  <select id="getUserByCode" resultMap="user" parameterType="String">
+		select id id, name name, code code, phone phone
+		, active_flag activeFlag, is_manager manager,passWord passWord from ods_s_user t where 1=1 
+			and t.code = #{code}
+	</select>
   
   	<insert id="insert" parameterType="com.boco.share.privilege.bean.User">
   		insert into ods_s_user(name, code, phone,
@@ -94,7 +100,7 @@
 			     where t.id = #{id}
 	</update>
 	<select id="queryUserAvailableByUserId" parameterType="String" resultMap="userAvailable">
-			select id id, is_vip vip, execFrequency execFrequency,execTime execTime, lineEffectiveTime lineEffectiveTime
+			select id id, is_vip vip, execFrequency execFrequency,DATE_FORMAT(execTime,'%Y-%m-%d') execTime, DATE_FORMAT(lineEffectiveTime,'%Y-%m-%d') lineEffectiveTime
 			from ods_user_available 
 			where 1=1
 			<if test="userId != null and userId !=''">

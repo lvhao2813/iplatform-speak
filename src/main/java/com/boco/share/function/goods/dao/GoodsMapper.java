@@ -24,7 +24,7 @@ public interface GoodsMapper {
 	 * @return
 	 */
 	public List<Goods> queryGoods(Map<String, String> formMap);
-	
+
 	/**
 	 * 查询商品 by id
 	 * 
@@ -32,13 +32,5 @@ public interface GoodsMapper {
 	 * @return
 	 */
 	public Goods queryGoodsById(String goodsId);
-	
-	/**
-	 * 查询用户
-	 * 
-	 * @param formMap
-	 * @return
-	 */
-	public List<Goods> queryUserAvailable(Map<String, String> formMap);
 
 }

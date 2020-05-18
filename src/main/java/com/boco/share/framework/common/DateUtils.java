@@ -1,5 +1,6 @@
 package com.boco.share.framework.common;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -51,5 +52,39 @@ public class DateUtils {
 	    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return df.format(new Date());
     }
+	
+	/**
+	 * 传入的时间是否 比当天时间小
+	 * @param oneDate
+	 * @return
+	 */
+	public static boolean isVipOverTime(String oneDate){
+	    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+	    Date date1 = null;
+		try {
+			date1 = df.parse(oneDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+        return date1.before(new Date());
+    }
+	
+	
+	public static String timeAddDay(String time, Integer addCount) {
+		 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		    Date date = null;
+		    String result = "";
+			try {
+				date = df.parse(time);
+				Calendar cl = Calendar.getInstance();
+	            cl.setTime(date);
+	            cl.add(Calendar.DATE, addCount);
+	            result = df.format(cl.getTime());
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			
+			return result;
+	}
 	
 }

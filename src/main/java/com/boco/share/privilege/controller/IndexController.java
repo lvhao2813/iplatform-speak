@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.boco.share.framework.springmvc.BaseController;
-import com.boco.share.privilege.service.inter.LoginService;
+import com.boco.share.privilege.service.inter.UserService;
 import com.boco.share.privilege.util.PrivilageConstants;
 
 @Controller
@@ -20,7 +20,7 @@ import com.boco.share.privilege.util.PrivilageConstants;
 public class IndexController extends BaseController implements PrivilageConstants {
 
 	@Autowired
-	private LoginService loginService;
+	private UserService userService;
 
 	@RequestMapping("")
 	public String login2(Map<String, Object> map, String loginMessage) {
@@ -36,12 +36,12 @@ public class IndexController extends BaseController implements PrivilageConstant
 	 */
 	@RequestMapping("login")
 	public ModelAndView login(@RequestParam Map<String, String> formMap) {
-		boolean isCheck = loginService.checkLoginUser(formMap.get("username"), formMap.get("password"));
+		boolean isCheck = userService.checkLoginUser(formMap.get("username"), formMap.get("password"));
 		ModelAndView mav = null;
 		boolean error = false;
-		if(isCheck) {
+		if (isCheck) {
 			mav = new ModelAndView("index");
-		}else {
+		} else {
 			mav = new ModelAndView("login");
 			error = true;
 		}

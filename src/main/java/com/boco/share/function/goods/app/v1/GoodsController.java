@@ -21,6 +21,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 /**
  * @author lv
@@ -38,7 +39,7 @@ public class GoodsController {
 	@ApiImplicitParams({
 			@ApiImplicitParam(dataType = "String", paramType = "query", name = "sortName", value = "商品分类名称，例如:套餐商品,普通商品,邮寄运费商品,教材商品", required = true) })
 	@RequestMapping(value = "/queryGoods", method = RequestMethod.POST)
-	public List<Goods> queryGoods(@RequestParam Map<String, String> formMap,
+	public List<Goods> queryGoods(@RequestParam @ApiParam(hidden = true) Map<String, String> formMap,
 			@ModelAttribute(value = "pagination") Pagination pagination) {
 		return goodsService.queryGoods(formMap);
 	}
@@ -47,7 +48,7 @@ public class GoodsController {
 	@ApiImplicitParams({
 			@ApiImplicitParam(dataType = "String", paramType = "query", name = "sortName", value = "商品分类名称，例如:套餐商品,普通商品,邮寄运费商品,教材商品", required = true) })
 	@RequestMapping(value = "/buyGoodsAvailable", method = RequestMethod.POST)
-	public String buyGoodsAvailable(@RequestParam Map<String, String> formMap) {
+	public String buyGoodsAvailable(@RequestParam @ApiParam(hidden = true) Map<String, String> formMap) {
 		goodsService.buyGoodsAvailable(formMap);
 		return "";
 	}

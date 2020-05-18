@@ -27,15 +27,6 @@ public interface UserMapper {
 	User getUserByCode(String code);
 
 	/**
-	 * 校验用户密码是否正确
-	 * 
-	 * @param code
-	 * @param passWord
-	 * @return
-	 */
-	boolean checkLoginUser(String code, String passWord);
-
-	/**
 	 * Title: loadManagers Description: 读取管理员信息
 	 * 
 	 * @param formMap

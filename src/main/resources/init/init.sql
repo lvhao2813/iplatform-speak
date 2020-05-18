@@ -17,6 +17,7 @@ create table ods_user_available(
    execFrequency int DEFAULT 0 COMMENT '全真测试次数',
    execTime date DEFAULT NULL COMMENT '全真测试次数有效期',
    lineEffectiveTime date DEFAULT NULL COMMENT '在线学习有效期',
+   integral int  DEFAULT 0 COMMENT '积分',
    user_id int DEFAULT NULL COMMENT '用户id'
 );
 

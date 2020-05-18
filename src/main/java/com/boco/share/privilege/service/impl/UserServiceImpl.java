@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.boco.share.privilege.bean.User;
+import com.boco.share.privilege.bean.UserAvailable;
 import com.boco.share.privilege.dao.UserMapper;
 import com.boco.share.privilege.service.inter.UserService;
 import com.boco.share.privilege.util.Md5Util;
@@ -27,7 +28,10 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User getUserByCode(String code) {
-		return userMapper.getUserByCode(code);
+		User user = userMapper.getUserByCode(code);
+		UserAvailable userAvailable = userMapper.queryUserAvailableByUserId(user.getId());
+		user.setUserAvaliable(userAvailable);
+		return user;
 	}
 
 	@Override
