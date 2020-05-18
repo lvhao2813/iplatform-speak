@@ -9,6 +9,8 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import com.boco.share.function.common.bean.Attachment;
+import com.boco.share.function.common.bean.AttachmentUnit;
 import com.boco.share.function.common.bean.Sort;
 import com.boco.share.function.question.bean.Chinese;
 import com.boco.share.function.question.bean.ChineseUnit;
@@ -106,4 +108,14 @@ public interface QuestionMapper {
 	 * 通过 chinese_unid_id 修改 chinese_id
 	 */
 	public void updateChineseUnit(Map<String, String> formMap);
+	
+	/**
+	 * 新增 attachment_unit
+	 */
+	public void saveAttachmentUnit(AttachmentUnit unit);
+	
+	/**
+	 * 新增 attachment
+	 */
+	public void saveAttachment(Attachment attachment);
 }

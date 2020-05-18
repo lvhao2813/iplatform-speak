@@ -11,6 +11,7 @@
 	
 	<select id="queryQuestionSorts" resultMap="question">
 		select id id, name name, code code from ods_c_sort where type = 'question'
+		order by ord
 	</select>
 	
 	<resultMap type="com.boco.share.function.question.bean.Question" id="question">
@@ -22,8 +23,8 @@
 		<result column="ATTACHMENTUNITID" property="attachmentUnitId" jdbcType="VARCHAR" />
 	</resultMap>
 	
-	<select id="loadQuestions" resultMap="question">
-		select t.id id, t.name name, DATE_FORMAT(t.create_date,'%Y-%m-%d') createDate,
+	<!-- <select id="loadQuestions" resultMap="question">
+		 select t.id id, t.name name, DATE_FORMAT(t.create_date,'%Y-%m-%d') createDate,
 			   t.sort_id sortId, s.name sortName,t.attachment_unit_id attachmentUnitId
 		 from ods_questions t
 		 left join ods_c_sort s on s.id = t.sort_id
@@ -34,7 +35,22 @@
 			and t.name like concat('%',#{QUESTION_NAME},'%')	
 		</if>
 		order by t.create_date desc
+	</select> -->
+	
+	<select id="loadQuestions" resultMap="question">
+		 select t.id id, t.name name, DATE_FORMAT(t.create_date,'%Y-%m-%d') createDate,
+			   t.sort_id sortId, s.name sortName,t.attachment_unit_id attachmentUnitId
+		 from ods_questions t
+		 left join ods_c_sort s on s.ord = t.sort_id where s.type='question'
+		 <if test="SORT_ID != null and SORT_ID !=''">
+			and t.sort_id = #{SORT_ID}
+		</if>
+		<if test="QUESTION_NAME != null and QUESTION_NAME !=''">
+			and t.name like concat('%',#{QUESTION_NAME},'%')	
+		</if>
+		order by t.create_date desc
 	</select>
+	
 	
 	<insert id="saveQuestion" parameterType="com.boco.share.function.question.bean.Question">
   		insert into ods_questions(id, name, create_date, sort_id) 
@@ -173,5 +189,15 @@
 		t.chinese_id = #{chineseId}
 		where t.id = #{UNITID}
 	</update>
+	
+	<insert id="saveAttachmentUnit" parameterType="com.boco.share.function.common.bean.AttachmentUnit">
+  		insert into ods_c_attachment_unit(id) 
+  		values (#{id})
+	</insert>
+	
+	<insert id="saveAttachment" parameterType="com.boco.share.function.common.bean.Attachment">
+  		insert into ods_c_atachment(id, name, attach_path, upload_date,attachment_unit_id) 
+  		values (#{id}, #{name}, #{path}, NOW(),#{attachmentUnitId} )
+	</insert>
 	
 </mapper>

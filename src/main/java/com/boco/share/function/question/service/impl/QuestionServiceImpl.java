@@ -146,12 +146,14 @@ public class QuestionServiceImpl implements QuestionService {
         String unitId = UuidUtil.genUUID();
         unit.setId(unitId);
         //save
+        mapper.saveAttachmentUnit(unit);
         Attachment attachment = new Attachment();
         attachment.setId(UuidUtil.genUUID());
         attachment.setName(file.getName());
         attachment.setPath("E:\\fileUpload/" + file.getOriginalFilename());
         attachment.setAttachmentUnitId(unitId);
         //save
+        mapper.saveAttachment(attachment);
         return unitId;
 	}
 	
