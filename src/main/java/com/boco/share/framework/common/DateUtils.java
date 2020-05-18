@@ -7,6 +7,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.util.StringUtils;
+
 import com.boco.share.framework.common.bean.SelectBean;
 
 /**
@@ -69,13 +71,17 @@ public class DateUtils {
         return date1.before(new Date());
     }
 	
-	
 	public static String timeAddDay(String time, Integer addCount) {
 		 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		    Date date = null;
 		    String result = "";
 			try {
-				date = df.parse(time);
+				if(!StringUtils.isEmpty(time)) {
+					date = df.parse(time);
+				}else {
+					date = new Date();
+				}
+				
 				Calendar cl = Calendar.getInstance();
 	            cl.setTime(date);
 	            cl.add(Calendar.DATE, addCount);

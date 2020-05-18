@@ -79,5 +79,14 @@ public interface UserMapper {
 	 * @return
 	 */
 	UserAvailable queryUserAvailableByUserId(String userId);
+	
+	/**
+	 * 更新用户可用权益
+	 * 
+	 * @param userAvailable
+	 * @return
+	 */
+	void updateUserAvailable(UserAvailable userAvailable);
+
 
 }

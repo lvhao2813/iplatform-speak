@@ -23,7 +23,7 @@
 		<result column="ATTACHMENTUNITID" property="attachmentUnitId" jdbcType="VARCHAR" />
 	</resultMap>
 	
-	<!-- <select id="loadQuestions" resultMap="question">
+	<select id="loadQuestions" resultMap="question">
 		 select t.id id, t.name name, DATE_FORMAT(t.create_date,'%Y-%m-%d') createDate,
 			   t.sort_id sortId, s.name sortName,t.attachment_unit_id attachmentUnitId
 		 from ods_questions t
@@ -35,22 +35,7 @@
 			and t.name like concat('%',#{QUESTION_NAME},'%')	
 		</if>
 		order by t.create_date desc
-	</select> -->
-	
-	<select id="loadQuestions" resultMap="question">
-		 select t.id id, t.name name, DATE_FORMAT(t.create_date,'%Y-%m-%d') createDate,
-			   t.sort_id sortId, s.name sortName,t.attachment_unit_id attachmentUnitId
-		 from ods_questions t
-		 left join ods_c_sort s on s.ord = t.sort_id where s.type='question'
-		 <if test="SORT_ID != null and SORT_ID !=''">
-			and t.sort_id = #{SORT_ID}
-		</if>
-		<if test="QUESTION_NAME != null and QUESTION_NAME !=''">
-			and t.name like concat('%',#{QUESTION_NAME},'%')	
-		</if>
-		order by t.create_date desc
 	</select>
-	
 	
 	<insert id="saveQuestion" parameterType="com.boco.share.function.question.bean.Question">
   		insert into ods_questions(id, name, create_date, sort_id) 

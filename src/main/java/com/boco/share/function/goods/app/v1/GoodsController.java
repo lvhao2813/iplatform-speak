@@ -37,7 +37,8 @@ public class GoodsController {
 
 	@ApiOperation(value = "查询商品列表")
 	@ApiImplicitParams({
-			@ApiImplicitParam(dataType = "String", paramType = "query", name = "sortName", value = "商品分类名称，例如:套餐商品,普通商品,邮寄运费商品,教材商品", required = true) })
+			@ApiImplicitParam(dataType = "String", paramType = "query", name = "sortCode", value = "商品分类code，例如:套餐商品package,普通商品stander,邮寄运费商品send,教材商品book", required = true),
+			})
 	@RequestMapping(value = "/queryGoods", method = RequestMethod.POST)
 	public List<Goods> queryGoods(@RequestParam @ApiParam(hidden = true) Map<String, String> formMap,
 			@ModelAttribute(value = "pagination") Pagination pagination) {

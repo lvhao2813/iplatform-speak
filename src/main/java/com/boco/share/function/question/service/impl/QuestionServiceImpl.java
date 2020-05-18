@@ -3,6 +3,7 @@
  */
 package com.boco.share.function.question.service.impl;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -139,6 +140,10 @@ public class QuestionServiceImpl implements QuestionService {
 	private String uploadFile(MultipartFile file) throws IOException {
 		//保存文件到本地磁盘,同时生成对象，保存路径方便后续取
 		byte[] bytes = file.getBytes();
+		File fileDir = new File("E:\\fileUpload");
+		if(!fileDir.exists()) {
+			fileDir.mkdirs();
+		}
         Path path = Paths.get("E:\\fileUpload/" + file.getOriginalFilename());
         Files.write(path, bytes);
 		//保存对应的附件对象

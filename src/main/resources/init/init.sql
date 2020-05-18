@@ -172,7 +172,8 @@ create table ods_s_chinese(
   id varchar(32) PRIMARY KEY COMMENT '主键',
   chinese varchar(6) DEFAULT NULL COMMENT '汉字',
   pinyin varchar(12) DEFAULT NULL COMMENT '汉字拼音',
-  hzAndpy varchar(255) DEFAULT NULL COMMENT '汉字和拼音'
+  hzAndpy varchar(255) DEFAULT NULL COMMENT '汉字和拼音',
+  attachment_unit_id varchar(32) COMMENT '语音附件包id'
 );
 
 

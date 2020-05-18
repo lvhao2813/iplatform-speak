@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.boco.share.framework.common.DateUtils;
+import com.boco.share.framework.common.UuidUtil;
 import com.boco.share.function.goods.bean.Goods;
 import com.boco.share.function.goods.dao.GoodsMapper;
 import com.boco.share.function.goods.service.inter.GoodsService;
@@ -42,26 +43,23 @@ public class GoodsServiceImpl implements GoodsService {
 		UserAvailable available = userMapper.queryUserAvailableByUserId(userId);
 		Goods goods = goodsMapper.queryGoodsById(goodsId);
 
-		// 如果是vip，则续费。如果不是vip则按生效套餐
-		if (ISVIP.equals(available.getVip())) {
-
-		} else {
-
-		}
+		effectGoods(available, goods);
 
 	}
 
 	private void effectGoods(UserAvailable available, Goods goods) {
 		if("package".equals(goods.getSort().getCode())) {
-			
-		}else if("book".equals(goods.getSort().getCode())) {
-			
+			genVip(available, goods);
+		}else if("stander".equals(goods.getSort().getCode())) {
+			genStander(available, goods);
 		}
 	}
 
 	private void genVip(UserAvailable available, Goods goods) {
 		if (available == null) {
 			available = new UserAvailable();
+			available.setId(UuidUtil.genUUID());
+			available.setVip("0");
 		}
 		Integer day = 0;
 		if("1".equals(goods.getId())) {
@@ -72,11 +70,19 @@ public class GoodsServiceImpl implements GoodsService {
 			day = 30;
 		}
 		
-		//如果会员到期或者当前不是会员
+		//当前不是会员, 全真测试-1无限次，学习有效期从当天增加
 		if(!isVip(available)) {
+			available.setExecFrequency(-1);
+			available.setExecTime(DateUtils.timeAddDay(null, day));
+		}else {
+			//如果是会员则续费
 			available.setExecFrequency(-1);
 			available.setExecTime(DateUtils.timeAddDay(available.getExecTime(), day));
 		}
+		//TODO 先删 后 SAVE
+	}
+	
+	private void genStander(UserAvailable available, Goods goods) {
 		
 	}
 

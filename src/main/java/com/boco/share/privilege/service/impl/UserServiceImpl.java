@@ -9,6 +9,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.boco.share.framework.common.DateUtils;
 import com.boco.share.privilege.bean.User;
 import com.boco.share.privilege.bean.UserAvailable;
 import com.boco.share.privilege.dao.UserMapper;
@@ -30,6 +31,11 @@ public class UserServiceImpl implements UserService {
 	public User getUserByCode(String code) {
 		User user = userMapper.getUserByCode(code);
 		UserAvailable userAvailable = userMapper.queryUserAvailableByUserId(user.getId());
+		//检测会员是否过期,过期则更新状态
+		if(isVip(userAvailable) && DateUtils.isVipOverTime(userAvailable.getExecTime())) {
+			userAvailable.setVip("0");
+			userMapper.updateUserAvailable(userAvailable);
+		}
 		user.setUserAvaliable(userAvailable);
 		return user;
 	}
@@ -79,4 +85,17 @@ public class UserServiceImpl implements UserService {
 		userMapper.batchDeleteUsers(mgrIds);
 	}
 
+	private boolean isVip(UserAvailable available) {
+		//如果是空的则为未充值对象
+		if(available == null) {
+			return false;
+		}else {
+			if("0".equals(available.getVip())) {
+				return false;
+			}else {
+				return true;
+			}
+		}
+	}
+	
 }

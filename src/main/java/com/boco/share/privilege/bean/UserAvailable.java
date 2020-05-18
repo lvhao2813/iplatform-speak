@@ -26,6 +26,9 @@ public class UserAvailable {
 	@ApiModelProperty(value = "在线学习有效期")
 	private String lineEffectiveTime;
 
+	@ApiModelProperty(value = "用户id")
+	private String userId;
+	
 	public String getId() {
 		return id;
 	}
@@ -65,5 +68,14 @@ public class UserAvailable {
 	public void setLineEffectiveTime(String lineEffectiveTime) {
 		this.lineEffectiveTime = lineEffectiveTime;
 	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+	
 
 }
