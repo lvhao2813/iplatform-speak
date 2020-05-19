@@ -38,8 +38,8 @@
 	</select>
 	
 	<insert id="saveQuestion" parameterType="com.boco.share.function.question.bean.Question">
-  		insert into ods_questions(id, name, create_date, sort_id) 
-  		values ( #{id}, #{name}, NOW(), #{sortId} )
+  		insert into ods_questions(id, name, create_date, sort_id,attachment_unit_id) 
+  		values ( #{id}, #{name}, NOW(), #{sortId} ,#{attachmentUnitId})
 	</insert>
 	
 	<insert id="saveQuestionDetails" parameterType="java.util.List">
@@ -184,5 +184,12 @@
   		insert into ods_c_atachment(id, name, attach_path, upload_date,attachment_unit_id) 
   		values (#{id}, #{name}, #{path}, NOW(),#{attachmentUnitId} )
 	</insert>
+	
+		
+	<select id="queryQuestionSortById" resultType="String">
+		select sort_id sortId
+		from ods_questions where id = #{questionId}
+	</select>
+	
 	
 </mapper>

@@ -61,7 +61,7 @@ public class QuestionServiceImpl implements QuestionService {
 		question.setId(UuidUtil.genUUID());
 		question.setName(formMap.get("name"));
 		question.setSortId(formMap.get("type"));
-		if(file != null) {
+		if (file != null) {
 			question.setAttachmentUnitId(uploadFile(file));
 		}
 		mapper.saveQuestion(question);
@@ -85,18 +85,23 @@ public class QuestionServiceImpl implements QuestionService {
 	@Override
 	@Transactional
 	public void deleteQuestion(String deleteId) {
-		// 删除三个表
-		// question表 通过 deleteId
-		// question_detail 表 通过 其 question_id 为 deleteId
-		// chinese_unit 表 通过 查表 question_detail 得到 所有要删除的 question_detail_id
+		String sortId = mapper.queryQuestionSortById(deleteId);
+		if (sortId.equals("11")) {
+			mapper.deleteQuestionById(deleteId);
+		} else {
+			// 删除三个表
+			// question表 通过 deleteId
+			// question_detail 表 通过 其 question_id 为 deleteId
+			// chinese_unit 表 通过 查表 question_detail 得到 所有要删除的 question_detail_id
 
-		// 得到要删除 chinese_unit表中 的所有 question_detail_id
-		List<String> deleteDetailIds = mapper.queryDetialIdByQuestId(deleteId);
+			// 得到要删除 chinese_unit表中 的所有 question_detail_id
+			List<String> deleteDetailIds = mapper.queryDetialIdByQuestId(deleteId);
 
-		// 删除的时候最好从底层表 向 上层表删
-		mapper.deleteUnitByDetailId(deleteDetailIds);
-		mapper.deleteDetailByQuetionId(deleteId);
-		mapper.deleteQuestionById(deleteId);
+			// 删除的时候最好从底层表 向 上层表删
+			mapper.deleteUnitByDetailId(deleteDetailIds);
+			mapper.deleteDetailByQuetionId(deleteId);
+			mapper.deleteQuestionById(deleteId);
+		}
 	}
 
 	@Override
@@ -112,56 +117,57 @@ public class QuestionServiceImpl implements QuestionService {
 		Question question = mapper.queryQuestionById(formMap.get("questionId"));
 		return converterToApiQuestion(question);
 	}
-	
+
 	@Override
-	public List<String> getAllChooseFromChinese(Map<String, String> formMap){
+	public List<String> getAllChooseFromChinese(Map<String, String> formMap) {
 		char[] chars = formMap.get("CHINESE").toCharArray();
 		String[] PinYins = PinYinUtil.getPinyinBySingWord(chars[0]);
 		List<String> resultList = new ArrayList<>();
-		for(String s : PinYins) {
+		for (String s : PinYins) {
 			resultList.add(s);
 		}
 		return resultList;
 	}
-	
+
 	@Override
 	public void changePinYin(Map<String, String> formMap) {
-		String chineseId = getOneChineseId(formMap.get("CHINESE"),formMap.get("PINYIN"));
+		String chineseId = getOneChineseId(formMap.get("CHINESE"), formMap.get("PINYIN"));
 		formMap.put("chineseId", chineseId);
 		mapper.updateChineseUnit(formMap);
 	}
 
 	/**
 	 * 上传附件，返回附件包
+	 * 
 	 * @param file
 	 * @return
 	 * @throws IOException
 	 */
 	private String uploadFile(MultipartFile file) throws IOException {
-		//保存文件到本地磁盘,同时生成对象，保存路径方便后续取
+		// 保存文件到本地磁盘,同时生成对象，保存路径方便后续取
 		byte[] bytes = file.getBytes();
 		File fileDir = new File("E:\\fileUpload");
-		if(!fileDir.exists()) {
+		if (!fileDir.exists()) {
 			fileDir.mkdirs();
 		}
-        Path path = Paths.get("E:\\fileUpload/" + file.getOriginalFilename());
-        Files.write(path, bytes);
-		//保存对应的附件对象
-        AttachmentUnit unit = new AttachmentUnit();
-        String unitId = UuidUtil.genUUID();
-        unit.setId(unitId);
-        //save
-        mapper.saveAttachmentUnit(unit);
-        Attachment attachment = new Attachment();
-        attachment.setId(UuidUtil.genUUID());
-        attachment.setName(file.getName());
-        attachment.setPath("E:\\fileUpload/" + file.getOriginalFilename());
-        attachment.setAttachmentUnitId(unitId);
-        //save
-        mapper.saveAttachment(attachment);
-        return unitId;
+		Path path = Paths.get("E:\\fileUpload/" + file.getOriginalFilename());
+		Files.write(path, bytes);
+		// 保存对应的附件对象
+		AttachmentUnit unit = new AttachmentUnit();
+		String unitId = UuidUtil.genUUID();
+		unit.setId(unitId);
+		// save
+		mapper.saveAttachmentUnit(unit);
+		Attachment attachment = new Attachment();
+		attachment.setId(UuidUtil.genUUID());
+		attachment.setName(file.getName());
+		attachment.setPath("E:\\fileUpload/" + file.getOriginalFilename());
+		attachment.setAttachmentUnitId(unitId);
+		// save
+		mapper.saveAttachment(attachment);
+		return unitId;
 	}
-	
+
 	/**
 	 * 将question数据库对象，转换成前台展示对象
 	 * 
