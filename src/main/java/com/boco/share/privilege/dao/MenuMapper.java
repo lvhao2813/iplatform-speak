@@ -50,16 +50,14 @@ public interface MenuMapper {
 	public void batchDeleteMenus(String[] ids);
 	
 	/**
-	 * 通过ID 查找菜单
-	 * @param formMap
-	 * @return
-	 */
-	public Menu getMenuById(Map<String, String> formMap);
-	
-	/**
 	 * 修改目录
 	 * @param menu
 	 * @return
 	 */
 	public int update(Menu menu);
+	
+	/**
+	 * 	 通过id获取菜单
+	 */
+	public Menu getMenuById(@Param("MENU_ID")String id);
 }

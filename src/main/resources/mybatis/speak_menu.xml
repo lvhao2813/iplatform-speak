@@ -52,7 +52,7 @@
   				ord,code,isleaf,description) 
   		values (
   				#{parentId}, #{title}, #{href},
-  				'fa fa-tachometer',#{rightIcon}, #{target}, 2,
+  				'fa fa-tachometer',#{rightIcon}, #{target}, #{level},
   				#{ord}, #{code},#{isLeaf},#{description}
   	);
 	</insert>
@@ -68,7 +68,7 @@
         </foreach>
     </update>
   	
-  	  <select id="getMenuById" parameterType="java.util.HashMap" resultMap="menu">
+  	  <select id="getMenuById" resultType="com.boco.share.privilege.bean.Menu">
 			SELECT id id,parentId parentId,title title,
 			   		href href,icon icon,rightIcon rightIcon,
 			        target target,level level,code code,

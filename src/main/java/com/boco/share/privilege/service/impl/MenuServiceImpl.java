@@ -181,14 +181,12 @@ public class MenuServiceImpl implements MenuService {
 
 	@Override
 	public int insert(Menu menu) {
-		//之前想自增order 的时候写的，暂时不需要下面这段代码
-		//List<Menu> menuList = menuMapper.loadMenus(null);
-//		int maxOrder = 0;
-//		for (Menu temp : menuList) {
-//			if (temp.getParentId().equals(menu.getParentId()) && Integer.parseInt(temp.getOrd()) >= maxOrder) {
-//				maxOrder = Integer.parseInt(temp.getOrd());
-//			}
-//		}
+		Menu parentMenu = menuMapper.getMenuById(menu.getParentId());
+		if (parentMenu ==null) {
+			menu.setLevel("1");
+		}else {
+			menu.setLevel(String.valueOf( Integer.parseInt( parentMenu.getLevel()) +1));
+		}
 		return menuMapper.insert(menu);
 	}
 
@@ -204,7 +202,8 @@ public class MenuServiceImpl implements MenuService {
 
 	@Override
 	public Menu getMenuById(Map<String, String> formMap) {
-		return menuMapper.getMenuById(formMap);
+		String menuId = formMap.get("MENU_ID");
+		return menuMapper.getMenuById(menuId);
 	}
 
 	@Override
