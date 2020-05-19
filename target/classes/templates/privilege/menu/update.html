@@ -36,8 +36,8 @@
 				<tr>
 					<th><span>*</span>上级地图：</th>
 					<td>
-							<select  th:field="*{parentId}">
-		                		<option value="0">--请选择--</option>
+						<select  th:field="*{parentId}">
+		                		<option value = "0">计划管理</option>
 		                		<option th:each="eachmenu : ${menuList}"
 		                			th:selected="${eachmenu['id']==Menu['id']}"
 									th:value="${eachmenu.id}"

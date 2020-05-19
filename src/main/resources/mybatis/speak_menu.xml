@@ -94,6 +94,9 @@
 	    <if test="ord!=null and ord!=''">
 	        ,t.ord = #{ord}
 	    </if>
+	    <if test="level!=null and level!=''">
+	        ,t.level = #{level}
+	    </if>
 	    <if test="parentId!=null and parentId!=''">
 	        ,t.parentId = #{parentId}
 	    </if>
@@ -101,7 +104,7 @@
 	        ,t.isLeaf = #{isLeaf}
 	    </if>
 	    <if test="description!=null and description!=''">
-	        , t.description = #{description}
+	        ,t.description = #{description}
 	    </if>
 	        where t.id = #{id}
 	</update> 

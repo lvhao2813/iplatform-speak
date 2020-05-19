@@ -208,6 +208,12 @@ public class MenuServiceImpl implements MenuService {
 
 	@Override
 	public int update(Menu menu) {
+		Menu parentMenu = menuMapper.getMenuById(menu.getParentId());
+		if (parentMenu ==null) {
+			menu.setLevel("1");
+		}else {
+			menu.setLevel(String.valueOf( Integer.parseInt( parentMenu.getLevel()) +1));
+		}
 		return menuMapper.update(menu);
 	}
 

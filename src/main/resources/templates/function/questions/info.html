@@ -32,6 +32,11 @@
 			<th width="8%">题目内容：</th>
 			<td colspan="4" width="15%" th:text="${question.content}"></td>
 		</tr>
+		<tr th:if="${type == '3' or type == '11'}">
+			<th width = "%8">附件名称：</th>
+			<td >附件名称</td>
+		<tr>
+		
 	</table>
 </div>
 	
@@ -46,11 +51,13 @@
 	       		<th>汉字</th>
 				<th>拼音</th>
 				<th>附件</th>
+				<th>操作</th>
 			</tr>
 			<tr  th:each="chinese,each : ${question.details}">
 				<td th:text="${each.count}"></td>			
 				<td th:text="${chinese.chinese}" th:onclick="'javascript:openCommonLayer2(\'/api/v1/question/choosepage?CHINESE='+${chinese.chinese}+'&UNITID='+${chinese.chineseUnitId}+'\')'"></td>			
-				<td th:text="${chinese.pinyin}" th:onclick="'javascript:openCommonLayer2(\'/api/v1/question/choosepage?CHINESE='+${chinese.chinese}+'&UNITID='+${chinese.chineseUnitId}+'\')'"></td>			
+				<td th:text="${chinese.pinyin}" th:onclick="'javascript:openCommonLayer2(\'/api/v1/question/choosepage?CHINESE='+${chinese.chinese}+'&UNITID='+${chinese.chineseUnitId}+'\')'"></td>
+				<td th:text="${each.count}"></td>				
 				<td><input type="file" name="chineseMp3" /><button type="submit">上传</button></td>			
 			</tr>
 		</table>
