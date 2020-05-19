@@ -71,4 +71,9 @@ public interface QuestionService {
 	 *  通过传来的 unitId 和 用户选择的读音，更正unit表对应关系
 	 */
 	public void changePinYin(Map<String, String> formMap);
+	
+	/**
+	 * 	添加单字音频附件
+	 */
+	public void addSingleAttach(Map<String, String> formMap, MultipartFile file) throws Exception;
 }

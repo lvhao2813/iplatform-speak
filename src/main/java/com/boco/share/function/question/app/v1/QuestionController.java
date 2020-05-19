@@ -94,6 +94,19 @@ public class QuestionController {
 		questionService.genQuestion(formMap, file);
 	}
 	
+	@ApiOperation(value = "新增单字附件")
+	@ApiImplicitParams({
+			@ApiImplicitParam(dataType = "String", paramType = "query", name = "details", value = "题目内容", required = true) })
+	@RequestMapping(value = "/addSingleAttach", method = RequestMethod.POST)
+	public void addSingleAttach(HttpServletRequest request, @RequestParam Map<String, String> formMap) throws Exception {
+		MultipartFile file = null;
+		if(request instanceof StandardMultipartHttpServletRequest) {
+			file = ((StandardMultipartHttpServletRequest) request).getFile("file");
+		}
+		questionService.addSingleAttach(formMap, file);
+	}
+	
+	
 	@ApiOperation(value = "题目编辑页面")
 	@ApiImplicitParams({
 		@ApiImplicitParam(dataType = "String", paramType = "query", name = "questionId", value = "题目id", required = true)})
@@ -101,6 +114,7 @@ public class QuestionController {
 	public ModelAndView info(@RequestParam Map<String, String> formMap) {
 		ModelAndView mav = new ModelAndView("function/questions/info");
 		ApiQuestion question = questionService.info(formMap);
+		mav.addObject("formMap",formMap);
 		mav.addObject("question", question );
 		return mav;
 	}

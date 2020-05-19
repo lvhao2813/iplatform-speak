@@ -136,6 +136,15 @@ public class QuestionServiceImpl implements QuestionService {
 		formMap.put("chineseId", chineseId);
 		mapper.updateChineseUnit(formMap);
 	}
+	
+	@Override
+	public void addSingleAttach(Map<String, String> formMap, MultipartFile file) throws Exception {
+		if (file != null) {
+			String unitId = uploadFile(file);
+		}
+		// TODO
+		//mapper.updateChinese(formMap);
+	}
 
 	/**
 	 * 上传附件，返回附件包
@@ -161,13 +170,15 @@ public class QuestionServiceImpl implements QuestionService {
 		mapper.saveAttachmentUnit(unit);
 		Attachment attachment = new Attachment();
 		attachment.setId(UuidUtil.genUUID());
-		attachment.setName(file.getName());
+		attachment.setName(file.getOriginalFilename());
 		attachment.setPath("E:\\fileUpload/" + file.getOriginalFilename());
 		attachment.setAttachmentUnitId(unitId);
 		// save
 		mapper.saveAttachment(attachment);
 		return unitId;
 	}
+	
+	
 
 	/**
 	 * 将question数据库对象，转换成前台展示对象

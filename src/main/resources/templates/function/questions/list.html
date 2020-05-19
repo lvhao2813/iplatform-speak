@@ -84,8 +84,8 @@ function openBatchDeletePage(){
 								<td th:text="${question.name}"></td>
 								<td th:text="${question.sortName}"></td>
 								<td th:text="${question.createDate}"></td>
-								<td align="center">
-								<a href="#" class="c-green parentedit" th:onclick="'javascript:questionInfo(\''+${question.id}+'\')'">编辑</a>
+								<td align="center">														
+								<a href="#" class="c-green parentedit" th:onclick="'javascript:questionInfo(\''+${question.id}+'\',\''+${question.sortId}+'\')'">编辑</a>
 								<a href="#" class="color-red parentIframe" th:onclick="'javascript:openDeleteLayer(\'/api/v1/question/deletepage?deleteUrl=/api/v1/question/delete&deleteId='+${question['id']}+'\')'">删除</a> 
 								</td>
 							</tr>
@@ -100,8 +100,8 @@ function openBatchDeletePage(){
 			function openLargeEditLayer(url){
 				openCommonLayer('编辑记录','500px','250px',url);
 			}
-			function questionInfo(questionId){
-				document.getElementById('callForm').action = contextPath + 'info?questionId='+questionId;
+			function questionInfo(questionId ,sortId){
+				document.getElementById('callForm').action = contextPath + 'info?questionId='+questionId+"&sortId="+sortId;
 				document.getElementById('callForm').method = 'post';
 				document.getElementById('callForm').submit();
 			}
