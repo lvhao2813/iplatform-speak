@@ -30,6 +30,9 @@ public class ApiQuestion {
 
 	@ApiModelProperty(value = "题目全内容")
 	private String content;
+	
+	@ApiModelProperty(value = "附件名称")
+	private String attachmentName;
 
 	@ApiModelProperty(value = "题目全内容，字对象")
 	private List<ApiChineseDetail> details = new ArrayList<ApiChineseDetail>();
@@ -80,6 +83,14 @@ public class ApiQuestion {
 
 	public void setDetails(List<ApiChineseDetail> details) {
 		this.details = details;
+	}
+
+	public String getAttachmentName() {
+		return attachmentName;
+	}
+
+	public void setAttachmentName(String attachmentName) {
+		this.attachmentName = attachmentName;
 	}
 
 }

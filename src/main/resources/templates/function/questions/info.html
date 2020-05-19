@@ -34,7 +34,7 @@
 		</tr>
 		<tr th:if="${type == '3' or type == '11'}">
 			<th width = "%8">附件名称：</th>
-			<td >附件名称</td>
+			<td  th:text="${question.attachmentName}"></td>
 		<tr>
 		
 	</table>

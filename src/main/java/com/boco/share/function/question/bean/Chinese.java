@@ -13,7 +13,7 @@ import io.swagger.annotations.ApiModelProperty;
  *
  */
 @ApiModel(value = "汉字码表", description = "汉字码表")
-public class Chinese implements Serializable{
+public class Chinese implements Serializable {
 	private static final long serialVersionUID = 6654351202494111501L;
 
 	@ApiModelProperty(value = "主键id")
@@ -27,7 +27,10 @@ public class Chinese implements Serializable{
 
 	@ApiModelProperty(value = "汉字+拼音，下划线分隔")
 	private String hzAndpy;
-	
+
+	@ApiModelProperty(value = "附件名称")
+	private String attachmentName;
+
 	public String getId() {
 		return id;
 	}
@@ -60,5 +63,12 @@ public class Chinese implements Serializable{
 		this.hzAndpy = hzAndpy;
 	}
 
-	
+	public String getAttachmentName() {
+		return attachmentName;
+	}
+
+	public void setAttachmentName(String attachmentName) {
+		this.attachmentName = attachmentName;
+	}
+
 }

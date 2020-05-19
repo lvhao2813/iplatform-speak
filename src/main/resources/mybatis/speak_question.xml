@@ -111,32 +111,36 @@
 		<result column="CREATEDATE" property="createDate" jdbcType="TIMESTAMP" />
 		<result column="SORTID" property="sortId" jdbcType="VARCHAR" />
 		<result column="SORTNAME" property="sortName" jdbcType="VARCHAR" />
+		<result column="SORTCODE" property="sortCode" jdbcType="VARCHAR" />
 		<result column="ATTACHMENTUNITID" property="attachmentUnitId" jdbcType="VARCHAR" />
-		<collection property="details" column="{id=id}" select="queryQueDetailByQueId"/>
+		<collection   property="details" column="{id=id}" fetchType="lazy" select="queryQueDetailByQueId"/>
 	</resultMap>
 	<resultMap type="com.boco.share.function.question.bean.QuestionDetail" id="questionDetail2">
 		<result column="ID" property="id" jdbcType="VARCHAR" />
 		<result column="WORD" property="word" jdbcType="VARCHAR" />
 		<result column="ORD" property="ord" jdbcType="INTEGER" />
-		<collection property="details" column="{id=id}" select="queryChinaUnitByQueDetailId" />
+		<collection   property="details" column="{id=id}" fetchType="lazy" select="queryChinaUnitByQueDetailId" />
 	</resultMap>
 	<resultMap type="com.boco.share.function.question.bean.ChineseUnit" id="chineseUnit2">
 		<result column="ID" property="id" jdbcType="VARCHAR" />
 		<result column="CHINESEID" property="chineseId" jdbcType="VARCHAR" />
 		<result column="ORD" property="ord" jdbcType="INTEGER" />
-		<collection property="chinese" column="{chineseId=chineseId}" select="queryChineseById" />
+		<collection   property="chinese" column="{chineseId=chineseId}" fetchType="lazy" select="queryChineseById" />
 	</resultMap>
 	<resultMap type="com.boco.share.function.question.bean.Chinese" id="chinese2">
 		<result column="ID" property="id" jdbcType="VARCHAR" />
 		<result column="CHINESE" property="chinese" jdbcType="VARCHAR" />
-		<result column="PINYIN" property="pinyin" jdbcType="TIMESTAMP" />
+		<result column="PINYIN" property="pinyin" jdbcType="VARCHAR" />
+		<result column="ATTACHMENTNAME" property="attachmentName" jdbcType="VARCHAR" />
 	</resultMap>
 	
 	<select id="queryQuestionById" resultMap="question2">
 		select t.id id, t.name name, DATE_FORMAT(t.create_date,'%Y-%m-%d') createDate,
-			   t.sort_id sortId, s.name sortName,t.attachment_unit_id attachmentUnitId
+			   t.sort_id sortId, s.name sortName, s.code sortCode,t.attachment_unit_id attachmentUnitId,a.name attachmentName
 		 from ods_questions t
 		 left join ods_c_sort s on s.id = t.sort_id
+		 left join ods_c_attachment_unit u on u.id = t.attachment_unit_id
+		 left join ods_c_atachment a on a.attachment_unit_id = u.id
 		 where 1 = 1
 		 <if test="questionId != null and questionId !=''">
 			and t.id = #{questionId}
@@ -161,11 +165,13 @@
 		 order by ord
 	</select>
 	<select id="queryChineseById" resultMap="chinese2">
-		select id id, chinese chinese, pinyin pinyin
-		 from ods_s_chinese
+		select c.id id, c.chinese chinese, c.pinyin pinyin, a.name attachmentName
+		 from ods_s_chinese c
+		 left join ods_c_attachment_unit u on u.id = c.attachment_unit_id
+		 left join ods_c_atachment a on a.attachment_unit_id = u.id
 		 where 1 = 1
 		 <if test="chineseId != null and chineseId !=''">
-			and id = #{chineseId}
+			and c.id = #{chineseId}
 		</if>
 	</select>
 	
@@ -186,10 +192,4 @@
 	</insert>
 	
 		
-	<select id="queryQuestionSortById" resultType="String">
-		select sort_id sortId
-		from ods_questions where id = #{questionId}
-	</select>
-	
-	
 </mapper>

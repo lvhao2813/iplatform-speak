@@ -33,13 +33,19 @@ public class Question implements Serializable {
 
 	@ApiModelProperty(value = "分类名称")
 	private String sortName;
+	
+	@ApiModelProperty(value = "分类编码")
+	private String sortCode;
 
 	@ApiModelProperty(value = "问题内容明细分组")
 	private List<QuestionDetail> details = new ArrayList<QuestionDetail>();
 
 	@ApiModelProperty(value = "语音附件包id")
 	private String attachmentUnitId;
-
+	
+	@ApiModelProperty(value = "附件名称")
+	private String attachmentName;
+	
 	public String getAttachmentUnitId() {
 		return attachmentUnitId;
 	}
@@ -88,12 +94,28 @@ public class Question implements Serializable {
 		this.sortName = sortName;
 	}
 
+	public String getSortCode() {
+		return sortCode;
+	}
+
+	public void setSortCode(String sortCode) {
+		this.sortCode = sortCode;
+	}
+
 	public List<QuestionDetail> getDetails() {
 		return details;
 	}
 
 	public void setDetails(List<QuestionDetail> details) {
 		this.details = details;
+	}
+
+	public String getAttachmentName() {
+		return attachmentName;
+	}
+
+	public void setAttachmentName(String attachmentName) {
+		this.attachmentName = attachmentName;
 	}
 
 }

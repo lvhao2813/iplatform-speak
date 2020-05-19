@@ -119,8 +119,4 @@ public interface QuestionMapper {
 	 */
 	public void saveAttachment(Attachment attachment);
 	
-	/**
-	 * 	通过 questionId 获取 question的类型
-	 */
-	public String queryQuestionSortById(@Param("questionId")  String questionId);
 }

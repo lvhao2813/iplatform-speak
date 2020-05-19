@@ -85,9 +85,10 @@ public class QuestionServiceImpl implements QuestionService {
 	@Override
 	@Transactional
 	public void deleteQuestion(String deleteId) {
-		String sortId = mapper.queryQuestionSortById(deleteId);
-		if (sortId.equals("11")) {
+		Question question = mapper.queryQuestionById(deleteId);
+		if ("mingtilianxi".equals(question.getSortCode())) {
 			mapper.deleteQuestionById(deleteId);
+			//TODO 附件删除
 		} else {
 			// 删除三个表
 			// question表 通过 deleteId
@@ -180,6 +181,7 @@ public class QuestionServiceImpl implements QuestionService {
 		result.setCreateDate(question.getCreateDate());
 		result.setName(question.getName());
 		result.setSortName(question.getSortName());
+		result.setAttachmentName(question.getAttachmentName());
 		// 构建题目全内容
 		StringBuffer conent = new StringBuffer();
 		// 构建汉字包
@@ -205,6 +207,7 @@ public class QuestionServiceImpl implements QuestionService {
 							c.setChineseUnitId(unit.getId());
 							c.setChinese(unit.getChinese().getChinese());
 							c.setPinyin(unit.getChinese().getPinyin());
+							c.setAttachmentName(unit.getChinese().getAttachmentName());
 							details.add(c);
 						}
 					}
