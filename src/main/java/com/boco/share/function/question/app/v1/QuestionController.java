@@ -60,7 +60,7 @@ public class QuestionController {
 		pagination.setTotalCount(pageInfo.getTotal());
 		pagination.setTotalPageNum(pageInfo.getPages());
 
-		ModelAndView modelAndView = new ModelAndView("function/questions/list");
+		ModelAndView modelAndView = new ModelAndView("function/questions/questionimport/list");
 		modelAndView.addObject("resultList", resultList);
 		modelAndView.addObject("pagination", pagination);
 		modelAndView.addObject("formMap", formMap);
@@ -74,7 +74,7 @@ public class QuestionController {
 			@ApiImplicitParam(dataType = "String", paramType = "query", name = "type", value = "题目分类", required = true) })
 	@RequestMapping(value = "/insertpage", method = RequestMethod.GET)
 	public ModelAndView insertPage(@RequestParam Map<String, String> formMap) {
-		ModelAndView mav = new ModelAndView("function/questions/insert");
+		ModelAndView mav = new ModelAndView("function/questions/questionimport/insert");
 		mav.addObject("type", formMap.get("type"));
 		return mav;
 	}
@@ -112,7 +112,7 @@ public class QuestionController {
 		@ApiImplicitParam(dataType = "String", paramType = "query", name = "questionId", value = "题目id", required = true)})
 	@RequestMapping(value = "/info", method = RequestMethod.POST)
 	public ModelAndView info(@RequestParam Map<String, String> formMap) {
-		ModelAndView mav = new ModelAndView("function/questions/info");
+		ModelAndView mav = new ModelAndView("function/questions/questionimport/info");
 		ApiQuestion question = questionService.info(formMap);
 		mav.addObject("formMap",formMap);
 		mav.addObject("question", question );
@@ -154,7 +154,7 @@ public class QuestionController {
 			@ApiImplicitParam(dataType = "String", paramType = "query", name = "chinese", value = "点击的汉字", required = true) })
 	@RequestMapping(value = "/choosepage", method = RequestMethod.GET)
 	public ModelAndView choosePage(@RequestParam Map<String, String> formMap) {
-		ModelAndView mav = new ModelAndView("function/questions/choose");
+		ModelAndView mav = new ModelAndView("function/questions/questionimport/choose");
 		List<String> pinYins = questionService.getAllChooseFromChinese(formMap);
 		mav.addObject("formMap",formMap);
 		mav.addObject("pinYins", pinYins);

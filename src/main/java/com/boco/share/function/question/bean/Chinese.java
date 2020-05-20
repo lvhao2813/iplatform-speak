@@ -31,6 +31,9 @@ public class Chinese implements Serializable {
 	@ApiModelProperty(value = "附件名称")
 	private String attachmentName;
 
+	@ApiModelProperty(value = "拼音对应附件路径")
+	private String path;
+
 	public String getId() {
 		return id;
 	}
@@ -69,6 +72,14 @@ public class Chinese implements Serializable {
 
 	public void setAttachmentName(String attachmentName) {
 		this.attachmentName = attachmentName;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 }

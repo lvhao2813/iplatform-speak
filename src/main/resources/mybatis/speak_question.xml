@@ -113,6 +113,7 @@
 		<result column="SORTNAME" property="sortName" jdbcType="VARCHAR" />
 		<result column="SORTCODE" property="sortCode" jdbcType="VARCHAR" />
 		<result column="ATTACHMENTUNITID" property="attachmentUnitId" jdbcType="VARCHAR" />
+		<result column="PATH" property="path" jdbcType="VARCHAR" />
 		<collection   property="details" column="{id=id}" fetchType="lazy" select="queryQueDetailByQueId"/>
 	</resultMap>
 	<resultMap type="com.boco.share.function.question.bean.QuestionDetail" id="questionDetail2">
@@ -132,11 +133,13 @@
 		<result column="CHINESE" property="chinese" jdbcType="VARCHAR" />
 		<result column="PINYIN" property="pinyin" jdbcType="VARCHAR" />
 		<result column="ATTACHMENTNAME" property="attachmentName" jdbcType="VARCHAR" />
+		<result column="PATH" property="path" jdbcType="VARCHAR" />
 	</resultMap>
 	
 	<select id="queryQuestionById" resultMap="question2">
 		select t.id id, t.name name, DATE_FORMAT(t.create_date,'%Y-%m-%d') createDate,
-			   t.sort_id sortId, s.name sortName, s.code sortCode,t.attachment_unit_id attachmentUnitId,a.name attachmentName
+			   t.sort_id sortId, s.name sortName, s.code sortCode,t.attachment_unit_id attachmentUnitId,
+			   a.name attachmentName, a.attach_path path
 		 from ods_questions t
 		 left join ods_c_sort s on s.id = t.sort_id
 		 left join ods_c_attachment_unit u on u.id = t.attachment_unit_id
@@ -165,7 +168,7 @@
 		 order by ord
 	</select>
 	<select id="queryChineseById" resultMap="chinese2">
-		select c.id id, c.chinese chinese, c.pinyin pinyin, a.name attachmentName
+		select c.id id, c.chinese chinese, c.pinyin pinyin, a.name attachmentName, a.attach_path path
 		 from ods_s_chinese c
 		 left join ods_c_attachment_unit u on u.id = c.attachment_unit_id
 		 left join ods_c_atachment a on a.attachment_unit_id = u.id
@@ -191,12 +194,5 @@
   		values (#{id}, #{name}, #{path}, NOW(),#{attachmentUnitId} )
 	</insert>
 	
-	<update id="addChineseAttUnitId">	
-		update ods_s_chinese t set 
-			<if test="unitId!=null and unitId !=''">
-				t.attachment_unit_id = #{unitId}
-			</if>
-		    where t.id = #{chineseId}
-	</update>
 		
 </mapper>

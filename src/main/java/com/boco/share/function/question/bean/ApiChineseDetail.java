@@ -15,7 +15,7 @@ public class ApiChineseDetail {
 
 	@ApiModelProperty(value = "chinese_unit表id")
 	private String chineseUnitId;
-	
+
 	@ApiModelProperty(value = "chineseId")
 	private String chineseId;
 
@@ -27,7 +27,10 @@ public class ApiChineseDetail {
 
 	@ApiModelProperty(value = "拼音对应附件名称")
 	private String attachmentName;
-	
+
+	@ApiModelProperty(value = "拼音对应附件路径")
+	private String path;
+
 	public String getAttachmentName() {
 		return attachmentName;
 	}
@@ -66,6 +69,14 @@ public class ApiChineseDetail {
 
 	public void setPinyin(String pinyin) {
 		this.pinyin = pinyin;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 }

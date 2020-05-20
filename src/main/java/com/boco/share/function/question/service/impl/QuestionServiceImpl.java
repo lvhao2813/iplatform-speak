@@ -139,12 +139,11 @@ public class QuestionServiceImpl implements QuestionService {
 	
 	@Override
 	public void addSingleAttach(Map<String, String> formMap, MultipartFile file) throws Exception {
-		String unitId = null;
 		if (file != null) {
-			unitId = uploadFile(file);
+			String unitId = uploadFile(file);
 		}
-		formMap.put("unitId", unitId);
-		mapper.addChineseAttUnitId(formMap);
+		// TODO
+		//mapper.updateChinese(formMap);
 	}
 
 	/**
@@ -194,6 +193,7 @@ public class QuestionServiceImpl implements QuestionService {
 		result.setName(question.getName());
 		result.setSortName(question.getSortName());
 		result.setAttachmentName(question.getAttachmentName());
+		result.setPath(question.getPath());
 		// 构建题目全内容
 		StringBuffer conent = new StringBuffer();
 		// 构建汉字包
@@ -220,6 +220,7 @@ public class QuestionServiceImpl implements QuestionService {
 							c.setChinese(unit.getChinese().getChinese());
 							c.setPinyin(unit.getChinese().getPinyin());
 							c.setAttachmentName(unit.getChinese().getAttachmentName());
+							c.setPath("D:\\111.mp3");
 							details.add(c);
 						}
 					}

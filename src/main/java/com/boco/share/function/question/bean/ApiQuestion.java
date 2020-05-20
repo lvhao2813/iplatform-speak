@@ -33,6 +33,9 @@ public class ApiQuestion {
 	
 	@ApiModelProperty(value = "附件名称")
 	private String attachmentName;
+	
+	@ApiModelProperty(value = "拼音对应附件路径")
+	private String path;
 
 	@ApiModelProperty(value = "题目全内容，字对象")
 	private List<ApiChineseDetail> details = new ArrayList<ApiChineseDetail>();
@@ -91,6 +94,14 @@ public class ApiQuestion {
 
 	public void setAttachmentName(String attachmentName) {
 		this.attachmentName = attachmentName;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 }
