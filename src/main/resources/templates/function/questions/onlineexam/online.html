@@ -52,6 +52,17 @@ function audioplayer(id, file, loop){
     } 
   }
 } 
+
+function player(id){
+	var voice = document.getElementById('voice'+ id);
+	if (voice.paused) { //判断音乐是否在播放中，暂停状态
+       voice.play(); //音乐播放
+                 
+    } else { //播放状态
+        voice.pause(); //音乐停止
+    }
+}
+
 </script>
 </head>
 <body>
@@ -78,11 +89,13 @@ function audioplayer(id, file, loop){
 		</tr>
 		<tr  th:each="chinese,each : ${question.details}">
 				<td th:text="${each.count}"></td>			
-				<td th:text="${chinese.chinese}" th:onclick="'javascript:openCommonLayer2(\'/api/v1/question/choosepage?CHINESE='+${chinese.chinese}+'&UNITID='+${chinese.chineseUnitId}+'\')'"></td>			
-				<td th:text="${chinese.pinyin}" th:onclick="'javascript:openCommonLayer2(\'/api/v1/question/choosepage?CHINESE='+${chinese.chinese}+'&UNITID='+${chinese.chineseUnitId}+'\')'"></td>
+				<td th:onclick="'javascript:player(\''+${each.count}+'\')'" th:text="${chinese.chinese}" ></td>			
+				<td th:text="${chinese.pinyin}"></td>
 				<td th:text="${chinese.attachmentName}"></td>	
-				<td th:onclick="'javascript:audioplayer(\''+${chinese.chineseId}+'\',\''+${chinese.path}+'\')'">
-					<embed th:id="'Player' + ${each.count}" name="Player" th:src="${chinese.path}" width=200 height=100 type=audio/mpeg autostart=true loop=true>
+				<!--<td th:onclick="'javascript:audioplayer(\''+${chinese.chineseId}+'\',\''+${chinese.path}+'\')'">-->
+					<!--<embed th:id="'Player' + ${each.count}" name="Player" th:src="${chinese.path}" width=200 height=100 type=audio/mpeg autostart=true loop=true>-->
+				<td>	
+					<audio th:id="'voice' + ${each.count}" src="http://vk88.vka88.com/00006/2017063014590719381_Stay the Night.mp3"></audio>
 				</td>
 		</tr>
 	</table>
