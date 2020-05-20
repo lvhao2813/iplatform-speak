@@ -193,6 +193,12 @@
   		insert into ods_c_atachment(id, name, attach_path, upload_date,attachment_unit_id) 
   		values (#{id}, #{name}, #{path}, NOW(),#{attachmentUnitId} )
 	</insert>
-	
+	<update id="addChineseAttUnitId">	
+		update ods_s_chinese t set 
+			<if test="unitId!=null and unitId !=''">
+				t.attachment_unit_id = #{unitId}
+			</if>
+		    where t.id = #{chineseId}
+	</update>
 		
 </mapper>
