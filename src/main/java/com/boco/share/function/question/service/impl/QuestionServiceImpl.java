@@ -139,11 +139,12 @@ public class QuestionServiceImpl implements QuestionService {
 	
 	@Override
 	public void addSingleAttach(Map<String, String> formMap, MultipartFile file) throws Exception {
+		String unitId = null;
 		if (file != null) {
-			String unitId = uploadFile(file);
+			unitId = uploadFile(file);
 		}
-		// TODO
-		//mapper.updateChinese(formMap);
+		formMap.put("unitId", unitId);
+		mapper.addChineseAttUnitId(formMap);
 	}
 
 	/**

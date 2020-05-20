@@ -5,36 +5,7 @@
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <div th:insert="/common/common_css :: privilege"></div>
-<script type="text/javascript" th:inline="javascript">
-function openCommonLayer2(url){
-	openCommonLayer('选择读音','500px','300px',url);
-};
 
-function attach(chineseId ,index){
-	alert(chineseId);
-	alert(index);	
-	/* var formData = new FormData();
-   	// # 给formData对象添加<input>标签,注意与input标签的ID一致
-   	formData.append('chineseId',chineseId);
-    formData.append('file', $('#file')[index-1].files[0]);
-    $.ajax({
-        url : contextPath + 'addSingleAttach',
-        type : 'POST',
-        data : formData,
-        contentType: false,// 当有文件要上传时，此项是必须的，否则后台无法识别文件流的起始位置
-        processData: false,// 是否序列化data属性，默认true(注意：false时type必须是post)
-        dataType: 'json',//这里是返回类型，一般是json,text等
-        clearForm: true,//提交后是否清空表单数据
-        success: function(data) {   //提交成功后自动执行的处理函数，参数data就是服务器返回的数据。
-            aler('上传成功');
-        },
-        error: function(data, status, e) {  //提交失败自动执行的处理函数。
-        	 aler('上传失败');
-            console.error(e);
-        }
-    }); */
-};
-</script>
 </head>
 <body>
 <div th:insert="/common/common_index :: index_head"></div>
@@ -96,6 +67,32 @@ function attach(chineseId ,index){
 </div>
 <!-- </form> -->
 <div th:insert="/common/common_index :: index_foot"></div>
+	<script type="text/javascript" th:inline="javascript">
+		function openCommonLayer2(url){
+			openCommonLayer('选择读音','500px','300px',url);
+		};
+		
+		function attach(chineseId ,index){
+			var fileId = '#file'+index;
+			var formData = new FormData();
+		   	// # 给formData对象添加<input>标签,注意与input标签的ID一致
+		   	formData.append('chineseId',chineseId);
+		    formData.append('file', $(fileId)[0].files[0]);
+		    $.ajax({
+		        url : contextPath + 'addSingleAttach',
+		        type : 'POST',
+		        data : formData,
+		        contentType: false,// 当有文件要上传时，此项是必须的，否则后台无法识别文件流的起始位置
+		        processData: false,// 是否序列化data属性，默认true(注意：false时type必须是post)
+		        dataType: 'json',//这里是返回类型，一般是json,text等
+		        clearForm: true,//提交后是否清空表单数据
+		        success: function(data) {   //提交成功后自动执行的处理函数，参数data就是服务器返回的数据。
+		            aler('上传成功');
+		        },
+		    }); 
+		        location.reload();
+		};
+	</script>
 </body>
 </html>
 

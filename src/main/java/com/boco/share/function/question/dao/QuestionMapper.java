@@ -118,5 +118,11 @@ public interface QuestionMapper {
 	 * 新增 attachment
 	 */
 	public void saveAttachment(Attachment attachment);
+
+	/**
+	 * 给Chinese表单 attachment_unit_id 列更新数据
+	 * @param formMap
+	 */
+	public void addChineseAttUnitId(Map<String, String> formMap);
 	
 }
