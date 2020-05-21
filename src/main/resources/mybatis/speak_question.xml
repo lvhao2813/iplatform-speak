@@ -209,7 +209,7 @@
 		<result column="attachment_unit_id" property="attachmentUnitId" jdbcType="VARCHAR" />
 	</resultMap>
 	
-	<select id="queryAttachByUnitId" parameterType="String">
+	<select id="queryAttachByUnitId" parameterType="String" resultMap="attachment">
 		select id id, name name, attach_path path,
 				upload_date uploadDate,attachment_unit_id attachmentUnitId
 		 from ods_c_atachment c
