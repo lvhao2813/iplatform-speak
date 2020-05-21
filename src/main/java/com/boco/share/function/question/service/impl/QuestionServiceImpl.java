@@ -90,13 +90,13 @@ public class QuestionServiceImpl implements QuestionService {
 		Question question = mapper.queryQuestionById(deleteId);
 		if ("mingtilianxi".equals(question.getSortCode())) {
 			mapper.deleteQuestionById(deleteId);
-			//为了删除文件，需要查询数据库获得附件路径
+			// 为了删除文件，需要查询数据库获得附件路径
 			String unitId = question.getAttachmentUnitId();
 			Attachment attach = mapper.queryAttachByUnitId(unitId);
 			String path = attach.getPath();
 			File file = new File(path);
 			file.delete();
-			//删除两个表记录和 路径对应文件
+			// 删除两个表记录和 路径对应文件
 			mapper.deleteAttachByUnitId(unitId);
 			mapper.deleteAttachUnitById(unitId);
 		} else {
@@ -173,7 +173,7 @@ public class QuestionServiceImpl implements QuestionService {
 			fileDir.mkdirs();
 		}
 		String fileName = DateUtils.getNowDateNum() + "_" + file.getOriginalFilename();
-		Path path = Paths.get(resourceBasePath + fileName);
+		Path path = Paths.get(resourceBasePath + "/" + fileName);
 		Files.write(path, bytes);
 		// 保存对应的附件对象
 		AttachmentUnit unit = new AttachmentUnit();
@@ -393,6 +393,5 @@ public class QuestionServiceImpl implements QuestionService {
 			return chineseId;
 		}
 	}
-	
 
 }
