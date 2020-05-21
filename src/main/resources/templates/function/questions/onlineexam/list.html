@@ -67,7 +67,7 @@
 					</td>
 					<td th:text="${exam.name}"></td>
 					<td align="center">														
-						<a href="#" class="c-green parentedit" th:onclick="'javascript:questionInfo(\''+${exam.id}+'\')'">编辑</a>
+						<a href="#" class="c-green parentedit" th:onclick="'javascript:info(\''+${exam.id}+'\')'">编辑</a>
 						<a href="#" class="color-red parentIframe" th:onclick="'javascript:openDeleteLayer(\'/api/v1/onlineExam/deletepage?deleteUrl=/api/v1/onlineExam/delete&deleteId='+${exam['id']}+'\')'">删除</a> 
 					</td>
 				</tr>
@@ -83,8 +83,8 @@
 		function openLargeEditLayer(url){
 			openCommonLayer('编辑记录','500px','250px',url);
 		}
-		function questionInfo(questionId ,sortId){
-			document.getElementById('callForm').action = contextPath + 'info?questionId='+questionId+"&sortId="+sortId;
+		function info(examId){
+			document.getElementById('callForm').action = contextPath + 'infoExam?examId='+examId;
 			document.getElementById('callForm').method = 'post';
 			document.getElementById('callForm').submit();
 		}

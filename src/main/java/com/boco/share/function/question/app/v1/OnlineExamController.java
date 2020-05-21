@@ -122,8 +122,8 @@ public class OnlineExamController {
 	@ApiOperation(value = "单字练习")
 	@ApiImplicitParams({
 			@ApiImplicitParam(dataType = "String", paramType = "query", name = "type", value = "题目分类", required = true) })
-	@RequestMapping(value = "/queryExam11", method = RequestMethod.GET)
-	public ModelAndView queryExam11(@RequestParam Map<String, String> formMap) {
+	@RequestMapping(value = "/infoExam", method = RequestMethod.POST)
+	public ModelAndView infoExam(@RequestParam Map<String, String> formMap) {
 		ModelAndView mav = new ModelAndView("function/questions/onlineexam/online");
 		formMap.put("questionId", "80f5230987d14bf59861d15c40856b7e");
 		ApiQuestion info = questionService.info(formMap);
