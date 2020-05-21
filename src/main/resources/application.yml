@@ -50,6 +50,13 @@ spring:
     encoding: UTF-8
     prefix: classpath:/templates/
 ########################################################
+###upload file
+########################################################
+  servlet:
+    multipart:
+      max-request-size: 100MB
+      max-file-size: 10MB
+########################################################
 ###Operation Configuration
 ########################################################
 opertation:
