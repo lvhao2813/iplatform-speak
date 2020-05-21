@@ -125,4 +125,19 @@ public interface QuestionMapper {
 	 */
 	public void addChineseAttUnitId(Map<String, String> formMap);
 	
+	/**
+	 * queryAttachByUnitId
+	 * @return 
+	 */
+	public Attachment queryAttachByUnitId(@Param("unitId") String unitId);
+	
+	/**
+	 * 通过id 删除 Attachment_unit表
+	 */
+	public void deleteAttachUnitById(@Param("Id") String Id);
+	
+	/*
+	 * 通过 attachmentUnitId 删除 attachment表记录
+	 */
+	public Attachment deleteAttachByUnitId(@Param("attachmentUnitId") String attachmentUnitId);
 }

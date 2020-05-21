@@ -200,5 +200,31 @@
 			</if>
 		    where t.id = #{chineseId}
 	</update>
+	
+	<resultMap type="com.boco.share.function.common.bean.Attachment" id="attachment">
+		<result column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="ATTACH_PATH" property="path" jdbcType="VARCHAR" />
+		<result column="upload_date" property="uploadDate" jdbcType="TIMESTAMP" />
+		<result column="attachment_unit_id" property="attachmentUnitId" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="queryAttachByUnitId" parameterType="String">
+		select id id, name name, attach_path path,
+				upload_date uploadDate,attachment_unit_id attachmentUnitId
+		 from ods_c_atachment c
+		 where 1 = 1
+		 <if test="unitId != null and unitId !=''">
+			and c.attachment_unit_id = #{unitId}
+		</if>
+	</select>
+	
+	<update id="deleteAttachUnitById" parameterType="String">
+		delete from ods_c_attachment_unit where id = #{Id}
+	</update>
+	
+	<update id="deleteAttachByUnitId" parameterType="String">
+		delete from ods_c_atachment where attachment_unit_id = #{attachmentUnitId}
+	</update>
 		
 </mapper>
