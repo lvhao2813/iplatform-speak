@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -156,7 +157,7 @@ public class MenuServiceImpl implements MenuService {
 
 	@Override
 	public List<Menu> loadMenus(Map<String, String> formMap) {
-		if (formMap == null || formMap.get("MENU_NAME") == null) { // 搜索全部 -- 就是加载
+		if (formMap == null || StringUtils.isEmpty(formMap.get("MENU_NAME"))) { // 搜索全部 -- 就是加载
 			return getAllMenusList("0");
 		} else { // 有输入的搜索
 			return menuMapper.loadMenus(formMap);
