@@ -95,7 +95,7 @@ function player(id){
 				<!--<td th:onclick="'javascript:audioplayer(\''+${chinese.chineseId}+'\',\''+${chinese.path}+'\')'">-->
 					<!--<embed th:id="'Player' + ${each.count}" name="Player" th:src="${chinese.path}" width=200 height=100 type=audio/mpeg autostart=true loop=true>-->
 				<td>	
-					<audio th:id="'voice' + ${each.count}" th:src="${chinese.path}"></audio>
+					<audio th:id="'voice' + ${each.count}" th:src="'/mp3' + ${chinese.path}"></audio>
 				</td>
 		</tr>
 	</table>
