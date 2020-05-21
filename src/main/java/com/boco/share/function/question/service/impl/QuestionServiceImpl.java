@@ -168,13 +168,12 @@ public class QuestionServiceImpl implements QuestionService {
 		// 保存文件到本地磁盘,同时生成对象，保存路径方便后续取
 		byte[] bytes = file.getBytes();
 		String resourceBasePath = FileUtils.getResourceBasePath() + "/static/mp3";
-		String folderPath = resourceBasePath + "/mp3";
 		File fileDir = new File(resourceBasePath);
 		if (!fileDir.exists()) {
 			fileDir.mkdirs();
 		}
 		String fileName = DateUtils.getNowDateNum() + "_" + file.getOriginalFilename();
-		Path path = Paths.get(folderPath + fileName);
+		Path path = Paths.get(resourceBasePath + fileName);
 		Files.write(path, bytes);
 		// 保存对应的附件对象
 		AttachmentUnit unit = new AttachmentUnit();
@@ -185,7 +184,7 @@ public class QuestionServiceImpl implements QuestionService {
 		Attachment attachment = new Attachment();
 		attachment.setId(UuidUtil.genUUID());
 		attachment.setName(fileName);
-		attachment.setPath(folderPath + fileName);
+		attachment.setPath(resourceBasePath + fileName);
 		attachment.setAttachmentUnitId(unitId);
 		// save
 		mapper.saveAttachment(attachment);
@@ -232,7 +231,7 @@ public class QuestionServiceImpl implements QuestionService {
 							c.setChinese(unit.getChinese().getChinese());
 							c.setPinyin(unit.getChinese().getPinyin());
 							c.setAttachmentName(unit.getChinese().getAttachmentName());
-							c.setPath("/111.mp3");
+							c.setPath(unit.getChinese().getPath());
 							details.add(c);
 						}
 					}
