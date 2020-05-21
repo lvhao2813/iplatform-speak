@@ -176,6 +176,17 @@ create table ods_s_chinese(
   attachment_unit_id varchar(32) COMMENT '语音附件包id'
 );
 
+-- 测试题目包
+create table ods_s_exam(
+  id varchar(32) PRIMARY KEY COMMENT '主键',
+  name varchar(255) DEFAULT NULL COMMENT '测试题目名称',
+  singleword_id varchar(32) DEFAULT NULL COMMENT '单字题目id',
+  multiword_id varchar(32) DEFAULT NULL COMMENT '多字题目id',
+  essay_id varchar(32) DEFAULT NULL COMMENT '短文题目id',
+  topic_id varchar(32) COMMENT '命题练习id',
+  create_date datetime DEFAULT NULL COMMENT '创建时间'
+);
+
 
 -- 报名
 create table ods_exam_people(

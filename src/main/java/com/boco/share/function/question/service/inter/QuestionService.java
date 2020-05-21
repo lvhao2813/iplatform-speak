@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.boco.share.function.common.bean.Sort;
 import com.boco.share.function.question.bean.ApiQuestion;
-import com.boco.share.function.question.bean.Chinese;
+import com.boco.share.function.question.bean.Exam;
 import com.boco.share.function.question.bean.Question;
 
 /**
@@ -76,4 +76,32 @@ public interface QuestionService {
 	 * 	添加单字音频附件
 	 */
 	public void addSingleAttach(Map<String, String> formMap, MultipartFile file) throws Exception;
+	
+	/**
+	 * 	查询所有测试题目
+	 */
+	public List<Exam> loadExams(Map<String, String> formMap);
+	
+	/**
+	 * 按sort_ud 查询question
+	 */
+	public List<Question> queryQuestionsBySort( String sortId);
+	
+	/**
+	 * 根据选择的题目，生成测试题目
+	 * @param formMap
+	 */
+	public void genExam(Map<String, String> formMap);
+	
+	/**
+	 * 根据 id 删除Exam
+	 */
+	public void deleteExamById(String deleteId);
+	
+	
+	/**
+	 * 批量测试题目
+	 * @param deleteIds
+	 */
+	public void batchDeleteExams(String[] deleteIds);
 }

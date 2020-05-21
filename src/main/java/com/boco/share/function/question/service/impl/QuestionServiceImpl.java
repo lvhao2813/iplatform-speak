@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,7 @@ import com.boco.share.function.question.bean.ApiChineseDetail;
 import com.boco.share.function.question.bean.ApiQuestion;
 import com.boco.share.function.question.bean.Chinese;
 import com.boco.share.function.question.bean.ChineseUnit;
+import com.boco.share.function.question.bean.Exam;
 import com.boco.share.function.question.bean.Question;
 import com.boco.share.function.question.bean.QuestionDetail;
 import com.boco.share.function.question.dao.QuestionMapper;
@@ -92,13 +94,7 @@ public class QuestionServiceImpl implements QuestionService {
 			mapper.deleteQuestionById(deleteId);
 			// 为了删除文件，需要查询数据库获得附件路径
 			String unitId = question.getAttachmentUnitId();
-			Attachment attach = mapper.queryAttachByUnitId(unitId);
-			String path = attach.getPath();
-			File file = new File(path);
-			file.delete();
-			// 删除两个表记录和 路径对应文件
-			mapper.deleteAttachByUnitId(unitId);
-			mapper.deleteAttachUnitById(unitId);
+			deleteAttachByUnitId(unitId);
 		} else {
 			// 删除三个表
 			// question表 通过 deleteId
@@ -148,15 +144,63 @@ public class QuestionServiceImpl implements QuestionService {
 	}
 
 	@Override
+	@Transactional
 	public void addSingleAttach(Map<String, String> formMap, MultipartFile file) throws Exception {
-		String unitId = null;
+		String newUnitId = null;
+		//要删除单个的附件  需要通过chineseId 获取 attachment_unit_id 
+		//然后通过  attachment_unit_id 删除两个表(可以提出)
+		String chineseId = formMap.get("chineseId");
+		String unitId = mapper.queryAttachUnitIdByChineseId(chineseId);
+		deleteAttachByUnitId(unitId);
 		if (file != null) {
-			unitId = uploadFile(file);
+			newUnitId = uploadFile(file);
 		}
-		formMap.put("unitId", unitId);
+		formMap.put("newUnitId", newUnitId);
 		mapper.addChineseAttUnitId(formMap);
 	}
+	
+	@Override
+	public List<Exam> loadExams(Map<String, String> formMap) {
+		return mapper.loadExams(formMap);
+	}
+	
+	@Override
+	public void genExam(Map<String, String> formMap) {
+		Exam exam = new Exam();
+		exam.setId(UuidUtil.genUUID());
+		exam.setName(formMap.get("NAME"));
+		exam.setSinglewordId(formMap.get("SINGLE_ID"));
+		exam.setMultiwordId(formMap.get("MULTI_ID"));
+		exam.setEssayId(formMap.get("ESSAY_ID"));
+		exam.setTopicId(formMap.get("TOPIC_ID"));
+		mapper.saveExam(exam);
+	}
+	
+	
+	@Override
+	public List<Question> queryQuestionsBySort( String sortId){
+		return mapper.queryQuestionsBySort(sortId);
+	}
+	
+	@Override
+	public void deleteExamById(String deleteId) {
+		mapper.deleteExamById(deleteId);
+	}
+	
+	@Override
+	public void batchDeleteExams(String[] deleteIds) {
+		mapper.batchDeleteExams(deleteIds);
+	}
 
+	private void deleteAttachByUnitId(String unitId) {
+		Attachment attach = mapper.queryAttachByUnitId(unitId);
+		String path = attach.getPath();
+		File file = new File(path);
+		file.delete();
+		// 删除两个表记录和 路径对应文件
+		mapper.deleteAttachByUnitId(unitId);
+		mapper.deleteAttachUnitById(unitId);
+	}
 	/**
 	 * 上传附件，返回附件包
 	 * 
@@ -184,7 +228,7 @@ public class QuestionServiceImpl implements QuestionService {
 		Attachment attachment = new Attachment();
 		attachment.setId(UuidUtil.genUUID());
 		attachment.setName(fileName);
-		attachment.setPath(resourceBasePath + fileName);
+		attachment.setPath(path.toString());
 		attachment.setAttachmentUnitId(unitId);
 		// save
 		mapper.saveAttachment(attachment);
@@ -393,5 +437,7 @@ public class QuestionServiceImpl implements QuestionService {
 			return chineseId;
 		}
 	}
+
+
 
 }

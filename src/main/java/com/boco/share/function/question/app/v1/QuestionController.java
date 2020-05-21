@@ -127,7 +127,7 @@ public class QuestionController {
 		return modelAndView;
 	}
 	
-	@ApiOperation(value = "删除跳转页")
+	@ApiOperation(value = "删除")
 	@RequestMapping("/delete")
 	@ResponseBody
 	@ApiImplicitParams({

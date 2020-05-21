@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<link th:href="@{/css/common.css}" rel="stylesheet" />
+<link th:href="@{/css/syle.css}" rel="stylesheet" />
+<link th:href="@{~/js/layer/skin/layer.css}" rel="stylesheet"/>
+</head>
+
+<body id="bg-white">
+<form id="callForm" name="callForm" th:action="@{/api/v1/question/genExam}" enctype="multipart/form-data" th:method="post">
+<input style="display:none" name="type"  th:value="${type}">
+	<div class="p10">
+	  <table width="100%" cellpadding="0" cellspacing="0" class="tc-edit">
+		<tr>
+			<th width="30%" align="center"><span>*</span>题目名称：</th>
+			<td><input type="text" name="NAME" class="input1"/></td>
+		</tr>
+		<tr>
+			<th width="30%"><span>*</span>单字练习：</th>
+			<td>
+				<select name ="SINGLE_ID" >
+					<option value="#">请选择单字练习</option>
+					<option th:each="single:${singleQuestions}" th:value="${single.id}" th:text="${single.name}" >
+				</select>			
+			<td>
+		</tr>
+		<tr>
+			<th width="30%"><span>*</span>词语练习：</th>
+			<td>
+				<select name ="MULTI_ID" >
+					<option value="#">选择词语练习</option>
+					<option th:each="multi:${multiQuestions}" th:value="${multi.id}" th:text="${multi.name}" >
+				</select>			
+			<td>
+		</tr>
+		<tr>
+			<th width="30%"><span>*</span>短文练习：</th>
+			<td>
+				<select name ="ESSAY_ID" >
+					<option value="">请选择短文练习</option>
+					<option th:each="essay:${essayQuestions}" th:value="${essay.id}" th:text="${essay.name}" >
+				</select>			
+			<td>
+		</tr>
+		<tr>
+			<th width="30%"><span>*</span>命题练习：</th>
+			<td>
+				<select name ="TOPIC_ID" >
+					<option value="">选择命题练习</option>
+					<option th:each="topic:${topicQuestions}" th:value="${topic.id}" th:text="${topic.name}" >
+				</select>			
+			<td>
+		</tr>
+	  </table>
+	  
+	</div>
+	<div class="tc-bottom">
+		<a onclick="submitAdd()" id="submitBtn">提交</a> 
+		<a th:onclick="'javascript:closeCurrentLayer()'">取消</a>
+	</div>
+</form>
+	<div th:include="/common/onload_layer_js :: loadJS"></div>
+	<script type="text/javascript">
+		function submitAdd(){
+			jqueryAjaxSubmit('genExam');
+		}
+	</script>
+</body>
+</html>
+	

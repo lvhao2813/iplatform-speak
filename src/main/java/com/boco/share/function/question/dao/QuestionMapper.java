@@ -14,6 +14,7 @@ import com.boco.share.function.common.bean.AttachmentUnit;
 import com.boco.share.function.common.bean.Sort;
 import com.boco.share.function.question.bean.Chinese;
 import com.boco.share.function.question.bean.ChineseUnit;
+import com.boco.share.function.question.bean.Exam;
 import com.boco.share.function.question.bean.Question;
 import com.boco.share.function.question.bean.QuestionDetail;
 
@@ -126,10 +127,15 @@ public interface QuestionMapper {
 	public void addChineseAttUnitId(Map<String, String> formMap);
 	
 	/**
-	 * queryAttachByUnitId
+	 * 通过attachment_unit_id 获取单个attachment记录
 	 * @return 
 	 */
 	public Attachment queryAttachByUnitId(@Param("unitId") String unitId);
+	
+	/**
+	 * 通过 chineseId 获取对应的 attachment_unit_id
+	 */
+	public String queryAttachUnitIdByChineseId(@Param("chineseId") String chineseId);
 	
 	/**
 	 * 通过id 删除 Attachment_unit表
@@ -139,5 +145,30 @@ public interface QuestionMapper {
 	/*
 	 * 通过 attachmentUnitId 删除 attachment表记录
 	 */
-	public Attachment deleteAttachByUnitId(@Param("attachmentUnitId") String attachmentUnitId);
+	public void deleteAttachByUnitId(@Param("attachmentUnitId") String attachmentUnitId);
+	
+	/**
+	 * 查询所有练习
+	 */
+	public List<Exam> loadExams(Map<String, String> formMap);
+	
+	/**
+	 *  通过 sortId 查出所有的Question
+	 */
+	public List<Question> queryQuestionsBySort(@Param("sortId") String sortId);
+	
+	/**
+	 * 根据 选择的题目id 生成 测试题
+	 */
+	public void saveExam(Exam exam);
+	
+	/**
+	 * 根据id 删除测试题
+	 */
+	public void deleteExamById(@Param("deleteId")String deleteId);
+	
+	/**
+	 * 根据id 批量删除测试题
+	 */
+	public void batchDeleteExams(String[] deleteIds);
 }

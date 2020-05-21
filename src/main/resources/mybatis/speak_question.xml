@@ -37,6 +37,13 @@
 		order by t.create_date desc
 	</select>
 	
+	<select id="queryQuestionsBySort" resultMap="question">
+		select t.id id, t.name name, DATE_FORMAT(t.create_date,'%Y-%m-%d') createDate,
+		t.sort_id sortId, t.attachment_unit_id attachmentUnitId
+		from ods_questions t
+		where t.sort_id = #{sortId}
+	</select>
+	
 	<insert id="saveQuestion" parameterType="com.boco.share.function.question.bean.Question">
   		insert into ods_questions(id, name, create_date, sort_id,attachment_unit_id) 
   		values ( #{id}, #{name}, NOW(), #{sortId} ,#{attachmentUnitId})
@@ -67,6 +74,13 @@
   		insert into ods_s_chinese(id, chinese, pinyin, hzAndpy) 
   		values ( #{id}, #{chinese}, #{pinyin}, #{hzAndpy} )
 	</insert>
+	
+	<insert id="saveExam" parameterType="com.boco.share.function.question.bean.Exam">
+  		insert into ods_s_exam(id,name,singleword_id, multiword_id,
+  								essay_id,topic_id,create_date) 
+  		values ( #{id}, #{name}, #{singlewordId}, #{multiwordId},#{essayId},#{topicId},NOW() )
+	</insert>
+	
 	
 	<select id="getOneChineseId" resultType="String">
 		select id id
@@ -195,8 +209,8 @@
 	</insert>
 	<update id="addChineseAttUnitId">	
 		update ods_s_chinese t set 
-			<if test="unitId!=null and unitId !=''">
-				t.attachment_unit_id = #{unitId}
+			<if test="newUnitId !=null and newUnitId !=''">
+				t.attachment_unit_id = #{newUnitId}
 			</if>
 		    where t.id = #{chineseId}
 	</update>
@@ -209,14 +223,19 @@
 		<result column="attachment_unit_id" property="attachmentUnitId" jdbcType="VARCHAR" />
 	</resultMap>
 	
-	<select id="queryAttachByUnitId" parameterType="String" resultMap="attachment">
+	<select id="queryAttachByUnitId" parameterType="String" resultType="com.boco.share.function.common.bean.Attachment">
 		select id id, name name, attach_path path,
-				upload_date uploadDate,attachment_unit_id attachmentUnitId
+				attachment_unit_id attachmentUnitId,upload_date uploadDate
 		 from ods_c_atachment c
 		 where 1 = 1
 		 <if test="unitId != null and unitId !=''">
 			and c.attachment_unit_id = #{unitId}
 		</if>
+	</select>
+	
+	<select id="queryAttachUnitIdByChineseId" resultType="String">
+		select attachment_unit_id attachmentUnitId
+		from ods_s_chinese where id = #{chineseId}
 	</select>
 	
 	<update id="deleteAttachUnitById" parameterType="String">
@@ -226,5 +245,36 @@
 	<update id="deleteAttachByUnitId" parameterType="String">
 		delete from ods_c_atachment where attachment_unit_id = #{attachmentUnitId}
 	</update>
-		
+	
+	<resultMap type="com.boco.share.function.question.bean.Exam" id="exam">
+		<result column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="SINGLEWORD_ID" property="singlewordId" jdbcType="VARCHAR" />
+		<result column="MULTIWORD_ID" property="multiwordId" jdbcType="VARCHAR" />
+		<result column="ESSAY_ID" property="essayId" jdbcType="VARCHAR" />
+		<result column="TOPIC_ID" property="topicId" jdbcType="VARCHAR" />
+		<result column="CREATE_DATE" property="createDate" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="loadExams" parameterType="java.util.HashMap" resultMap="exam">
+		 select t.id id, t.name name,t.singleword_id singlewordId,
+		 		t.multiword_id multiwordId,t.essay_id essayId,
+		 		t.topic_id tipicId, DATE_FORMAT(t.create_date,'%Y-%m-%d') createDate
+		 from ods_s_exam t
+		<if test="EXAM_NAME != null and EXAM_NAME !=''">
+			and t.name like concat('%',#{EXAM_NAME},'%')	
+		</if>
+		order by t.create_date desc
+	</select>
+	
+	<update id="deleteExamById" parameterType="String">
+		delete from ods_s_exam where id = #{deleteId}
+	</update>
+	<update id="batchDeleteExams" parameterType="String">
+        delete from ods_s_exam where id in
+       <foreach item="deleteIds" collection="array" open="(" separator="," close=")">
+            	#{deleteIds}
+        </foreach>
+    </update>
+	
 </mapper>
