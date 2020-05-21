@@ -1,4 +1,4 @@
-package com.boco.share.function.util;
+package com.boco.share.framework.common;
 /**
  * 生成汉字对应拼音的工具类
  * @author xp

@@ -50,13 +50,6 @@ spring:
     encoding: UTF-8
     prefix: classpath:/templates/
 ########################################################
-###THYMELEAF (ThymeleafAutoConfiguration)
-########################################################
-  resources:
-    static-locations: file:E://fileUpload//mp3
-  mvc:
-    static-path-pattern: /**
-########################################################
 ###Operation Configuration
 ########################################################
 opertation:

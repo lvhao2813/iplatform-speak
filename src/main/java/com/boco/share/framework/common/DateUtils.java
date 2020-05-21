@@ -71,6 +71,11 @@ public class DateUtils {
         return date1.before(new Date());
     }
 	
+	/**
+	 * 传入的时间 增加天数后返回
+	 * @param oneDate
+	 * @return
+	 */
 	public static String timeAddDay(String time, Integer addCount) {
 		 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		    Date date = null;
@@ -93,4 +98,14 @@ public class DateUtils {
 			return result;
 	}
 	
+	/**
+	 *  获取当前时间 数字字符串格式
+	 * @param oneDate
+	 * @return
+	 */
+	public static String getNowDateNum() {
+		Date now=new Date();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+		return dateFormat.format(now);
+	}
 }

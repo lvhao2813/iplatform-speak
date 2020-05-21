@@ -18,6 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.druid.util.StringUtils;
+import com.boco.share.framework.common.DateUtils;
+import com.boco.share.framework.common.FileUtils;
+import com.boco.share.framework.common.PinYinUtil;
 import com.boco.share.framework.common.UuidUtil;
 import com.boco.share.function.common.bean.Attachment;
 import com.boco.share.function.common.bean.AttachmentUnit;
@@ -30,7 +33,6 @@ import com.boco.share.function.question.bean.Question;
 import com.boco.share.function.question.bean.QuestionDetail;
 import com.boco.share.function.question.dao.QuestionMapper;
 import com.boco.share.function.question.service.inter.QuestionService;
-import com.boco.share.function.util.PinYinUtil;
 
 /**
  * @author LOVE
@@ -88,7 +90,7 @@ public class QuestionServiceImpl implements QuestionService {
 		Question question = mapper.queryQuestionById(deleteId);
 		if ("mingtilianxi".equals(question.getSortCode())) {
 			mapper.deleteQuestionById(deleteId);
-			//TODO 附件删除
+			// TODO 附件删除
 		} else {
 			// 删除三个表
 			// question表 通过 deleteId
@@ -136,7 +138,7 @@ public class QuestionServiceImpl implements QuestionService {
 		formMap.put("chineseId", chineseId);
 		mapper.updateChineseUnit(formMap);
 	}
-	
+
 	@Override
 	public void addSingleAttach(Map<String, String> formMap, MultipartFile file) throws Exception {
 		String unitId = null;
@@ -157,11 +159,14 @@ public class QuestionServiceImpl implements QuestionService {
 	private String uploadFile(MultipartFile file) throws IOException {
 		// 保存文件到本地磁盘,同时生成对象，保存路径方便后续取
 		byte[] bytes = file.getBytes();
-		File fileDir = new File("E:\\fileUpload");
+		String resourceBasePath = FileUtils.getResourceBasePath() + "/static/mp3";
+		String folderPath = resourceBasePath + "/mp3";
+		File fileDir = new File(resourceBasePath);
 		if (!fileDir.exists()) {
 			fileDir.mkdirs();
 		}
-		Path path = Paths.get("E:\\fileUpload/" + file.getOriginalFilename());
+		String fileName = DateUtils.getNowDateNum() + "_" + file.getOriginalFilename();
+		Path path = Paths.get(folderPath + fileName);
 		Files.write(path, bytes);
 		// 保存对应的附件对象
 		AttachmentUnit unit = new AttachmentUnit();
@@ -171,15 +176,13 @@ public class QuestionServiceImpl implements QuestionService {
 		mapper.saveAttachmentUnit(unit);
 		Attachment attachment = new Attachment();
 		attachment.setId(UuidUtil.genUUID());
-		attachment.setName(file.getOriginalFilename());
-		attachment.setPath("E:\\fileUpload/" + file.getOriginalFilename());
+		attachment.setName(fileName);
+		attachment.setPath(folderPath + fileName);
 		attachment.setAttachmentUnitId(unitId);
 		// save
 		mapper.saveAttachment(attachment);
 		return unitId;
 	}
-	
-	
 
 	/**
 	 * 将question数据库对象，转换成前台展示对象
@@ -221,7 +224,7 @@ public class QuestionServiceImpl implements QuestionService {
 							c.setChinese(unit.getChinese().getChinese());
 							c.setPinyin(unit.getChinese().getPinyin());
 							c.setAttachmentName(unit.getChinese().getAttachmentName());
-							c.setPath("D:\\th.mp3");
+							c.setPath("/111.mp3");
 							details.add(c);
 						}
 					}
