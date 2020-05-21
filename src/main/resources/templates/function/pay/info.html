@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<div th:insert="/common/common_css :: privilege"></div>
+</head>
+<body>
+<div th:insert="/common/common_index :: index_head"></div>
+<div th:include="/common/onload_list_js :: loadJS"></div>
+<div id="main">
+	<div class="box">
+			<div class="title">	
+				    	<h2>当前位置：<a th:href="${session.homeUrl}">首页</a> > <a>系统管理 </a>  > <a class="active">充值页面</a></h2>				
+			</div>
+			<input style="display:none" name="selectGoodsId" id="selectGoodsId" value="">
+			<table width="100%" cellpadding="0" cellspacing="0" class="text-table mt10">
+				  <tr>
+					   <td th:each="item : ${goods}" >
+					   		<img th:id="${item.id}" th:src="${item.image}" th:onclick="'javascript:selectPackage(\''+${item.id}+'\')'" height="300" width="200" />
+					   </td>
+				  </tr>
+				  <tr>
+				  	<td th:colspan="${goodsSize}" align="center"><button style="width:150px;height:60px">支付</button></td>
+				  <tr>
+			</table>
+			
+	</div>
+</div>
+<script type="text/javascript">
+	function selectPackage(imageId){
+		var imgSrc = $('#'+imageId).attr("src");
+		//将所有图片变成un
+		$('img').each(function(){
+			var src = $(this).attr("src");
+			// un不存在 则全部加un
+			if(src.indexOf("un") == -1){
+				$(this).attr("src", src.replace('select', 'unselect'));
+			}
+		});
+		
+		//选中
+		if(imgSrc.indexOf("un") !== -1){
+			imgSrc = imgSrc.replace('un', '');
+			document.getElementById(imageId).src = imgSrc;
+			document.getElementById('selectGoodsId').value =  imageId;
+		}else{
+			document.getElementById('selectGoodsId').value =  "";
+		}
+		
+	}
+</script>
+</body>
+</html>
+
+

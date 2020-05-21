@@ -145,7 +145,7 @@ text-overflow: ellipsis; white-space: nowrap; overflow: hidden;  }
 .fanye-new{ width:98%; margin:15px  auto 0; overflow:hidden; font-size:12px;  }
 /*.fanye-new ul{  position: relative; margin-left: -400px; left: 50%; }*/
 .fanye-new ul,li{list-style: none; }
-.fanye-new ul li,input,button{height:25px; float:left; background-color:none; text-align:center; color:#666; line-height:24px; border-radius:2px;padding:0px 10px; margin:0px 4px;}
+.fanye-new ul li,input{height:25px; float:left; background-color:none; text-align:center; color:#666; line-height:24px; border-radius:2px;padding:0px 10px; margin:0px 4px;}button{height:25px;  background-color:none; text-align:center; color:#666; line-height:24px; border-radius:2px;padding:0px 10px; margin:0px 4px;}
 .fanye-new ul input{ border:#ddd 1px solid; margin-left:20px; width:30px; text-align:left; outline:none; }	
 .fanye-new ul li:hover,.fanye-new ul li.active{background-color:#259fdd; color:#fff; border-color:#259fdd; cursor: pointer;}.fanye-new ul li.lastLi:hover{background-color:#fff;}
 .fanye-new ul button{ outline:none; background-color:#eee; border:#eee 1px solid; height:27px;}

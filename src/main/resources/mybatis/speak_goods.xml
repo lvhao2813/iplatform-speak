@@ -22,12 +22,12 @@
 	
 	
 	<select id="queryGoods" resultMap="goods" parameterType="java.util.HashMap">
-		select id id, name name, price price ,unit unit,
-			   image image, create_date createDate, desciption desciption,
-			   execFrequency execFrequency, effectiveTime effectiveTime,
-			   s.code code, s.sortName sortName
+		select g.id id, g.name name, g.price price ,g.unit unit,
+			   g.image image, g.create_date createDate, g.desciption desciption,
+			   g.execFrequency execFrequency, g.effectiveTime effectiveTime,
+			   s.code code, s.name sortName
 		from ods_goods g
-		left join ods_c_sort s on g.sort_id = s.id and s.type = 'good'
+		left join ods_c_sort s on g.sort_id = s.id
 		where 1 = 1 
 		<if test="sortCode!= null and sortCode!=''">
 			and s.code = #{sortCode}
