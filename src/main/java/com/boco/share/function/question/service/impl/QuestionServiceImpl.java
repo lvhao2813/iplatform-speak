@@ -191,6 +191,11 @@ public class QuestionServiceImpl implements QuestionService {
 	public void batchDeleteExams(String[] deleteIds) {
 		mapper.batchDeleteExams(deleteIds);
 	}
+	
+	@Override
+	public Exam queryExamById(String Id) {
+		return mapper.queryExamById(Id);
+	}
 
 	private void deleteAttachByUnitId(String unitId) {
 		Attachment attach = mapper.queryAttachByUnitId(unitId);

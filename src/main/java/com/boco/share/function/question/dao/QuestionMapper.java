@@ -171,4 +171,11 @@ public interface QuestionMapper {
 	 * 根据id 批量删除测试题
 	 */
 	public void batchDeleteExams(String[] deleteIds);
+	
+	/**
+	 * 根据 id 查找 exam
+	 * @param Id
+	 * @return
+	 */
+	public Exam queryExamById(@Param("Id")String Id);
 }

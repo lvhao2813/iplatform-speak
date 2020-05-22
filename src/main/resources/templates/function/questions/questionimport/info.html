@@ -1,97 +1,95 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
-<head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<div th:insert="/common/common_css :: privilege"></div>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<div th:insert="/common/common_css :: privilege"></div>
 
-</head>
-<body>
-<div th:insert="/common/common_index :: index_head"></div>
-<div th:include="/common/onload_list_js :: loadJS"></div>
+	</head>
+	<body>
+		<div th:insert="/common/common_index :: index_head"></div>
+		<div th:include="/common/onload_list_js :: loadJS"></div>
 
-<!-- <form id="callForm2" name="callForm2" th:method="post"> -->
-<div id="main">
-<div class="box">
-	<div class="title">	
-		<h2>当前位置：<a th:href="${session.homeUrl}">首页</a> > <a>系统管理 </a>  > <a  th:href="@{/api/v1/question/query}">题目录入</a>  > <a class="active">题目详情</a></h2>				
-	</div>
-	<table width="100%" cellpadding="0" cellspacing="0" class="text-table mt10">
-		<tr>
-			<th width="8%">题目：</th>
-			<td width="15%" th:text="${question.name}"></td>
-			<th width="8%">题目类型：</th>
-			<td width="15%" th:text="${question.sortName}"></td>
-			<th width="8%">创建时间：</th>
-			<td width="15%" th:text="${question.createDate}"></td>
-		</tr>
-		<tr>
-			<th width="8%">题目内容：</th>
-			<td colspan="4" width="15%" th:text="${question.content}"></td>
-		</tr>
-		<tr th:if="${formMap.sortId == '3' or formMap.sortId == '11'}">
-			<th width = "%8">附件名称：</th>
-			<td  th:text="${question.attachmentName}"></td>
-		<tr>
-		
-	</table>
-</div>
-	
-<div th:if="${formMap.sortId != '11'}"  class="box">	            
-	<div class="title">	
-			<h2> <a class="active">题目内容</a></h2>	
-	</div>	            
-	<div class="auto">
-		<table width="100%" cellpadding="0" cellspacing="0" class="user-list mt10">
-			<tr>
-				<th width="30">序号</th>
-	       		<th>汉字</th>
-				<th>拼音</th>
-				<th>附件</th>
-				<th>操作</th>
-			</tr>
-			<tr  th:each="chinese,each : ${question.details}">
-				<td th:text="${each.count}"></td>			
-				<td th:text="${chinese.chinese}" th:onclick="'javascript:openCommonLayer2(\'/api/v1/question/choosepage?CHINESE='+${chinese.chinese}+'&UNITID='+${chinese.chineseUnitId}+'\')'"></td>			
-				<td th:text="${chinese.pinyin}" th:onclick="'javascript:openCommonLayer2(\'/api/v1/question/choosepage?CHINESE='+${chinese.chinese}+'&UNITID='+${chinese.chineseUnitId}+'\')'"></td>
-				<td th:text="${chinese?.attachmentName}"></td>	
-				<td><span><input type="file" name="chineseMp3" th:id="'file' + ${each.count}"/></span><span><button th:onclick="'javascript:attach(\''+${chinese.chineseId}+'\',\''+${each.count}+'\')'" >上传</button></span></td>
-			</tr>
-		</table>
-	</div>
-	
-<!--这里page页面报错了所以没有继续往下加载到下面的openCommonLayer2  <div th:include="/common/page_control"></div>-->
-	    
-</div>
-</div>
-<!-- </form> -->
-<div th:insert="/common/common_index :: index_foot"></div>
-	<script type="text/javascript" th:inline="javascript">
-		function openCommonLayer2(url){
-			openCommonLayer('选择读音','500px','300px',url);
-		};
-		
-		function attach(chineseId ,index){
-			var fileId = '#file'+index;
-			var formData = new FormData();
-		   	// # 给formData对象添加<input>标签,注意与input标签的ID一致
-		   	formData.append('chineseId',chineseId);
-		    formData.append('file', $(fileId)[0].files[0]);
-		    $.ajax({
-		        url : contextPath + 'addSingleAttach',
-		        type : 'POST',
-		        data : formData,
-		        contentType: false,// 当有文件要上传时，此项是必须的，否则后台无法识别文件流的起始位置
-		        processData: false,// 是否序列化data属性，默认true(注意：false时type必须是post)
-		        dataType: 'json',//这里是返回类型，一般是json,text等
-		        clearForm: true,//提交后是否清空表单数据
-		        success: function(data) {   //提交成功后自动执行的处理函数，参数data就是服务器返回的数据。
-		       	 location.reload();
-		        },
-		    }); 
-		};
-	</script>
-</body>
+		<!-- <form id="callForm2" name="callForm2" th:method="post"> -->
+		<div id="main">
+			<div class="box">
+				<div class="title">
+					<h2>当前位置：<a th:href="${session.homeUrl}">首页</a> > <a>系统管理 </a> > <a th:href="@{/api/v1/question/query}">题目录入</a> >
+						<a class="active">题目详情</a></h2>
+				</div>
+				<table width="100%" cellpadding="0" cellspacing="0" class="text-table mt10">
+					<tr>
+						<th width="8%">题目：</th>
+						<td width="15%" th:text="${question.name}"></td>
+						<th width="8%">题目类型：</th>
+						<td width="15%" th:text="${question.sortName}"></td>
+						<th width="8%">创建时间：</th>
+						<td width="15%" th:text="${question.createDate}"></td>
+					</tr>
+					<tr>
+						<th width="8%">题目内容：</th>
+						<td colspan="4" width="15%" th:text="${question.content}"></td>
+					</tr>
+					<tr th:if="${formMap.sortId == '3' or formMap.sortId == '11'}">
+						<th width="%8">附件名称：</th>
+						<td th:text="${question.attachmentName}"></td>
+					<tr>
+
+				</table>
+			</div>
+
+			<div th:if="${formMap.sortId != '11'}" class="box">
+				<div class="title">
+					<h2> <a class="active">题目内容</a></h2>
+				</div>
+				<div class="auto">
+					<table width="100%" cellpadding="0" cellspacing="0" class="user-list mt10">
+						<tr>
+							<th width="30">序号</th>
+							<th>汉字</th>
+							<th>拼音</th>
+							<th>附件</th>
+							<th>操作</th>
+						</tr>
+						<tr th:each="chinese,each : ${question.details}">
+							<td th:text="${each.count}"></td>
+							<td th:text="${chinese.chinese}" th:onclick="'javascript:openCommonLayer2(\'/api/v1/question/choosepage?CHINESE='+${chinese.chinese}+'&UNITID='+${chinese.chineseUnitId}+'\')'"></td>
+							<td th:text="${chinese.pinyin}" th:onclick="'javascript:openCommonLayer2(\'/api/v1/question/choosepage?CHINESE='+${chinese.chinese}+'&UNITID='+${chinese.chineseUnitId}+'\')'"></td>
+							<td th:text="${chinese?.attachmentName}"></td>
+							<td><span><input type="file" name="chineseMp3" th:id="'file' + ${each.count}" /></span><span><button th:onclick="'javascript:attach(\''+${chinese.chineseId}+'\',\''+${each.count}+'\')'">上传</button></span></td>
+						</tr>
+					</table>
+				</div>
+
+				<!--这里page页面报错了所以没有继续往下加载到下面的openCommonLayer2  <div th:include="/common/page_control"></div>-->
+
+			</div>
+		</div>
+		<!-- </form> -->
+		<div th:insert="/common/common_index :: index_foot"></div>
+		<script type="text/javascript" th:inline="javascript">
+			function openCommonLayer2(url) {
+				openCommonLayer('选择读音', '500px', '300px', url);
+			};
+
+			function attach(chineseId, index) {
+				var fileId = '#file' + index;
+				var formData = new FormData();
+				// # 给formData对象添加<input>标签,注意与input标签的ID一致
+				formData.append('chineseId', chineseId);
+				formData.append('file', $(fileId)[0].files[0]);
+				$.ajax({
+					url: contextPath + 'addSingleAttach',
+					type: 'POST',
+					data: formData,
+					contentType: false, // 当有文件要上传时，此项是必须的，否则后台无法识别文件流的起始位置
+					processData: false, // 是否序列化data属性，默认true(注意：false时type必须是post)
+					dataType: 'json', //这里是返回类型，一般是json,text等
+					clearForm: true, //提交后是否清空表单数据
+					success: function(data) { //提交成功后自动执行的处理函数，参数data就是服务器返回的数据。
+						location.reload();
+					},
+				});
+			};
+		</script>
+	</body>
 </html>
-

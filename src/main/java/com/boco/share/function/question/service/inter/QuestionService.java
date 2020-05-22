@@ -98,10 +98,14 @@ public interface QuestionService {
 	 */
 	public void deleteExamById(String deleteId);
 	
-	
 	/**
-	 * 批量测试题目
+	 * 批量删除测试题目
 	 * @param deleteIds
 	 */
 	public void batchDeleteExams(String[] deleteIds);
+	
+	/**
+	 * 通过exam 的id字段查找exam
+	 */
+	public Exam queryExamById(String Id);
 }
