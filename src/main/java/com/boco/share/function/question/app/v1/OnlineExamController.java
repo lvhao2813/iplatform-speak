@@ -113,6 +113,7 @@ public class OnlineExamController {
 		return modelAndView;
 	}
 
+
 	@RequestMapping("batchDelete")
 	@ResponseBody
 	public void batchDelete(String[] deleteIds) {

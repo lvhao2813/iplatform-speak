@@ -261,6 +261,7 @@
 		 		t.multiword_id multiwordId,t.essay_id essayId,
 		 		t.topic_id tipicId, DATE_FORMAT(t.create_date,'%Y-%m-%d') createDate
 		 from ods_s_exam t
+		 where 1=1 
 		<if test="EXAM_NAME != null and EXAM_NAME !=''">
 			and t.name like concat('%',#{EXAM_NAME},'%')	
 		</if>

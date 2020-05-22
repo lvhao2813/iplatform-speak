@@ -67,7 +67,7 @@
 					</td>
 					<td th:text="${exam.name}"></td>
 					<td align="center">														
-						<a href="#" class="c-green parentedit" th:onclick="'javascript:info(\''+${exam.id}+'\')'">编辑</a>
+						<a href="#" class="c-green parentedit" th:onclick="'javascript:info(\''+${exam.id}+'\')'">详情</a>
 						<a href="#" class="color-red parentIframe" th:onclick="'javascript:openDeleteLayer(\'/api/v1/onlineExam/deletepage?deleteUrl=/api/v1/onlineExam/delete&deleteId='+${exam['id']}+'\')'">删除</a> 
 					</td>
 				</tr>
