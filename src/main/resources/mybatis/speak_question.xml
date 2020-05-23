@@ -174,7 +174,7 @@
 		sortCode,t.attachment_unit_id
 		attachmentUnitId,
 		a.name attachmentName,
-		CONCAT('/',a.name) path
+		CONCAT('/mp3/',a.name) path
 		from ods_questions t
 		left join ods_c_sort s on
 		s.id = t.sort_id
@@ -207,7 +207,7 @@
 	</select>
 	<select id="queryChineseById" resultMap="chinese2">
 		select c.id id, c.chinese chinese, c.pinyin pinyin, a.name
-		attachmentName, CONCAT('/',a.name) path
+		attachmentName, CONCAT('/mp3/',a.name) path
 		from ods_s_chinese c
 		left join
 		ods_c_attachment_unit u on u.id = c.attachment_unit_id
