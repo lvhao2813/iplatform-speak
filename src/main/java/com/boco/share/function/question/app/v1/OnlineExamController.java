@@ -151,4 +151,19 @@ public class OnlineExamController {
 		return mav;
 	}
 
+	@ApiOperation(value = "短文练习")
+	@ResponseBody
+	@ApiImplicitParams({
+			@ApiImplicitParam(dataType = "String", paramType = "query", name = "examId", value = "测试Id", required = true) })
+	@RequestMapping(value = "/essayExam", method = RequestMethod.POST)
+	public ModelAndView essayExam(@RequestParam Map<String, String> formMap) {
+		ModelAndView mav = new ModelAndView("function/questions/onlineexam/essayonline");
+		Exam exam = questionService.queryExamById(formMap.get("examId"));
+		formMap.put("questionId", exam.getEssayId());
+		ApiExamQuestion info = onlineExamService.info(formMap);
+		mav.addObject("examId", exam.getId());
+		mav.addObject("question", info);
+		return mav;
+	}
+
 }
