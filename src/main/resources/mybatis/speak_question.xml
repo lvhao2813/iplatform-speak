@@ -324,5 +324,20 @@
 			#{deleteIds}
 		</foreach>
 	</update>
+	
+	<select id="queryChineseListByIds" parameterType="java.util.List" resultType="com.boco.share.function.question.bean.Chinese">
+		select c.id id, c.chinese chinese, c.pinyin pinyin, a.name
+		attachmentName, CONCAT('/mp3/',a.name) path
+		from ods_s_chinese c
+		left join ods_c_attachment_unit u on u.id = c.attachment_unit_id
+		left join
+		ods_c_atachment a on a.attachment_unit_id = u.id
+		where 1 = 1 and
+		c.id in (
+		<foreach collection="list" item="item" index="index" separator=",">
+			#{item}
+		</foreach>
+			)
+	</select>
 
 </mapper>

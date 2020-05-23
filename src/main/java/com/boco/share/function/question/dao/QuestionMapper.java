@@ -178,4 +178,9 @@ public interface QuestionMapper {
 	 * @return
 	 */
 	public Exam queryExamById(@Param("Id")String Id);
+	
+	/**
+	 * 查询汉字列表 通过 ids
+	 */
+	public List<Chinese> queryChineseListByIds(List<String> chineseIds);
 }

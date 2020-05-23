@@ -4,6 +4,7 @@
 package com.boco.share.function.question.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.boco.share.function.question.bean.ApiChineseDetail;
-import com.boco.share.function.question.bean.ApiQuestion;
+import com.boco.share.function.question.bean.Chinese;
 import com.boco.share.function.question.bean.ChineseUnit;
 import com.boco.share.function.question.bean.Question;
 import com.boco.share.function.question.bean.QuestionDetail;
@@ -50,22 +51,22 @@ public class OnlineExamServiceImpl implements OnlineExamService {
 		List<ApiExamQuestionDetail> details = new ArrayList<ApiExamQuestionDetail>();
 
 		if (!question.getDetails().isEmpty()) {
+			Map<String,Chinese> chineseMap = listToMap(question);
 			for (QuestionDetail queDetail : question.getDetails()) {
 				ApiExamQuestionDetail apiDetail = new ApiExamQuestionDetail();
 				if (!queDetail.getDetails().isEmpty()) {
 					// 构建对应分类的汉字包
-					List<ApiChineseDetail> chineses = new ArrayList<ApiChineseDetail>();
+					List<ApiChineseDetail> chineses = new ArrayList<ApiChineseDetail>();					
 					for (ChineseUnit unit : queDetail.getDetails()) {
-						if (unit.getChinese() == null) {
-							continue;
-						} else {
+						Chinese singleChinese = chineseMap.get(unit.getChineseId());
+						if (singleChinese != null) {	
 							ApiChineseDetail c = new ApiChineseDetail();
-							c.setChineseId(unit.getChinese().getId());
+							c.setChineseId(singleChinese.getId());
 							c.setChineseUnitId(unit.getId());
-							c.setChinese(unit.getChinese().getChinese());
-							c.setPinyin(unit.getChinese().getPinyin());
-							c.setAttachmentName(unit.getChinese().getAttachmentName());
-							c.setPath(unit.getChinese().getPath());
+							c.setChinese(singleChinese.getChinese());
+							c.setPinyin(singleChinese.getPinyin());
+							c.setAttachmentName(singleChinese.getAttachmentName());
+							c.setPath(singleChinese.getPath());
 							chineses.add(c);
 						}
 					}
@@ -75,9 +76,26 @@ public class OnlineExamServiceImpl implements OnlineExamService {
 				details.add(apiDetail);
 			}
 		}
-
 		result.setDetails(details);
 		return result;
+	}
+	
+	private Map<String,Chinese> listToMap(Question question ){
+		List<String> chineseIds =new ArrayList<>();
+
+		for (QuestionDetail detail : question.getDetails()) {
+			for(ChineseUnit unit : detail.getDetails()) {
+				if(unit!=null) {
+					chineseIds.add(unit.getChineseId());	
+				}
+			}
+		}
+		List<Chinese> chinesesList = mapper.queryChineseListByIds(chineseIds);
+		Map<String,Chinese> chineseMap = new HashMap<String, Chinese>();
+		for(Chinese chinese :chinesesList) {
+			chineseMap.put(chinese.getId(), chinese);
+		}
+		return chineseMap;
 	}
 
 }
