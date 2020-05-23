@@ -59,7 +59,7 @@
 <body onload="initTable()">
 <div th:insert="common/common_index :: index_head"></div>
 <div th:include="common/onload_list_js :: loadJS"></div>
-<form id="callForm" name="callForm" th:action="@{multiExam}" th:method="post" >
+<form id="callForm" name="callForm" th:action="@{/multiExam}" th:method="post" >
 	<input style="display:none" name="examId" id="examId" th:value="${examId}">
 </form>
 

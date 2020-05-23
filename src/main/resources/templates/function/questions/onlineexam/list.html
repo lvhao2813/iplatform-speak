@@ -21,7 +21,7 @@
 	<div th:insert="/common/common_index :: index_head"></div>
 	<div th:include="/common/onload_list_js :: loadJS"></div>
 
-<form id="callForm" name="callForm" th:action="@{api/v1/onlineExam/queryExam}" th:method="get">
+<form id="callForm" name="callForm" th:action="@{/api/v1/onlineExam/queryExam}" th:method="get">
 
 	<input style="display:none" name="deleteIds" id="deleteIds" value="">
 
