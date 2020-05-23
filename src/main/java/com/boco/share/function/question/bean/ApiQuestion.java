@@ -13,7 +13,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @author LOVE
  *
  */
-@ApiModel(value = "前段题目详情对象", description = "问前段题目详情对象")
+@ApiModel(value = "前段题目概况", description = "前段题目概况对象")
 public class ApiQuestion {
 
 	@ApiModelProperty(value = "题目id")
@@ -37,9 +37,12 @@ public class ApiQuestion {
 	@ApiModelProperty(value = "拼音对应附件路径")
 	private String path;
 
-	@ApiModelProperty(value = "题目全内容，字对象")
-	private List<ApiChineseDetail> details = new ArrayList<ApiChineseDetail>();
+	@ApiModelProperty(value = "题目details内容，用于存放后台所有details")
+	private List<ApiQuestionDetail> details = new ArrayList<ApiQuestionDetail>();
 
+	@ApiModelProperty(value = "题目details内容，用于存放后台所有汉字")
+	private List<ApiChineseDetail> chineses = new ArrayList<ApiChineseDetail>();
+	
 	public String getId() {
 		return id;
 	}
@@ -76,15 +79,23 @@ public class ApiQuestion {
 		return content;
 	}
 
+	public List<ApiChineseDetail> getChineses() {
+		return chineses;
+	}
+
+	public void setChineses(List<ApiChineseDetail> chineses) {
+		this.chineses = chineses;
+	}
+
 	public void setContent(String content) {
 		this.content = content;
 	}
 
-	public List<ApiChineseDetail> getDetails() {
+	public List<ApiQuestionDetail> getDetails() {
 		return details;
 	}
 
-	public void setDetails(List<ApiChineseDetail> details) {
+	public void setDetails(List<ApiQuestionDetail> details) {
 		this.details = details;
 	}
 

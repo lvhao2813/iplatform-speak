@@ -55,8 +55,7 @@
 			<table width="100%" cellpadding="0" cellspacing="0" class="user-list mt10">
        			<tr>
 	       			<th width="30">
-						<input type="checkbox" class="check-all" id="mainCheckbox" name="mainCheckbox"
-											onClick="selectedAllCheckbox()" />
+						<input type="checkbox" class="check-all" id="mainCheckbox" name="mainCheckbox" onClick="selectedAllCheckbox()" />
 					</th>
      				<th>测试名称</th>
 					<th>操作</th>
@@ -84,7 +83,7 @@
 			openCommonLayer('编辑记录','500px','250px',url);
 		}
 		function info(examId,examName){
-			document.getElementById('callForm').action = contextPath + 'infoExam?examId='+examId+'&examName='+examName;
+			document.getElementById('callForm').action = contextPath + 'singleExam?examId='+examId+'&examName='+examName;
 			document.getElementById('callForm').method = 'post';
 			document.getElementById('callForm').submit();
 		}

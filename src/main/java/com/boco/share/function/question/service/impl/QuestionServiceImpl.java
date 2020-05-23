@@ -11,7 +11,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +27,7 @@ import com.boco.share.function.common.bean.AttachmentUnit;
 import com.boco.share.function.common.bean.Sort;
 import com.boco.share.function.question.bean.ApiChineseDetail;
 import com.boco.share.function.question.bean.ApiQuestion;
+import com.boco.share.function.question.bean.ApiQuestionDetail;
 import com.boco.share.function.question.bean.Chinese;
 import com.boco.share.function.question.bean.ChineseUnit;
 import com.boco.share.function.question.bean.Exam;
@@ -256,8 +256,10 @@ public class QuestionServiceImpl implements QuestionService {
 		result.setPath(question.getPath());
 		// 构建题目全内容
 		StringBuffer conent = new StringBuffer();
+		// 构建题目detail包
+		List<ApiQuestionDetail> details = new ArrayList<ApiQuestionDetail>();
 		// 构建汉字包
-		List<ApiChineseDetail> details = new ArrayList<ApiChineseDetail>();
+		List<ApiChineseDetail> chineses = new ArrayList<ApiChineseDetail>();
 
 		if (!question.getDetails().isEmpty()) {
 			int i = 0;

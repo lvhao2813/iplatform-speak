@@ -122,16 +122,32 @@ public class OnlineExamController {
 	
 	@ApiOperation(value = "单字练习")
 	@ApiImplicitParams({
-			@ApiImplicitParam(dataType = "String", paramType = "query", name = "type", value = "题目分类", required = true) })
-	@RequestMapping(value = "/infoExam", method = RequestMethod.POST)
-	public ModelAndView infoExam(@RequestParam Map<String, String> formMap) {
-		ModelAndView mav = new ModelAndView("function/questios/onlineexam/singleonline");
+			@ApiImplicitParam(dataType = "String", paramType = "query", name = "examId", value = "测试Id", required = true) })
+	@RequestMapping(value = "/singleExam", method = RequestMethod.POST)
+	public ModelAndView singleExam(@RequestParam Map<String, String> formMap) {
+		ModelAndView mav = new ModelAndView("function/questions/onlineexam/singleonline");
 		Exam exam = questionService.queryExamById(formMap.get("examId"));	
 		formMap.put("questionId", exam.getSinglewordId());
 		ApiQuestion singleInfo = questionService.info(formMap);
-		//mav.addObject("formMap", formMap);
+		mav.addObject("exam", exam);
 		mav.addObject("question", singleInfo);
 		return mav;
 	}
+	
+	@ApiOperation(value = "多字练习")
+	@ResponseBody
+	@ApiImplicitParams({
+			@ApiImplicitParam(dataType = "String", paramType = "query", name = "examId", value = "测试Id", required = true) })
+	@RequestMapping(value = "/multiExam", method = RequestMethod.GET)
+	public ModelAndView multiExam(@RequestParam Map<String, String> formMap) {
+		ModelAndView mav = new ModelAndView("function/questions/onlineexam/multionline");
+		Exam exam = questionService.queryExamById(formMap.get("examId"));	
+		formMap.put("questionId", exam.getMultiwordId());
+		ApiQuestion singleInfo = questionService.info(formMap);
+		mav.addObject("exam", exam);
+		mav.addObject("question", singleInfo);
+		return mav;
+	}
+	
 	
 }

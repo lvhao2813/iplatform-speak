@@ -5,19 +5,24 @@
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <div th:insert="/common/common_css :: privilege"></div>
+
 <script type="text/javascript" th:inline="javascript">
 	function initTable(){
 		var table = $("#examTable");
-		var details = [[${question.details}]];
+		var details = [[${question.details}]];	 // 我们   世界
 		var htmlInner = "";
 		var trHtml = "";
 		$.each(details,function(i,item){
 			if((i % 5) == 0){
 				trHtml = "<tr>"
 			}
+			
 			var tdHtml = "<td onclick='player("+ i +");'><ruby>" + item.chinese + "<rt>" + item.pinyin + "</rt></ruby></td>";
-			<!--tdHtml = tdHtml + "<td> <audio id='voice"+ i +"' src='"+ item.path +"' ></audio></td> ";-->
 			tdHtml = tdHtml + "<td> <audio id='voice"+ i +"'><source src='"+ item.path +"' type='audio/mpeg'></audio></td> ";
+
+
+			
+			
 			trHtml = trHtml + tdHtml;
 			if((i % 5) == 4){
 				htmlInner = htmlInner + trHtml + "</tr>";
@@ -70,7 +75,7 @@
 		</table>
 	</div>
 	<div class="next-page"  style="text-align:left">
-		<a href="#" class="c-green parentedit" th:onclick="'javascript:multiWord2(\''+${exam.id}+'\')'">下一题</a>
+		<a href="#" class="c-green parentedit" th:onclick="'javascript:multiWord(\''+${exam.id}+'\')'">下一题</a>
 	</div>
 </div>
 
@@ -83,15 +88,15 @@
 				  cache: false,
 				  async:false,
 				  success: function(html){
+				   	if(html == 'success'){
+				   		callFormSubmit();
+				   	}
 				  },
 				  error:function(html){
 				  },
 				  complete:function(){
 				  }
 			 }); 
-		}
-		function multiWord2(examId){
-			window.location.href="/api/v1/onlineExam/multiExam?examId="+examId;	
 		}
 	</script>
 </body>
