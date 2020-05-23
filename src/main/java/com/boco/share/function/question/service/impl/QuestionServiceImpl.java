@@ -150,7 +150,9 @@ public class QuestionServiceImpl implements QuestionService {
 		// 然后通过 attachment_unit_id 删除两个表(可以提出)
 		String chineseId = formMap.get("chineseId");
 		String unitId = mapper.queryAttachUnitIdByChineseId(chineseId);
-		deleteAttachByUnitId(unitId);
+		if(!StringUtils.isEmpty(unitId)) {
+			deleteAttachByUnitId(unitId);
+		}
 		if (file != null) {
 			newUnitId = uploadFile(file);
 		}
@@ -279,7 +281,7 @@ public class QuestionServiceImpl implements QuestionService {
 							c.setChinese(unit.getChinese().getChinese());
 							c.setPinyin(unit.getChinese().getPinyin());
 							c.setAttachmentName(unit.getChinese().getAttachmentName());
-							c.setPath("mp3/" + unit.getChinese().getPath());
+							c.setPath(unit.getChinese().getPath());
 							details.add(c);
 						}
 					}

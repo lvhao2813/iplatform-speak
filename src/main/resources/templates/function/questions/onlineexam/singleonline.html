@@ -24,6 +24,7 @@
 				htmlInner = htmlInner + trHtml + "</tr>";
 			}
 		});
+		
 		$("#examTable").html(htmlInner);
 	}
 	
@@ -73,10 +74,12 @@
 		<table id="examTable" width="100%" cellpadding="0" cellspacing="0" class="text-table mt10">
 		
 		</table>
+		
+		<div style="text-align:center;width:300px;height:50pxl;margin:50px 0 0 550px">
+			<a href="#" style="font-size:40px;" class="c-green parentedit" th:onclick="'javascript:multiWord2()'">下一题</a>
+		</div>
 	</div>
-	<div class="next-page"  style="text-align:center;width:300px;height:50px">
-		<a href="#" style="font-size:40px" class="c-green parentedit" th:onclick="'javascript:multiWord2()'">下一题</a>
-	</div>
+	
 </div>
 
 <div th:insert="/common/common_index :: index_foot"></div>

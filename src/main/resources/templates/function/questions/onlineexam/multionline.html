@@ -12,15 +12,22 @@
 		var details = [[${question.details}]];	 // 我们   世界
 		var htmlInner = "";
 		var trHtml = "";
+		var count = 0;
 		$.each(details,function(i,item){
 			if((i % 5) == 0){
 				trHtml = "<tr>";
 			}
-			tdHtml = "<td onclick = 'player("+i +");'>";
+			
+			var playIds = "";
+			var rubyHtml = "";
 			$.each(item.chinese,function(j,word){
-				tdHtml += "<ruby>"+word.chinese+"<rt>"+word.pinyin+"</rt></ruby>";
+				rubyHtml += "<ruby>"+word.chinese+"<rt>"+word.pinyin+"</rt></ruby><audio id='voice"+ count +"'><source src='"+ word.path +"' type='audio/mpeg'></audio>";
+				playIds+= (j>0?",":"") + count;
+				count++;
 			});
-			trHtml += tdHtml;	
+			
+			tdHtml = "<td onclick = " + "player('"+  playIds + "');>";
+			trHtml = trHtml + tdHtml + rubyHtml;	
 			if((i % 5) == 4){
 				htmlInner = htmlInner + trHtml + "</tr>";
 			}
@@ -31,13 +38,26 @@
 		$("#examTable").html(htmlInner);
 	}
 	
-	function player(id){
-		var voice = document.getElementById('voice'+ id);
-		if (voice.paused) { //判断音乐是否在播放中，暂停状态
-	       voice.play(); //音乐播放
-	                 
+	function player(ids){
+		var idsArray = ids.split(',');
+		//给音频绑定结束事件
+		$.each(idsArray, function(i,id){
+			var voice = document.getElementById('voice'+ id);
+			if(i !== (idsArray.length - 1)){
+				voice.addEventListener('ended', function() {
+					var voiceNext = document.getElementById('voice'+ (parseInt(id)+1));
+					voiceNext.play();
+	        	}, false);
+			}
+			
+		});
+		
+		//开始播放
+		var voiceStart = document.getElementById('voice'+ idsArray[0]);
+		if (voiceStart.paused) { //判断音乐是否在播放中，暂停状态
+	       voiceStart.play(); //音乐播放
 	    } else { //播放状态
-	        voice.pause(); //音乐停止
+	        voiceStart.pause(); //音乐停止
 	    }
 	}
 	</script>
@@ -81,7 +101,7 @@ table {
 			<table id="examTable" width="100%" cellpadding="0" cellspacing="0" class="text-table mt10">
 			</table>
 		</div>
-		<div class="next-page"  style="text-align:center;width:300px;height:50px">
+		<div style="text-align:center;width:300px;height:50pxl;margin:50px 0 0 550px">
 		<a href="#" style="font-size:40px" class="c-green parentedit" th:onclick="'javascript:multiWord2()'">下一题</a>
 		</div>
 	</div>

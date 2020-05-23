@@ -65,7 +65,7 @@ public class OnlineExamServiceImpl implements OnlineExamService {
 							c.setChinese(unit.getChinese().getChinese());
 							c.setPinyin(unit.getChinese().getPinyin());
 							c.setAttachmentName(unit.getChinese().getAttachmentName());
-							c.setPath("mp3/" + unit.getChinese().getPath());
+							c.setPath(unit.getChinese().getPath());
 							chineses.add(c);
 						}
 					}
