@@ -2,18 +2,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 	<head>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<div th:insert="/common/common_css :: privilege"></div>
+		<div th:insert="common/common_css :: privilege"></div>
 
 	</head>
 	<body>
-		<div th:insert="/common/common_index :: index_head"></div>
-		<div th:include="/common/onload_list_js :: loadJS"></div>
+		<div th:insert="common/common_index :: index_head"></div>
+		<div th:include="common/onload_list_js :: loadJS"></div>
 
 		<!-- <form id="callForm2" name="callForm2" th:method="post"> -->
 		<div id="main">
 			<div class="box">
 				<div class="title">
-					<h2>当前位置：<a th:href="${session.homeUrl}">首页</a> > <a>系统管理 </a> > <a th:href="@{/api/v1/question/query}">题目录入</a> >
+					<h2>当前位置：<a th:href="${session.homeUrl}">首页</a> > <a>系统管理 </a> > <a th:href="@{api/v1/question/query}">题目录入</a> >
 						<a class="active">题目详情</a></h2>
 				</div>
 				<table width="100%" cellpadding="0" cellspacing="0" class="text-table mt10">
@@ -65,7 +65,7 @@
 			</div>
 		</div>
 		<!-- </form> -->
-		<div th:insert="/common/common_index :: index_foot"></div>
+		<div th:insert="common/common_index :: index_foot"></div>
 		<script type="text/javascript" th:inline="javascript">
 			function openCommonLayer2(url) {
 				openCommonLayer('选择读音', '500px', '300px', url);

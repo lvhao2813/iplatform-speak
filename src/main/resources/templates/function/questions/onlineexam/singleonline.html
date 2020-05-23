@@ -15,9 +15,7 @@
 			if((i % 5) == 0){
 				trHtml = "<tr>"
 			}
-			var tdHtml = "<td onclick='player("+ i +");'><ruby>" + item.chinese + "<rt>" + item.pinyin + "</rt></ruby></td>";
-			<!--tdHtml = tdHtml + "<td> <audio id='voice"+ i +"' src='"+ item.path +"' ></audio></td> ";-->
-			tdHtml = tdHtml + "<td> <audio id='voice"+ i +"'><source src='"+ item.path +"' type='audio/mpeg'></audio></td> ";
+			var tdHtml = "<td onclick='player("+ i +");'><ruby>" + item.chinese + "<rt>" + item.pinyin + "</rt></ruby><audio id='voice"+ i +"'><source src='"+ item.path +"' type='audio/mpeg'></audio></td>";
 			trHtml = trHtml + tdHtml;
 			if((i % 5) == 4){
 				htmlInner = htmlInner + trHtml + "</tr>";
@@ -58,8 +56,11 @@
 </head>
 
 <body onload="initTable()">
-<div th:insert="/common/common_index :: index_head"></div>
-<div th:include="/common/onload_list_js :: loadJS"></div>
+<div th:insert="common/common_index :: index_head"></div>
+<div th:include="common/onload_list_js :: loadJS"></div>
+<form id="callForm" name="callForm" th:action="@{multiExam}" th:method="post" >
+	<input style="display:none" name="examId" id="examId" th:value="${examId}">
+</form>
 
 <div id="main">
 	<div class="box">
@@ -69,29 +70,15 @@
 		<table id="examTable" width="100%" cellpadding="0" cellspacing="0" class="text-table mt10">
 		</table>
 	</div>
-	<div class="next-page"  style="text-align:left">
-		<a href="#" class="c-green parentedit" th:onclick="'javascript:multiWord2(\''+${exam.id}+'\')'">下一题</a>
+	<div class="next-page"  style="text-align:center;width:300px;height:50px">
+		<a href="#" style="font-size:40px" class="c-green parentedit" th:onclick="'javascript:multiWord2()'">下一题</a>
 	</div>
 </div>
 
 <div th:insert="/common/common_index :: index_foot"></div>
 	<script>
-		function multiWord(examId){
-			$.ajax({
-			  	  type: "POST",
-				  url: "/api/v1/onlineExam/multiExam?examId="+examId,
-				  cache: false,
-				  async:false,
-				  success: function(html){
-				  },
-				  error:function(html){
-				  },
-				  complete:function(){
-				  }
-			 }); 
-		}
-		function multiWord2(examId){
-			window.location.href="/api/v1/onlineExam/multiExam?examId="+examId;	
+		function multiWord2(){
+			callFormSubmit();
 		}
 	</script>
 </body>

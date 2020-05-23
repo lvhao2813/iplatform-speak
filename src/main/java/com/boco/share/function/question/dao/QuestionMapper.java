@@ -14,9 +14,9 @@ import com.boco.share.function.common.bean.AttachmentUnit;
 import com.boco.share.function.common.bean.Sort;
 import com.boco.share.function.question.bean.Chinese;
 import com.boco.share.function.question.bean.ChineseUnit;
-import com.boco.share.function.question.bean.Exam;
 import com.boco.share.function.question.bean.Question;
 import com.boco.share.function.question.bean.QuestionDetail;
+import com.boco.share.function.question.bean.exam.Exam;
 
 /**
  * @author LOVE

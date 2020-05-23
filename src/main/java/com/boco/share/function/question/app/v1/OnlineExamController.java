@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.boco.share.framework.pagination.Pagination;
 import com.boco.share.function.question.bean.ApiQuestion;
-import com.boco.share.function.question.bean.Exam;
 import com.boco.share.function.question.bean.Question;
+import com.boco.share.function.question.bean.exam.ApiExamQuestion;
+import com.boco.share.function.question.bean.exam.Exam;
+import com.boco.share.function.question.service.inter.OnlineExamService;
 import com.boco.share.function.question.service.inter.QuestionService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -33,15 +33,18 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping("/api/v1/onlineExam")
 public class OnlineExamController {
-	
+
 	@Autowired
 	private QuestionService questionService;
-	
+
+	@Autowired
+	private OnlineExamService onlineExamService;
+
 	@ApiOperation(value = "查询测试列表")
 	@ResponseBody
 	@ApiImplicitParams({
 			@ApiImplicitParam(dataType = "String", paramType = "query", name = "name", value = "测试名称", required = false) })
-	@RequestMapping(value = "/queryExam",method = RequestMethod.GET)
+	@RequestMapping(value = "/queryExam", method = RequestMethod.GET)
 	public ModelAndView queryExam(@RequestParam Map<String, String> formMap,
 			@ModelAttribute(value = "pagination") Pagination pagination) {
 
@@ -56,7 +59,7 @@ public class OnlineExamController {
 		modelAndView.addObject("resultList", resultList);
 		modelAndView.addObject("pagination", pagination);
 		modelAndView.addObject("formMap", formMap);
-		
+
 		modelAndView.addObject("questionSort", questionService.queryQuestionSorts());
 		return modelAndView;
 	}
@@ -75,7 +78,7 @@ public class OnlineExamController {
 		mav.addObject("topicQuestions", topicQuestions);
 		return mav;
 	}
-	
+
 	@ApiOperation(value = "新增测试")
 	@ApiImplicitParams({
 			@ApiImplicitParam(dataType = "String", paramType = "query", name = "NAME", value = "测试名称", required = true),
@@ -87,7 +90,7 @@ public class OnlineExamController {
 	public void genQuestion(HttpServletRequest request, @RequestParam Map<String, String> formMap) throws Exception {
 		questionService.genExam(formMap);
 	}
-	
+
 	@ApiOperation(value = "删除跳转页")
 	@RequestMapping("/deletepage")
 	public ModelAndView deletePage(@RequestParam Map<String, String> formMap) {
@@ -95,16 +98,16 @@ public class OnlineExamController {
 		modelAndView.addObject("formMap", formMap);
 		return modelAndView;
 	}
-	
+
 	@ApiOperation(value = "单个删除")
 	@RequestMapping("/delete")
 	@ResponseBody
 	@ApiImplicitParams({
-		@ApiImplicitParam(dataType = "String", paramType = "query", name = "deleteId", value = "删除题目id", required = true) })
+			@ApiImplicitParam(dataType = "String", paramType = "query", name = "deleteId", value = "删除题目id", required = true) })
 	public void delete(@RequestParam Map<String, String> formMap) {
 		questionService.deleteExamById(formMap.get("deleteId"));
 	}
-	
+
 	@ApiOperation(value = "批量删除")
 	@RequestMapping("batchDeletePage")
 	public ModelAndView batchDeletePage(@RequestParam Map<String, String> formMap) {
@@ -113,41 +116,39 @@ public class OnlineExamController {
 		return modelAndView;
 	}
 
-
 	@RequestMapping("batchDelete")
 	@ResponseBody
 	public void batchDelete(String[] deleteIds) {
 		questionService.batchDeleteExams(deleteIds);
 	}
-	
+
 	@ApiOperation(value = "单字练习")
 	@ApiImplicitParams({
 			@ApiImplicitParam(dataType = "String", paramType = "query", name = "examId", value = "测试Id", required = true) })
 	@RequestMapping(value = "/singleExam", method = RequestMethod.POST)
 	public ModelAndView singleExam(@RequestParam Map<String, String> formMap) {
 		ModelAndView mav = new ModelAndView("function/questions/onlineexam/singleonline");
-		Exam exam = questionService.queryExamById(formMap.get("examId"));	
+		Exam exam = questionService.queryExamById(formMap.get("examId"));
 		formMap.put("questionId", exam.getSinglewordId());
 		ApiQuestion singleInfo = questionService.info(formMap);
-		mav.addObject("exam", exam);
+		mav.addObject("examId", exam.getId());
 		mav.addObject("question", singleInfo);
 		return mav;
 	}
-	
+
 	@ApiOperation(value = "多字练习")
 	@ResponseBody
 	@ApiImplicitParams({
 			@ApiImplicitParam(dataType = "String", paramType = "query", name = "examId", value = "测试Id", required = true) })
-	@RequestMapping(value = "/multiExam", method = RequestMethod.GET)
+	@RequestMapping(value = "/multiExam", method = RequestMethod.POST)
 	public ModelAndView multiExam(@RequestParam Map<String, String> formMap) {
 		ModelAndView mav = new ModelAndView("function/questions/onlineexam/multionline");
-		Exam exam = questionService.queryExamById(formMap.get("examId"));	
+		Exam exam = questionService.queryExamById(formMap.get("examId"));
 		formMap.put("questionId", exam.getMultiwordId());
-		ApiQuestion singleInfo = questionService.info(formMap);
-		mav.addObject("exam", exam);
-		mav.addObject("question", singleInfo);
+		ApiExamQuestion info = onlineExamService.info(formMap);
+		mav.addObject("examId", exam.getId());
+		mav.addObject("question", info);
 		return mav;
 	}
-	
-	
+
 }

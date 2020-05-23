@@ -10,8 +10,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.boco.share.function.common.bean.Sort;
 import com.boco.share.function.question.bean.ApiQuestion;
-import com.boco.share.function.question.bean.Exam;
 import com.boco.share.function.question.bean.Question;
+import com.boco.share.function.question.bean.exam.Exam;
 
 /**
  * @author LOVE

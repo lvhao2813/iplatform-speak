@@ -40,8 +40,8 @@
 </head>
 
 <body onload="initTable()">
-<div th:insert="/common/common_index :: index_head"></div>
-<div th:include="/common/onload_list_js :: loadJS"></div>
+<div th:insert="common/common_index :: index_head"></div>
+<div th:include="common/onload_list_js :: loadJS"></div>
 
 <div id="main">
 	<div class="box">
@@ -53,7 +53,7 @@
 	</div>	
 </div>
 
-<div th:insert="/common/common_index :: index_foot"></div>
+<div th:insert="common/common_index :: index_foot"></div>
 </body>
 </html>
 

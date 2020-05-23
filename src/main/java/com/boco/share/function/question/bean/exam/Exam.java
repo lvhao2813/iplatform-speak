@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.boco.share.function.question.bean;
+package com.boco.share.function.question.bean.exam;
 
 import java.io.Serializable;
 

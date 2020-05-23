@@ -81,12 +81,19 @@ public interface UserMapper {
 	UserAvailable queryUserAvailableByUserId(String userId);
 	
 	/**
-	 * 更新用户可用权益
+	 * 删除用户可用权益
 	 * 
 	 * @param userAvailable
 	 * @return
 	 */
-	void updateUserAvailable(UserAvailable userAvailable);
+	void deleteUserAvailable(String userAvailableId);
 
+	/**
+	 * 保存用户可用权益
+	 * 
+	 * @param userAvailable
+	 * @return
+	 */
+	void saveUserAvailable(UserAvailable userAvailable);
 
 }

@@ -27,12 +27,11 @@ import com.boco.share.function.common.bean.AttachmentUnit;
 import com.boco.share.function.common.bean.Sort;
 import com.boco.share.function.question.bean.ApiChineseDetail;
 import com.boco.share.function.question.bean.ApiQuestion;
-import com.boco.share.function.question.bean.ApiQuestionDetail;
 import com.boco.share.function.question.bean.Chinese;
 import com.boco.share.function.question.bean.ChineseUnit;
-import com.boco.share.function.question.bean.Exam;
 import com.boco.share.function.question.bean.Question;
 import com.boco.share.function.question.bean.QuestionDetail;
+import com.boco.share.function.question.bean.exam.Exam;
 import com.boco.share.function.question.dao.QuestionMapper;
 import com.boco.share.function.question.service.inter.QuestionService;
 
@@ -147,8 +146,8 @@ public class QuestionServiceImpl implements QuestionService {
 	@Transactional
 	public void addSingleAttach(Map<String, String> formMap, MultipartFile file) throws Exception {
 		String newUnitId = null;
-		//要删除单个的附件  需要通过chineseId 获取 attachment_unit_id 
-		//然后通过  attachment_unit_id 删除两个表(可以提出)
+		// 要删除单个的附件 需要通过chineseId 获取 attachment_unit_id
+		// 然后通过 attachment_unit_id 删除两个表(可以提出)
 		String chineseId = formMap.get("chineseId");
 		String unitId = mapper.queryAttachUnitIdByChineseId(chineseId);
 		deleteAttachByUnitId(unitId);
@@ -158,12 +157,12 @@ public class QuestionServiceImpl implements QuestionService {
 		formMap.put("newUnitId", newUnitId);
 		mapper.addChineseAttUnitId(formMap);
 	}
-	
+
 	@Override
 	public List<Exam> loadExams(Map<String, String> formMap) {
 		return mapper.loadExams(formMap);
 	}
-	
+
 	@Override
 	public void genExam(Map<String, String> formMap) {
 		Exam exam = new Exam();
@@ -175,23 +174,22 @@ public class QuestionServiceImpl implements QuestionService {
 		exam.setTopicId(formMap.get("TOPIC_ID"));
 		mapper.saveExam(exam);
 	}
-	
-	
+
 	@Override
-	public List<Question> queryQuestionsBySort( String sortId){
+	public List<Question> queryQuestionsBySort(String sortId) {
 		return mapper.queryQuestionsBySort(sortId);
 	}
-	
+
 	@Override
 	public void deleteExamById(String deleteId) {
 		mapper.deleteExamById(deleteId);
 	}
-	
+
 	@Override
 	public void batchDeleteExams(String[] deleteIds) {
 		mapper.batchDeleteExams(deleteIds);
 	}
-	
+
 	@Override
 	public Exam queryExamById(String Id) {
 		return mapper.queryExamById(Id);
@@ -206,6 +204,7 @@ public class QuestionServiceImpl implements QuestionService {
 		mapper.deleteAttachByUnitId(unitId);
 		mapper.deleteAttachUnitById(unitId);
 	}
+
 	/**
 	 * 上传附件，返回附件包
 	 * 
@@ -256,10 +255,8 @@ public class QuestionServiceImpl implements QuestionService {
 		result.setPath(question.getPath());
 		// 构建题目全内容
 		StringBuffer conent = new StringBuffer();
-		// 构建题目detail包
-		List<ApiQuestionDetail> details = new ArrayList<ApiQuestionDetail>();
 		// 构建汉字包
-		List<ApiChineseDetail> chineses = new ArrayList<ApiChineseDetail>();
+		List<ApiChineseDetail> details = new ArrayList<ApiChineseDetail>();
 
 		if (!question.getDetails().isEmpty()) {
 			int i = 0;
@@ -282,7 +279,7 @@ public class QuestionServiceImpl implements QuestionService {
 							c.setChinese(unit.getChinese().getChinese());
 							c.setPinyin(unit.getChinese().getPinyin());
 							c.setAttachmentName(unit.getChinese().getAttachmentName());
-							c.setPath(unit.getChinese().getPath());
+							c.setPath("mp3/" + unit.getChinese().getPath());
 							details.add(c);
 						}
 					}
@@ -444,7 +441,5 @@ public class QuestionServiceImpl implements QuestionService {
 			return chineseId;
 		}
 	}
-
-
 
 }

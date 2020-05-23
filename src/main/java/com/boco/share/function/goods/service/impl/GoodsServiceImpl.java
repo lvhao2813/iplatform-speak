@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.boco.share.framework.common.DateUtils;
 import com.boco.share.framework.common.UuidUtil;
@@ -37,6 +38,7 @@ public class GoodsServiceImpl implements GoodsService {
 	}
 
 	@Override
+	@Transactional
 	public void buyGoodsAvailable(Map<String, String> formMap) {
 		String userId = formMap.get("userId");
 		String goodsId = formMap.get("goodsId");
@@ -69,17 +71,24 @@ public class GoodsServiceImpl implements GoodsService {
 		}else if("3".equals(goods.getId())) {
 			day = 30;
 		}
+		available.setVip("1");
+		//TODO 设置当前登录用户
+		available.setUserId("1");
 		
 		//当前不是会员, 全真测试-1无限次，学习有效期从当天增加
 		if(!isVip(available)) {
 			available.setExecFrequency(-1);
 			available.setExecTime(DateUtils.timeAddDay(null, day));
+			available.setLineEffectiveTime(DateUtils.timeAddDay(null, day));
 		}else {
 			//如果是会员则续费
 			available.setExecFrequency(-1);
-			available.setExecTime(DateUtils.timeAddDay(available.getExecTime(), day));
+			available.setExecTime(DateUtils.timeAddDay(null, day));
+			available.setLineEffectiveTime(DateUtils.timeAddDay(available.getLineEffectiveTime(), day));
 		}
 		//TODO 先删 后 SAVE
+		userMapper.deleteUserAvailable(available.getId());
+		userMapper.saveUserAvailable(available);
 	}
 	
 	private void genStander(UserAvailable available, Goods goods) {

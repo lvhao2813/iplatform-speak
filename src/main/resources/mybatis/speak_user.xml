@@ -106,6 +106,16 @@
 			<if test="userId != null and userId !=''">
 				and user_id = #{userId}
 			</if>
-	  </select>
+	</select>
+	  
+	<update id="deleteUserAvailable" parameterType="String">
+		delete from
+		ods_user_available where id = #{userAvailableId}
+	</update>
+
+	<insert id="saveUserAvailable" parameterType="com.boco.share.privilege.bean.UserAvailable">
+		insert into ods_user_available(id, is_vip, execFrequency, execTime, lineEffectiveTime, user_id)
+		values (#{id}, {vip}, {execFrequency}, {execTime}, {lineEffectiveTime}, {userId})
+	</insert>
 
 </mapper>

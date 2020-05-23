@@ -34,7 +34,8 @@ public class UserServiceImpl implements UserService {
 		//检测会员是否过期,过期则更新状态
 		if(isVip(userAvailable) && DateUtils.isVipOverTime(userAvailable.getExecTime())) {
 			userAvailable.setVip("0");
-			userMapper.updateUserAvailable(userAvailable);
+			userMapper.deleteUserAvailable(userAvailable.getId());
+			userMapper.saveUserAvailable(userAvailable);
 		}
 		user.setUserAvaliable(userAvailable);
 		return user;

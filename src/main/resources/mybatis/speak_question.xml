@@ -85,7 +85,7 @@
 		values ( #{id}, #{chinese}, #{pinyin}, #{hzAndpy} )
 	</insert>
 
-	<insert id="saveExam" parameterType="com.boco.share.function.question.bean.Exam">
+	<insert id="saveExam" parameterType="com.boco.share.function.question.bean.exam.Exam">
 		insert into ods_s_exam(id,name,singleword_id,
 		multiword_id,
 		essay_id,topic_id,create_date)
@@ -281,7 +281,7 @@
 		ods_c_atachment where attachment_unit_id = #{attachmentUnitId}
 	</update>
 
-	<resultMap type="com.boco.share.function.question.bean.Exam" id="exam">
+	<resultMap type="com.boco.share.function.question.bean.exam.Exam" id="exam">
 		<result column="ID" property="id" jdbcType="VARCHAR" />
 		<result column="NAME" property="name" jdbcType="VARCHAR" />
 		<result column="SINGLEWORD_ID" property="singlewordId" jdbcType="VARCHAR" />
@@ -304,7 +304,7 @@
 		order by t.create_date desc
 	</select>
 
-	<select id="queryExamById" parameterType="String" resultType="com.boco.share.function.question.bean.Exam">
+	<select id="queryExamById" parameterType="String" resultType="com.boco.share.function.question.bean.exam.Exam">
 		select t.id id, t.name name,t.singleword_id singlewordId,
 		t.multiword_id multiwordId,t.essay_id essayId,
 		t.topic_id tipicId,
