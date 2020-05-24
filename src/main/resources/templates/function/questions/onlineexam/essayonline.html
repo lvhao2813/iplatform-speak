@@ -23,14 +23,14 @@
 		$("#examTable").html(htmlInner);
 	}
 	
-	function player(id){
-		var voice = document.getElementById('voice'+ id);
+	function playAllAudio(){
+		voice = document.getElementById("voiceAll");
+		voice.src =  [[${question.path}]];
 		if (voice.paused) { //判断音乐是否在播放中，暂停状态
-	       voice.play(); //音乐播放
-	                 
-	    } else { //播放状态
-	        voice.pause(); //音乐停止
-	    }
+		       voice.play(); //音乐播放            
+		    } else { //播放状态
+		        voice.pause(); //音乐停止
+		    }
 	}
 	</script>
 
@@ -52,6 +52,10 @@
 			</div>
 			<div>
 				<h3> 三：朗读短文(400个音节，共30分，限时4分钟)</h3>
+				<div style="float:right;font-size:20px">
+				<a href="#" class="c-green parentedit" th:onclick="'javascript:playAllAudio()'">播放全部</a>
+					<audio id="voiceAll"></audio>
+				</div>
 			</div>
 			<table id="examTable" width="100%" cellpadding="0" cellspacing="0" class="text-table mt10">
 			</table>
