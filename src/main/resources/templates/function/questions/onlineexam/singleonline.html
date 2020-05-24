@@ -6,6 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <div th:insert="/common/common_css :: privilege"></div>
 <script type="text/javascript" th:inline="javascript">
+	var musics = new Array();
 	function initTable(){
 		var table = $("#examTable");
 		var details = [[${question.details}]];
@@ -13,9 +14,10 @@
 		var trHtml = "";
 		$.each(details,function(i,item){
 			if((i % 5) == 0){
-				trHtml = "<tr>"
+				trHtml = "<tr>";
 			}
 			var tdHtml = "<td onclick='player("+ i +");'><ruby>" + item.chinese + "<rt>" + item.pinyin + "</rt></ruby><audio id='voice"+ i +"'><source src='"+ item.path +"' type='audio/mpeg'></audio></td>";
+			musics.push(item.path);
 			trHtml = trHtml + tdHtml;
 			if((i % 5) == 4){
 				htmlInner = htmlInner + trHtml + "</tr>";
@@ -27,16 +29,27 @@
 		
 		$("#examTable").html(htmlInner);
 	}
-	
+
+	function playAllAudio(index){
+		index = Number(index);
+		allPlayer = document.getElementById("voiceAll");
+		allPlayer.src = musics[index];
+		allPlayer.onended = function(){
+			playAllAudio(++index);		
+		}
+		allPlayer.play();
+	}
+
 	function player(id){
 		var voice = document.getElementById('voice'+ id);
 		if (voice.paused) { //判断音乐是否在播放中，暂停状态
-	       voice.play(); //音乐播放
-	                 
+	       voice.play(); //音乐播放            
 	    } else { //播放状态
 	        voice.pause(); //音乐停止
 	    }
 	}
+	
+	
 	</script>
 	<style>
         table,table tr th, table tr td { 
@@ -59,7 +72,7 @@
 <body onload="initTable()">
 <div th:insert="common/common_index :: index_head"></div>
 <div th:include="common/onload_list_js :: loadJS"></div>
-<form id="callForm" name="callForm" th:action="@{/multiExam}" th:method="post" >
+<form id="callForm" name="callForm" th:action="@{multiExam}" th:method="post" >
 	<input style="display:none" name="examId" id="examId" th:value="${examId}">
 </form>
 
@@ -70,6 +83,10 @@
 		</div>
 		<div>
 			<h3> 一：读单音节字词(100个音节，共10分，限时3.5分钟)</h3>
+			<div style="float:right;font-size:20px">
+				<a href="#" class="c-green parentedit" th:onclick="'javascript:playAllAudio(0)'">播放全部</a>
+				<audio id="voiceAll"></audio>
+			</div>
 		</div>
 		<table id="examTable" width="100%" cellpadding="0" cellspacing="0" class="text-table mt10">
 		

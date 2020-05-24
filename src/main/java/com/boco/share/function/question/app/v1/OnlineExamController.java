@@ -165,5 +165,4 @@ public class OnlineExamController {
 		mav.addObject("question", info);
 		return mav;
 	}
-
 }

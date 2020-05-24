@@ -13,12 +13,12 @@
 		var htmlInner = "";
 		var trHtml = "";
 		$.each(details,function(i,item){
-			headHtml = "<tr><td><p>&nbsp;&nbsp;&nbsp;&nbsp;";
-			innerHtml = "";
+			headHtml = "<tr><td><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+			tdHtml = "";
 			$.each(item.chinese,function(j,word){
-				innerHtml += word.chinese;
+				tdHtml += "<ruby>"+word.chinese+"<rt>&nbsp;"+word.pinyin+"&nbsp;</rt></ruby>";
 			});
-			htmlInner =  htmlInner + headHtml + innerHtml+ "</p></td></tr>";
+			htmlInner =  htmlInner + headHtml + tdHtml+ "</p></td></tr>";
 		});
 		$("#examTable").html(htmlInner);
 	}
@@ -56,9 +56,10 @@
 			<table id="examTable" width="100%" cellpadding="0" cellspacing="0" class="text-table mt10">
 			</table>
 		</div>
-		<div class="next-page"  style="text-align:center;width:300px;height:50px">
-		<a href="#" style="font-size:40px" class="c-green parentedit" th:onclick="'javascript:multiWord2()'">下一题</a>
-		</div>
+<!-- 		注释掉是因为以后还可能加 命题练习 -->
+<!-- 		<div class="next-page"  style="text-align:center;width:300px;height:50px"> -->
+<!-- 		<a href="#" style="font-size:40px" class="c-green parentedit" th:onclick="'javascript:multiWord2()'">下一题</a> -->
+<!-- 		</div> -->
 	</div>
 
 	<div th:insert="common/common_index :: index_foot"></div>
