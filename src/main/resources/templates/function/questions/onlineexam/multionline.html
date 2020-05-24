@@ -7,6 +7,7 @@
 <div th:insert="/common/common_css :: privilege"></div>
 
 <script type="text/javascript" th:inline="javascript">
+	var musics = new Array();
 	function initTable(){
 		var table = $("#examTable");
 		var details = [[${question.details}]];	
@@ -22,6 +23,7 @@
 			var rubyHtml = "";
 			$.each(item.chinese,function(j,word){
 				rubyHtml += "<ruby>"+word.chinese+"<rt>"+word.pinyin+"</rt></ruby><audio id='voice"+ count +"'><source src='"+ word.path +"' type='audio/mpeg'></audio>";
+				musics.push(word.path);
 				playIds+= (j>0?",":"") + count;
 				count++;
 			});
@@ -38,6 +40,16 @@
 		$("#examTable").html(htmlInner);
 	}
 	
+	function playAllAudio(index){
+		index = Number(index);
+		allPlayer = document.getElementById("voiceAll");
+		allPlayer.src = musics[index];
+		allPlayer.onended = function(){
+			playAllAudio(++index);		
+		}
+		allPlayer.play();
+	}
+	
 	function player(ids){
 		var idsArray = ids.split(',');
 		//给音频绑定结束事件
@@ -48,10 +60,8 @@
 					var voiceNext = document.getElementById('voice'+ (parseInt(id)+1));
 					voiceNext.play();
 	        	}, false);
-			}
-			
+			}	
 		});
-		
 		//开始播放
 		var voiceStart = document.getElementById('voice'+ idsArray[0]);
 		if (voiceStart.paused) { //判断音乐是否在播放中，暂停状态
@@ -98,7 +108,8 @@ table {
 			<div>
 				<h3> 二：读多音节字词(100个音节，共20分，限时2.5分钟)</h3>
 				<div style="float:right;font-size:20px">
-				<a href="#" class="c-green parentedit" th:onclick="'javascript:playAllAudio()'">播放全部</a>
+				<a href="#" class="c-green parentedit" th:onclick="'javascript:playAllAudio(0)'">播放全部</a>
+				<audio id="voiceAll"></audio>
 				</div>
 			</div>
 			<table id="examTable" width="100%" cellpadding="0" cellspacing="0" class="text-table mt10">
