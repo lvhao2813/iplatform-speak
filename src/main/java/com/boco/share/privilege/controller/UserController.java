@@ -127,13 +127,6 @@ public class UserController extends BaseController implements LoginConstants, Pr
 		userService.batchDeleteUsers(deleteIds);
 	}
 
-	@ApiOperation(value = "0前端,通过用户编码查询用户")
-	@ApiImplicitParams({
-			@ApiImplicitParam(dataType = "String", paramType = "query", name = "code", value = "根据用户code查询用户", required = true) })
-	@RequestMapping(value = "/getUserByCode", method = RequestMethod.POST)
-	@ResponseBody
-	public User getUserByCode(@RequestParam @ApiParam(hidden = true) Map<String, String> formMap) {
-		return userService.getUserByCode(formMap.get("code"));
-	}
+
 
 }

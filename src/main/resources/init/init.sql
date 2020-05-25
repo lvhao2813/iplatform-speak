@@ -5,10 +5,13 @@ create table ods_s_user(
 	name varchar(255) DEFAULT NULL COMMENT '名称',
     code varchar(255) DEFAULT NULL COMMENT '登录编码',
 	phone varchar(255) DEFAULT NULL COMMENT '电话',
+	e_mail varchar(255) DEFAULT NULL COMMENT '邮箱',
+	descrition  varchar(255)  DEFAULT NULL COMMENT '描述',
     active_flag varchar(2) DEFAULT NULL COMMENT '是否活动',
     is_manager varchar(2) DEFAULT NULL COMMENT '是否管理员',
 	password varchar(50) DEFAULT NULL COMMENT '登录密码'
 );
+INSERT INTO `ods_s_user` (`id`, `name`, `code`, `phone`, `active_flag`, `is_manager`, `password`, `e_mail`, `descrition`) VALUES ('1', '管理员', 'admin', '183', '1', '1', '96E79218965EB72C92A549DD5A330112', '690610004', '111');
 
 -- 用户可用权益
 create table ods_user_available(

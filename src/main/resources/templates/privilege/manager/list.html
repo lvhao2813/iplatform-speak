@@ -41,8 +41,8 @@ function openBatchDeletePage(){
 
 	</head>
 	<body>
-<div th:insert="/common/common_index :: index_head"></div>
-<div th:include="/common/onload_list_js :: loadJS"></div>
+<div th:insert="common/common_index :: index_head"></div>
+<div th:include="common/onload_list_js :: loadJS"></div>
 
 <form id="callForm" name="callForm" th:action="@{/privilege/user/query}" th:method="post">
 
@@ -120,7 +120,7 @@ function openBatchDeletePage(){
 	       		</table>
 		</div>
 	
-	    	<div th:include="/common/page_control"></div>
+	    	<div th:include="common/page_control"></div>
 	    
 			</div>
 		</div>
@@ -131,7 +131,7 @@ function openBatchDeletePage(){
 			}
 		</script>
 	</form>
-	<div th:insert="/common/common_index :: index_foot"></div>
+	<div th:insert="common/common_index :: index_foot"></div>
 	</body>
 </html>
 

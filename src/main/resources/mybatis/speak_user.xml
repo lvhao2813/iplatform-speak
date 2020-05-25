@@ -71,7 +71,7 @@
 		delete from ods_s_user where id = #{deleteId}
 	</update>
 	
-	 <update id="batchDeleteManager" parameterType="String">
+	 <update id="batchDeleteUsers" parameterType="String">
         delete from ods_s_user where id in
         
        <foreach item="deleteIds" collection="array" open="(" separator="," close=")">
