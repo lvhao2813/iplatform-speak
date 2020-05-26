@@ -1,192 +1,199 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
-<head>
-    <meta charset="utf-8">
-    <title>交换平台</title>
-    <meta name="renderer" content="webkit">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta http-equiv="Access-Control-Allow-Origin" content="*">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="format-detection" content="telephone=no">
-    <link rel="icon" href="images/favicon.ico">
-    <link rel="stylesheet"  th:href="@{/js/layui-v2.5.4/css/layui.css}"  media="all">
-    <link rel="stylesheet" th:href="@{/css/layuimini.css}"   media="all">
-    <link rel="stylesheet" th:href="@{/css/font-awesome-4.7.0/css/font-awesome.min.css}"  media="all">
-    <link rel="stylesheet" th:href="@{/css/tietong.css}"  media="all">
-    <link rel="stylesheet" th:href="@{/css/iconfont/iconfont.css}" >
-    <script th:src="@{/js/rem.min.js}"></script>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+	<head>
+		<meta charset="utf-8">
+		<title>交换平台</title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta http-equiv="Access-Control-Allow-Origin" content="*">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="format-detection" content="telephone=no">
+		<link rel="icon" href="images/favicon.ico">
+		<link rel="stylesheet" th:href="@{/js/layui-v2.5.4/css/layui.css}" media="all">
+		<link rel="stylesheet" th:href="@{/css/layuimini.css}" media="all">
+		<link rel="stylesheet" th:href="@{/css/font-awesome-4.7.0/css/font-awesome.min.css}" media="all">
+		<link rel="stylesheet" th:href="@{/css/tietong.css}" media="all">
+		<link rel="stylesheet" th:href="@{/css/iconfont/iconfont.css}">
+		<script th:src="@{/js/rem.min.js}"></script>
 
-    <!--[if lt IE 9]>
+		<!--[if lt IE 9]>
     <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
     <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-    <style id="layuimini-bg-color">
-    </style>
-    <style>
-    .layui-layout-admin .layui-logo {
-    	background-color: #243346!important;
-	}
+		<style id="layuimini-bg-color">
+		</style>
+		<style>
+			.layui-layout-admin .layui-logo {
+				background-color: #243346 !important;
+			}
 
-    .layui-layout-admin .layui-header .layui-nav .layui-nav-item a{
-    color: #fff;}
-    .layui-logo img{
-    	width: auto;
-    }
-   .layui-nav-child.layui-anim.layui-anim-upbit{
-   	background: #1aa094;
-   }
-   .layui-layout-admin .layui-header .layui-nav .layui-nav-item:hover {
-    background: #41c0b5;
-}
-.layui-nav .layui-nav-child a:hover{
-    background: #41c0b5;
-}
-#pageList dl{
-	background: #fff;
-}
-    </style>
-</head>
-<body class="layui-layout-body layuimini-all">
-    <div class="layui-layout layui-layout-admin">
+			.layui-layout-admin .layui-header .layui-nav .layui-nav-item a {
+				color: #fff;
+			}
 
-        <div class="layui-header header">
-            <div class="layui-logo"></div>
-            <div class="right-content" style="background: #1aa094;">
-                <div class="logo-text">
-                    <img src="images/logo-text.png" alt="">
-                </div>
-                <!--<a>-->
-                <!--<div class="layuimini-tool"><i title="展开" class="fa fa-outdent" data-side-fold="1"></i></div>-->
-                <!--</a>-->
+			.layui-logo img {
+				width: auto;
+			}
 
-                <!--<ul class="layui-nav layui-layout-left layui-header-menu layui-header-pc-menu mobile layui-hide-xs">-->
-                <!--</ul>-->
-                <ul class="layui-nav layui-layout-left layui-header-menu mobile layui-hide-sm">
-                    <li class="layui-nav-item">
-                        <a href="javascript:;"><i class="fa fa-list-ul"></i> 选择模块</a>
-                        <dl class="layui-nav-child layui-header-mini-menu">
-                        </dl>
-                    </li>
-                </ul>
+			.layui-nav-child.layui-anim.layui-anim-upbit {
+				background: #1aa094;
+			}
 
-                <ul class="layui-nav layui-layout-right">
-         			  <li class="layui-nav-item">
-                        <a href="javascript:;" data-refresh="刷新"><i class="fa fa-refresh"></i></a>
-                    </li>
+			.layui-layout-admin .layui-header .layui-nav .layui-nav-item:hover {
+				background: #41c0b5;
+			}
 
-                    <li class="layui-nav-item">
-                        <a href="javascript:;" data-clear="清理" class="layuimini-clear"><i class="fa fa-trash-o"></i></a>
-                    </li>
-                    <li class="layui-nav-item layuimini-setting">
-                        <a href="javascript:;"><span th:text="${session.mgrName}"></span></a>
-                        <dl class="layui-nav-child">
-                            <dd>
-                                <a href="javascript:;" data-iframe-tab="page/user-setting.html" data-title="基本资料"
-                                   data-icon="fa fa-gears">基本资料</a>
-                            </dd>
-                            <dd>
-                                <a href="javascript:;" data-iframe-tab="page/user-password.html" data-title="修改密码"
-                                   data-icon="fa fa-gears">修改密码</a>
-                            </dd>
-                            <dd>
-                                <a href="javascript:;" class="login-out">退出登录</a>
-                            </dd>
-                        </dl>
-                    </li>
-                    <!--注释掉配色方案，现阶段没有换色功能-->
-                     <li class="layui-nav-item layuimini-select-bgcolor mobile layui-hide-xs">
-                   		 <a href="javascript:;" data-bgcolor="配色方案"><i class="fa fa-ellipsis-v"></i></a>
-                    </li> 
-              <!--       <li class="layui-nav-item account">
-                        <a href="javascript:;">
-                            <span class="iconfont iconuser"></span>
-                                张三/XXX部门/测试科室
-                        </a>
-                    </li>
-                    <li class="layui-nav-item">
-                        <div class="vertical-line"></div>
-                    </li>
-                    <li class="layui-nav-item">
-                        <a href="javascript:;">
-                            <span class="iconfont iconxiaoxi"></span>
-                        </a>
-                    </li>
-                    <li class="layui-nav-item">
-                        <a href="javascript:;">
-                            <span class="iconfont iconshezhi"></span>
-                        </a>
-                    </li>
-                    <li class="layui-nav-item login-out">
-                        <a href="javascript:;">
-                            <span class="iconfont icon084tuichu"></span>
-                        </a>
-                    </li> -->
-                </ul>
-            </div>
+			.layui-nav .layui-nav-child a:hover {
+				background: #41c0b5;
+			}
 
-        </div>
+			#pageList dl {
+				background: #fff;
+			}
+		</style>
+	</head>
+	<body class="layui-layout-body layuimini-all">
+		<div class="layui-layout layui-layout-admin">
+			<form id="callForm" name="callForm" th:action="@{/privilege/user/personalpage}" enctype="multipart/form-data" th:method="post">
+				<input style="display:none" name="ID"  th:value="${user.id}">
+			</form>
+			<div class="layui-header header">
+				<div class="layui-logo"></div>
+				<div class="right-content" style="background: #1aa094;">
+					<div class="logo-text">
+						<img src="images/logo-text.png" alt="">
+					</div>
+					<!--<a>-->
+					<!--<div class="layuimini-tool"><i title="展开" class="fa fa-outdent" data-side-fold="1"></i></div>-->
+					<!--</a>-->
 
-        <div class="layui-side layui-bg-black">
-            <div class="layui-side-scroll layui-left-menu">
-            </div>
-        </div>
+					<!--<ul class="layui-nav layui-layout-left layui-header-menu layui-header-pc-menu mobile layui-hide-xs">-->
+					<!--</ul>-->
+					<ul class="layui-nav layui-layout-left layui-header-menu mobile layui-hide-sm">
+						<li class="layui-nav-item"><a href="javascript:;"><i class="fa fa-list-ul"></i> 选择模块</a>
+							<dl class="layui-nav-child layui-header-mini-menu">
+							</dl>
+						</li>
+					</ul>
 
-        <div class="layui-body main-content">
-            <div class="layui-tab tab-card-blue" lay-filter="layuiminiTab" id="top_tabs_box">
-                <ul class="layui-tab-title" id="top_tabs">
-                    <li class="layui-this" id="layuiminiHomeTabId" lay-id=""></li>
-                </ul>
-                <ul class="layui-nav closeBox">
-                    <!--注释掉页面操作。因为ui图上没有这个功能。后面需要加功能再写-->
-                 <li class="layui-nav-item" id="pageList">
-                        <a href="javascript:;"> <i class="fa fa-dot-circle-o"></i> 页面操作</a>
-                        <dl class="layui-nav-child">
-                            <dd><a href="javascript:;" data-page-close="other"><i class="fa fa-window-close"></i> 关闭其他</a>
-                            </dd>
-                            <dd><a href="javascript:;" data-page-close="all"><i class="fa fa-window-close-o"></i> 关闭全部</a>
-                            </dd>
-                        </dl>
-                    </li>
-                </ul>
-                <div class="layui-tab-content clildFrame">
-                    <div id="layuiminiHomeTabIframe" class="layui-tab-item layui-show">
-                    </div>
-                </div>
-            </div>
-        </div>
+					<ul class="layui-nav layui-layout-right">
+																								
+						<li class="layui-nav-item account" data-iframe-tab="/privilege/user/personalpage&ID=${user.id}" data-title="个人中心" data-icon="fa fa-gears">
+							<a href="javascript:personalPage();">
+								<input style="width:30%;height:100%" type="image" src="/images/katarina.jpg"  />
+								<span>尊敬的</span><span th:text ="${user.name}" ></span> 
+								<font th:if="${user.userAvaliable.vip== '1'}" color="red">vip</font>
+							</a>
+						</li>
+						<li class="layui-nav-item"><a href="javascript:;" data-refresh="刷新"><i class="fa fa-refresh"></i></a></li>
 
-    </div>
-</body>
-<!-- delay reload -->
-<script th:src="@{/js/layui-v2.5.4/layui.js?v=1.0.4}" charset="utf-8"></script>
-<script th:src="@{/js/lay-config.js?v=1.0.4}" charset="utf-8"></script>
-<script>
-    layui.use(['element', 'layer', 'layuimini'], function () {
-        var $ = layui.jquery,
-            element = layui.element,
-            layer = layui.layer;
-        layuimini.init();
+						<li class="layui-nav-item"><a href="javascript:;" data-clear="清理" class="layuimini-clear"><i class="fa fa-trash-o"></i></a></li>
+						<li class="layui-nav-item layuimini-setting"><a href="javascript:;"><span th:text="${session.mgrName}"></span></a>
+							<dl class="layui-nav-child">
+								<dd>
+									<a href="javascript:;" data-iframe-tab="page/user-setting.html" data-title="基本资料" data-icon="fa fa-gears">基本资料</a>
+								</dd>
+								<dd>
+									<a href="javascript:;" data-iframe-tab="page/user-password.html" data-title="修改密码" data-icon="fa fa-gears">修改密码</a>
+								</dd>
+								<dd>
+									<a href="javascript:;" class="login-out">退出登录</a>
+								</dd>
+							</dl>
+						</li>
+						<!--注释掉配色方案，现阶段没有换色功能-->
+						<li class="layui-nav-item layuimini-select-bgcolor mobile layui-hide-xs">
+							<a href="javascript:;" data-bgcolor="配色方案"><i class="fa fa-ellipsis-v"></i></a>
+						</li>
+						<!--
+						<li class="layui-nav-item">
+							<div class="vertical-line"></div>
+						</li> 
+						<li class="layui-nav-item">
+							<a href="javascript:;">
+								<span class="iconfont iconxiaoxi"></span>
+							</a>
+						</li>
+						<li class="layui-nav-item">
+							<a href="javascript:;">
+								<span class="iconfont iconshezhi"></span>
+							</a>
+						</li>
+						<li class="layui-nav-item login-out">
+							<a href="javascript:;">
+								<span class="iconfont icon084tuichu"></span>
+							</a>
+						</li>-->
+					</ul>
+				</div>
+			</div>
 
-        $('.login-out').on("click", function () {
-            layer.msg('退出登录成功', {
-            	time: 500 
-           },function () {
-                window.location = '/login';
-            });
-        });
-    });
-</script>
-<!--<script>-->
-<!--//一般直接写在一个js文件中-->
-<!--layui.use(['layer', 'form'], function(){-->
-<!--var layer = layui.layer-->
-<!--,form = layui.form;-->
+			<div class="layui-side layui-bg-black">
+				<div class="layui-side-scroll layui-left-menu"></div>
+			</div>
 
-<!--layer.msg('Hello World');-->
-<!--});-->
-<!--</script>-->
+			<div class="layui-body main-content">
+				<div class="layui-tab tab-card-blue" lay-filter="layuiminiTab" id="top_tabs_box">
+					<ul class="layui-tab-title" id="top_tabs">
+						<li class="layui-this" id="layuiminiHomeTabId" lay-id=""></li>
+					</ul>
+					<ul class="layui-nav closeBox">
+						<!--注释掉页面操作。因为ui图上没有这个功能。后面需要加功能再写-->
+						<li class="layui-nav-item" id="pageList"><a href="javascript:;"> <i class="fa fa-dot-circle-o"></i> 页面操作
+							</a>
+							<dl class="layui-nav-child">
+								<dd>
+									<a href="javascript:;" data-page-close="other"><i class="fa fa-window-close"></i> 关闭其他</a>
+								</dd>
+								<dd>
+									<a href="javascript:;" data-page-close="all"><i class="fa fa-window-close-o"></i> 关闭全部</a>
+								</dd>
+							</dl>
+						</li>
+					</ul>
+					<div class="layui-tab-content clildFrame">
+						<div id="layuiminiHomeTabIframe" class="layui-tab-item layui-show">
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</body>
+	<!-- delay reload -->
+	<script th:src="@{/js/layui-v2.5.4/layui.js?v=1.0.4}" charset="utf-8"></script>
+	<script th:src="@{/js/lay-config.js?v=1.0.4}" charset="utf-8"></script>
+	<script>
+		layui.use(['element', 'layer', 'layuimini'], function() {
+			var $ = layui.jquery,
+				element = layui.element,
+				layer = layui.layer;
+			layuimini.init();
+
+			$('.login-out').on("click", function() {
+				layer.msg('退出登录成功', {
+					time: 500
+				}, function() {
+					window.location = '/login';
+				});
+			});
+		});
+		
+// 		function personalPage(){
+// 			document.getElementById('callForm').method = 'post';
+// 			document.getElementById('callForm').submit();
+// 		}
+		
+	</script>
+	<!--<script>-->
+	<!--//一般直接写在一个js文件中-->
+	<!--layui.use(['layer', 'form'], function(){-->
+	<!--var layer = layui.layer-->
+	<!--,form = layui.form;-->
+
+	<!--layer.msg('Hello World');-->
+	<!--});-->
+	<!--</script>-->
 </html>

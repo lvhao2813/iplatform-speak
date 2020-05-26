@@ -41,6 +41,7 @@ public class IndexController extends BaseController implements PrivilageConstant
 		boolean error = false;
 		if (isCheck) {
 			mav = new ModelAndView("index");
+			mav.addObject("user", userService.getUserByCode(formMap.get("username")));
 		} else {
 			mav = new ModelAndView("login");
 			error = true;

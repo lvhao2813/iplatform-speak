@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.boco.share.privilege.bean.User;
 import com.boco.share.privilege.bean.UserAvailable;
@@ -78,7 +79,7 @@ public interface UserMapper {
 	 * @param code
 	 * @return
 	 */
-	UserAvailable queryUserAvailableByUserId(String userId);
+	public UserAvailable queryUserAvailableByUserId(@Param("userId")String userId);
 	
 	/**
 	 * 删除用户可用权益

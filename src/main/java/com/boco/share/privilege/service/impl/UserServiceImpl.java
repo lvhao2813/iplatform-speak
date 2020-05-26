@@ -31,11 +31,11 @@ public class UserServiceImpl implements UserService {
 	public User getUserByCode(String code) {
 		User user = userMapper.getUserByCode(code);
 		UserAvailable userAvailable = userMapper.queryUserAvailableByUserId(user.getId());
-		//检测会员是否过期,过期则更新状态
-		if(isVip(userAvailable) && DateUtils.isVipOverTime(userAvailable.getExecTime())) {
+		// 检测会员是否过期,过期则更新状态
+		if (isVip(userAvailable) && DateUtils.isVipOverTime(userAvailable.getExecTime())) {
 			userAvailable.setVip("0");
 			userMapper.deleteUserAvailable(userAvailable.getId());
-			userMapper.saveUserAvailable(userAvailable);
+			userMapper.saveUserAvailable(userAvailable); // 这里为啥不能直接update
 		}
 		user.setUserAvaliable(userAvailable);
 		return user;
@@ -62,7 +62,10 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User getUserById(Map<String, String> formMap) {
-		return userMapper.getUserById(formMap);
+		User user = userMapper.getUserById(formMap);
+		UserAvailable userAvailable = userMapper.queryUserAvailableByUserId(user.getId());
+		user.setUserAvaliable(userAvailable);
+		return user;
 	}
 
 	@Override
@@ -87,16 +90,16 @@ public class UserServiceImpl implements UserService {
 	}
 
 	private boolean isVip(UserAvailable available) {
-		//如果是空的则为未充值对象
-		if(available == null) {
+		// 如果是空的则为未充值对象
+		if (available == null) {
 			return false;
-		}else {
-			if("0".equals(available.getVip())) {
+		} else {
+			if ("0".equals(available.getVip())) {
 				return false;
-			}else {
+			} else {
 				return true;
 			}
 		}
 	}
-	
+
 }

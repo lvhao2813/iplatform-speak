@@ -100,7 +100,10 @@
 			     where t.id = #{id}
 	</update>
 	<select id="queryUserAvailableByUserId" parameterType="String" resultMap="userAvailable">
-			select id id, is_vip vip, execFrequency execFrequency,DATE_FORMAT(execTime,'%Y-%m-%d') execTime, DATE_FORMAT(lineEffectiveTime,'%Y-%m-%d') lineEffectiveTime
+			select id id, is_vip vip, execFrequency execFrequency,
+						DATE_FORMAT(execTime,'%Y-%m-%d') execTime, 
+						DATE_FORMAT(lineEffectiveTime,'%Y-%m-%d') lineEffectiveTime,
+						user_id userId
 			from ods_user_available 
 			where 1=1
 			<if test="userId != null and userId !=''">

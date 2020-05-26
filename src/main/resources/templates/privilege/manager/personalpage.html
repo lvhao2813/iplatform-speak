@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<div th:insert="/common/common_css :: privilege"></div>
+		<script type="text/javascript" th:inline="javascript">
+		</script>
+	</head>
+	<body>
+		<div th:insert="common/common_index :: index_head"></div>
+		<div th:include="common/onload_list_js :: loadJS"></div>
+
+		<form id="callForm" name="callForm" th:action="@{/privilege/user/query}" th:method="post">
+			<input style="display:none" name="id"  value="${user.name}">
+
+			<div id="main">
+				<div class="box">
+					<div class="title">
+						<h2>当前位置：<a th:href="${session.homeUrl}">首页</a> > <a>系统管理 </a> > <a class="active">个人中心</a></h2>
+					</div>
+
+					<table width="100%" cellpadding="0" cellspacing="0" class="text-table mt10">
+						<tr>
+							<th width="25%">用户名称：</th>
+							<td width="45%"><input type="text" id="mgrName" name="MGR_NAME" th:value="${user.name}"></td>
+						</tr>
+						<tr>
+							<th width="25%">电话号码：</th>
+							<td width="45%"><input type="text" id="mgrName" name="MGR_NAME" th:value="${user.phone}"></td>
+						</tr>
+						<tr>
+							<th width="25%">是否管理员：</th>
+							<td width="45%"><input type="text" id="mgrName" name="MGR_NAME" th:value="${user.manager}" disabled="disabled"></td>
+						</tr>
+						<tr>
+							<th width="25%">邮箱：</th>
+							<td width="45%"><input type="text" id="mgrName" name="MGR_NAME" th:value="${user.email}"></td>
+						</tr>	
+						<tr>
+							<th width="25%">是否vip：</th>
+							<td width="45%"><input type="text" id="mgrName" name="MGR_NAME" th:value="${user.userAvaliable.vip}"></td>
+						</tr>
+						<tr>
+							<th width="25%">全真测试次数：</th>
+							<td width="45%"><input type="text" id="mgrName" name="MGR_NAME" th:value="${user.userAvaliable.execFrequency}"></td>
+						</tr>
+						<tr>
+							<th width="25%">在线学习有效期：</th>
+							<td width="45%"><input type="text" id="mgrName" name="MGR_NAME" th:value="${user.userAvaliable.lineEffectiveTime}"></td>
+						</tr>
+					</table>
+
+				</div>
+			</div>
+
+		</form>
+		<div th:insert="common/common_index :: index_foot"></div>
+	</body>
+</html>

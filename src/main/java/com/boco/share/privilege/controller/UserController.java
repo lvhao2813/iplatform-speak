@@ -127,6 +127,16 @@ public class UserController extends BaseController implements LoginConstants, Pr
 		userService.batchDeleteUsers(deleteIds);
 	}
 
-
+	@ApiOperation(value = "前台打开个人中心")
+	@ResponseBody
+	@ApiImplicitParams({
+			@ApiImplicitParam(dataType = "String", paramType = "query", name = "id", value = "用户id", required = false) })
+	@RequestMapping(value = "/personalpage", method = RequestMethod.GET)
+	public ModelAndView personalpage(@RequestParam Map<String, String> formMap) {
+		User user = userService.getUserById(formMap);
+		ModelAndView mav = new ModelAndView("privilege/manager/personalpage");
+		mav.addObject("user", user);
+		return mav;
+	}
 
 }
