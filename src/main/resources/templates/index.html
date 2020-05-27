@@ -56,9 +56,9 @@
 	</head>
 	<body class="layui-layout-body layuimini-all">
 		<div class="layui-layout layui-layout-admin">
-			<form id="callForm" name="callForm" th:action="@{/privilege/user/personalpage}" enctype="multipart/form-data" th:method="post">
-				<input style="display:none" name="ID"  th:value="${user.id}">
-			</form>
+<!-- 			<form id="callForm" name="callForm" th:action="@{/privilege/user/personalpage}" enctype="multipart/form-data" th:method="post"> -->
+<!-- 				<input style="display:none" name="ID"  th:value="${user.id}"> -->
+<!-- 			</form> -->
 			<div class="layui-header header">
 				<div class="layui-logo"></div>
 				<div class="right-content" style="background: #1aa094;">
@@ -80,8 +80,8 @@
 
 					<ul class="layui-nav layui-layout-right">
 																								
-						<li class="layui-nav-item account" data-iframe-tab="/privilege/user/personalpage&ID=${user.id}" data-title="个人中心" data-icon="fa fa-gears">
-							<a href="javascript:personalPage();">
+						<li class="layui-nav-item account" th:data-iframe-tab="'privilege/user/personalpage?ID='+${user.id}" data-title="个人中心" data-icon="fa fa-gears">
+							<a href="javascript:;">
 								<input style="width:30%;height:100%" type="image" src="/images/katarina.jpg"  />
 								<span>尊敬的</span><span th:text ="${user.name}" ></span> 
 								<font th:if="${user.userAvaliable.vip== '1'}" color="red">vip</font>
