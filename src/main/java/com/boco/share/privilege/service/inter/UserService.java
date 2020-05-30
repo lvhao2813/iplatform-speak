@@ -1,7 +1,10 @@
 package com.boco.share.privilege.service.inter;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import com.boco.share.privilege.bean.User;
 
@@ -68,5 +71,12 @@ public interface UserService {
 	 * @param ids
 	 */
 	void batchDeleteUsers(String[] ids);
+	
+	/**
+	 * 	根据传来的ID 和图片文件，更新头像
+	 * @param formMap
+	 * @param file
+	 */
+	void uploadImg(Map<String, String> formMap,MultipartFile file) throws IOException ;
 
 }

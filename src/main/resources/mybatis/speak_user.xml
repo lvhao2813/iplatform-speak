@@ -7,6 +7,8 @@
 		<result column="ID" property="id" jdbcType="VARCHAR" />
 		<result column="NAME" property="name" jdbcType="VARCHAR" />
 		<result column="CODE" property="code" jdbcType="VARCHAR" />
+		<result column="HEADPATH" property="headPath" jdbcType="VARCHAR" />
+		<result column="HEADNAME" property="headName" jdbcType="VARCHAR" />
 		<result column="PHONE" property="phone" jdbcType="VARCHAR" />
 		<result column="ACTIVEFLAG" property="activeFlag" jdbcType="VARCHAR" />
 		<result column="MANAGER" property="manager" jdbcType="VARCHAR" />
@@ -24,7 +26,8 @@
 	</resultMap>
 		
 	<select id="loadUsers" parameterType="java.util.HashMap" resultMap="user">
-		select id id, name name, code code, phone phone , 
+		select id id, name name, code code, phone phone ,
+		head_path headPath,CONCAT('/headImgs/',t.head_name) headName,
 		active_flag activeFlag, is_manager manager,passWord passWord, 
 		e_mail email,descrition descrition 
 		from ods_s_user t 
@@ -40,7 +43,8 @@
   	</select>
   
 	  <select id="getUserById" parameterType="java.util.HashMap" resultMap="user">
-			select id id, name name, code code, phone phone , 
+			select id id, name name, code code, phone phone,
+			head_path headPath,CONCAT('/headImgs/',t.head_name) headName,
 			active_flag activeFlag, is_manager manager,passWord passWord, 
 			e_mail email,descrition descrition 
 			from ods_s_user t 
@@ -51,8 +55,9 @@
 	  </select>
 	  
 	  <select id="getUserByCode" resultMap="user" parameterType="String">
-		select id id, name name, code code, phone phone
-		, active_flag activeFlag, is_manager manager,passWord passWord from ods_s_user t where 1=1 
+		select id id, name name, code code, phone phone,
+		head_path headPath,CONCAT('/headImgs/',t.head_name) headName,
+		active_flag activeFlag, is_manager manager,passWord passWord from ods_s_user t where 1=1 
 			and t.code = #{code}
 	</select>
   
@@ -82,7 +87,7 @@
     
     <update id="update" parameterType="com.boco.share.privilege.bean.User">
 		update ods_s_user t set 
-				 <if test="name!=null and name!=''">
+				<if test="name!=null and name!=''">
 					t.name = #{name}
 				</if>
 				<if test="code!=null and code!=''">
@@ -96,6 +101,12 @@
 				</if>
 				<if test="email!=null and email!=''">
 					, t.e_mail = #{email}
+				</if>
+				<if test="headPath!=null and headPath!=''">
+					, t.head_path = #{headPath}
+				</if>
+				<if test="headName!=null and headName!=''">
+					, t.head_name = #{headName}
 				</if>
 			     where t.id = #{id}
 	</update>

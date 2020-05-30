@@ -22,6 +22,12 @@ public class User {
 	@ApiModelProperty(value = "账户")
 	private String code;
 
+	@ApiModelProperty(value = "用户头像路径")
+	private String headPath;
+
+	@ApiModelProperty(value = "用户头像文件名称")
+	private String headName;
+
 	@ApiModelProperty(value = "电话")
 	private String phone;
 
@@ -42,6 +48,22 @@ public class User {
 
 	@ApiModelProperty(value = "用户权益对象")
 	private UserAvailable userAvaliable;
+
+	public String getHeadName() {
+		return headName;
+	}
+
+	public void setHeadName(String headName) {
+		this.headName = headName;
+	}
+
+	public String getHeadPath() {
+		return headPath;
+	}
+
+	public void setHeadPath(String headPath) {
+		this.headPath = headPath;
+	}
 
 	public String getEmail() {
 		return email;

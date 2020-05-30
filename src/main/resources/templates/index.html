@@ -80,9 +80,9 @@
 
 					<ul class="layui-nav layui-layout-right">
 																								
-						<li class="layui-nav-item account" data-iframe-tab="/privilege/user/personalpage&ID=${user.id}" data-title="个人中心" data-icon="fa fa-gears">
-							<a href="javascript:personalPage();">
-								<input style="width:30%;height:100%" type="image" src="/images/katarina.jpg"  />
+						<li class="layui-nav-item account" th:data-iframe-tab="'/privilege/user/personalpage?ID='+${user.id}" data-title="个人中心" data-icon="fa fa-gears">
+							<a href="javascript:;">
+								<input style="width:30%;height:100%" type="image" th:src="${user.headName}"  />
 								<span>尊敬的</span><span th:text ="${user.name}" ></span> 
 								<font th:if="${user.userAvaliable.vip== '1'}" color="red">vip</font>
 							</a>

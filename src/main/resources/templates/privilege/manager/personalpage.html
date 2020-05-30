@@ -10,15 +10,22 @@
 		<div th:insert="common/common_index :: index_head"></div>
 		<div th:include="common/onload_list_js :: loadJS"></div>
 
-		<form id="callForm" name="callForm" th:action="@{/privilege/user/query}" th:method="post">
-			<input style="display:none" name="id"  value="${user.name}">
-
+<!-- 			<input style="display:none" name="id"  name="MGR_CODE" value="${user.code}"> -->
 			<div id="main">
 				<div class="box">
 					<div class="title">
 						<h2>当前位置：<a th:href="${session.homeUrl}">首页</a> > <a>系统管理 </a> > <a class="active">个人中心</a></h2>
 					</div>
+					
+			<form enctype="multipart/form-data" id="uploadForm">
+				<img th:src="${user.headName}" id= "headImg" style="width: 200px;height:200px ;"><br/>
+		      	<input type='file' name='headFile' id='headFile'>
+				 <input type='button' th:onclick="'javascript:upload(\''+${user.id}+'\')'" value='点击上传'>
+			</form>
+			
+			</div>
 
+		<form id="callForm" name="callForm" th:action="@{/privilege/user/query}" th:method="post">
 					<table width="100%" cellpadding="0" cellspacing="0" class="text-table mt10">
 						<tr>
 							<th width="25%">用户名称：</th>
@@ -55,5 +62,46 @@
 
 		</form>
 		<div th:insert="common/common_index :: index_foot"></div>
+		<script type="text/javascript">
+			var fileObj = "";
+			var imgData = "";
+	
+			$("#headFile").change(function () {
+			    // 构造一个文件渲染对象
+			    var reader = new FileReader();
+			    // 得到文件列表数组
+			    fileObj = $(this)[0].files[0];
+			    // 拿到文件数据
+			    reader.readAsDataURL(fileObj);
+	
+			    reader.onload = function() {
+			        // 获取文件信息
+			        imgData = reader.result;
+			        // 指定位置显示图片	
+			        $("#headImg").attr("src", imgData);
+			    };
+			});
+			
+			function upload(userId){
+				//var fileId = '#file' + index;
+				var formData = new FormData();
+				// # 给formData对象添加<input>标签,注意与input标签的ID一致
+				formData.append('ID', userId);
+				formData.append('file', $('#headFile')[0].files[0]);
+				$.ajax({
+					url: contextPath + 'uploadImg',
+					type: 'POST',
+					data: formData,
+					contentType: false, // 当有文件要上传时，此项是必须的，否则后台无法识别文件流的起始位置
+					processData: false, // 是否序列化data属性，默认true(注意：false时type必须是post)
+					dataType: 'json', //这里是返回类型，一般是json,text等
+					clearForm: true, //提交后是否清空表单数据
+					success: function(data) { //提交成功后自动执行的处理函数，参数data就是服务器返回的数据。
+						alert("上传成功！");
+						location.reload();
+					}
+				});
+			}
+		</script>
 	</body>
 </html>

@@ -4,6 +4,8 @@ create table ods_s_user(
 	id int PRIMARY KEY AUTO_INCREMENT COMMENT '主键',
 	name varchar(255) DEFAULT NULL COMMENT '名称',
     code varchar(255) DEFAULT NULL COMMENT '登录编码',
+    head_path varchar(255) DEFAULT NULL COMMENT '头像图片路径',
+    head_name varchar(255) DEFAULT NULL COMMENT '头像图片名称',
 	phone varchar(255) DEFAULT NULL COMMENT '电话',
 	e_mail varchar(255) DEFAULT NULL COMMENT '邮箱',
 	descrition  varchar(255)  DEFAULT NULL COMMENT '描述',

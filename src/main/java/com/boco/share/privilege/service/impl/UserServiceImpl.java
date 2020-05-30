@@ -3,13 +3,24 @@
  */
 package com.boco.share.privilege.service.impl;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.alibaba.druid.util.StringUtils;
 import com.boco.share.framework.common.DateUtils;
+import com.boco.share.framework.common.FileUtils;
+import com.boco.share.framework.common.UuidUtil;
+import com.boco.share.function.common.bean.Attachment;
+import com.boco.share.function.common.bean.AttachmentUnit;
 import com.boco.share.privilege.bean.User;
 import com.boco.share.privilege.bean.UserAvailable;
 import com.boco.share.privilege.dao.UserMapper;
@@ -88,7 +99,20 @@ public class UserServiceImpl implements UserService {
 	public void batchDeleteUsers(String[] mgrIds) {
 		userMapper.batchDeleteUsers(mgrIds);
 	}
+	
+	@Override
+	public void uploadImg(Map<String, String> formMap,MultipartFile file) throws IOException {
+		User user = userMapper.getUserById(formMap);
+		String headPath = user.getHeadPath();
+		if(!StringUtils.isEmpty(headPath)) {
+			deleteHeadPath(headPath);
+		}
+		if (file != null) {
+			uploadFile(file,user);
+		}
 
+	}
+	
 	private boolean isVip(UserAvailable available) {
 		// 如果是空的则为未充值对象
 		if (available == null) {
@@ -101,5 +125,39 @@ public class UserServiceImpl implements UserService {
 			}
 		}
 	}
+	
+	/**
+	 * 	根据路径删除头像
+	 * @param path
+	 */
+	private void deleteHeadPath(String path) {
+		File file = new File(path);
+		file.delete();
+	}
+	
+	/**
+	 * 	上传附件，返回文件存放路径
+	 * 
+	 * @param file
+	 * @return
+	 * @throws IOException
+	 */
+	private void uploadFile(MultipartFile file,User user) throws IOException {
+		// 保存文件到本地磁盘,同时生成对象，保存路径方便后续取
+		byte[] bytes = file.getBytes();
+		String resourceBasePath = FileUtils.getResourceBasePath() + "/static/headImgs";
+		File fileDir = new File(resourceBasePath);
+		if (!fileDir.exists()) {
+			fileDir.mkdirs();
+		}
+		String fileName = DateUtils.getNowDateNum() + "_" + file.getOriginalFilename();
+		Path path = Paths.get(resourceBasePath + "/" + fileName);
+		Files.write(path, bytes);
+		// 返回文件路径
+		user.setHeadPath(path.toString());
+		user.setHeadName(fileName);
+		userMapper.update(user);
+	}
+	
 
 }

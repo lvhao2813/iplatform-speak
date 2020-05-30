@@ -6,6 +6,7 @@ package com.boco.share.privilege.controller;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.boco.share.framework.constants.ConfigContants;
@@ -137,6 +140,18 @@ public class UserController extends BaseController implements LoginConstants, Pr
 		ModelAndView mav = new ModelAndView("privilege/manager/personalpage");
 		mav.addObject("user", user);
 		return mav;
+	}
+	
+	@ApiOperation(value = "上传/更改头像")
+	@ApiImplicitParams({
+			@ApiImplicitParam(dataType = "String", paramType = "query", name = "userId", value = "用户id", required = true) })
+	@RequestMapping(value = "/uploadImg", method = RequestMethod.POST)
+	public void uploadImg(HttpServletRequest request, @RequestParam Map<String, String> formMap) throws Exception {
+		MultipartFile file = null;
+		if(request instanceof StandardMultipartHttpServletRequest) {
+			file = ((StandardMultipartHttpServletRequest) request).getFile("file");
+		}	
+		userService.uploadImg(formMap, file);
 	}
 
 }
