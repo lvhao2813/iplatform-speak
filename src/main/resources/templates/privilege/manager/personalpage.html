@@ -1,122 +1,59 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
-<head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<div th:insert="/common/common_css :: privilege"></div>
-<script type="text/javascript" th:inline="javascript">
-
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<div th:insert="/common/common_css :: privilege"></div>
+		<script type="text/javascript" th:inline="javascript">
 		</script>
-</head>
-<body>
-	<div th:insert="common/common_index :: index_head"></div>
-	<div th:include="common/onload_list_js :: loadJS"></div>
+	</head>
+	<body>
+		<div th:insert="common/common_index :: index_head"></div>
+		<div th:include="common/onload_list_js :: loadJS"></div>
 
-	<form id="callForm" name="callForm"
-		th:action="@{/privilege/user/query}" th:method="post">
-		<input style="display: none" name="id" value="${user.name}">
+		<form id="callForm" name="callForm" th:action="@{/privilege/user/query}" th:method="post">
+			<input style="display:none" name="id"  value="${user.name}">
 
-		<div id="main">
-			<div class="box">
-				<div class="title">
-					<h2>
-						当前位置：<a th:href="${session.homeUrl}">首页</a> > <a>系统管理 </a> > <a
-							class="active">个人中心</a>
-					</h2>
+			<div id="main">
+				<div class="box">
+					<div class="title">
+						<h2>当前位置：<a th:href="${session.homeUrl}">首页</a> > <a>系统管理 </a> > <a class="active">个人中心</a></h2>
+					</div>
+
+					<table width="100%" cellpadding="0" cellspacing="0" class="text-table mt10">
+						<tr>
+							<th width="25%">用户名称：</th>
+							<td width="45%"><input type="text" id="mgrName" name="MGR_NAME" th:value="${user.name}"></td>
+						</tr>
+						<tr>
+							<th width="25%">电话号码：</th>
+							<td width="45%"><input type="text" id="mgrName" name="MGR_NAME" th:value="${user.phone}"></td>
+						</tr>
+						<tr>
+							<th width="25%">是否管理员：</th>
+							<td width="45%"><input type="text" id="mgrName" name="MGR_NAME" th:value="${user.manager}" disabled="disabled"></td>
+						</tr>
+						<tr>
+							<th width="25%">邮箱：</th>
+							<td width="45%"><input type="text" id="mgrName" name="MGR_NAME" th:value="${user.email}"></td>
+						</tr>	
+						<tr>
+							<th width="25%">是否vip：</th>
+							<td width="45%"><input type="text" id="mgrName" name="MGR_NAME" th:value="${user.userAvaliable.vip}"></td>
+						</tr>
+						<tr>
+							<th width="25%">全真测试次数：</th>
+							<td width="45%"><input type="text" id="mgrName" name="MGR_NAME" th:value="${user.userAvaliable.execFrequency}"></td>
+						</tr>
+						<tr>
+							<th width="25%">在线学习有效期：</th>
+							<td width="45%"><input type="text" id="mgrName" name="MGR_NAME" th:value="${user.userAvaliable.lineEffectiveTime}"></td>
+						</tr>
+					</table>
+
 				</div>
-				<table width="60%" cellpadding="0" cellspacing="0"
-					class="text-table mt10">
-					<tr>
-						<td rowspan="7">
-						
-						 <!--头像-->
-    <div class="head-p" id="touxiang">
-         <img  src="/images/katarina.jpg" alt='头像'  width="100" height="100" id="avatar_img">
-    </div>
-    <div  id="fromTx">
-         <input type="file" class="file"  name="avatar" id="avatar">
-    </div>
-    
-<!-- 						        <img id='img' src="/images/katarina.jpg" width="100px" height="100px"> -->
-<!-- 				        <input type="file" name="" id="tu" value="" style="" /> -->
-<!-- 				        <button type="button" id='btn'>上传</button> -->
-										
-						</td>
-						<th width="25%">用户名称：</th>
-						<td width="45%"><input type="text" id="mgrName"
-							name="MGR_NAME" th:value="${user.name}"></td>
-					</tr>
-					<tr>
-						<th width="25%">电话号码：</th>
-						<td width="45%"><input type="text" id="mgrName"
-							name="MGR_NAME" th:value="${user.phone}"></td>
-					</tr>
-					<tr>
-						<th width="25%">是否管理员：</th>
-						<td width="45%"><input type="text" id="mgrName"
-							name="MGR_NAME" th:value="${user.manager}" disabled="disabled"></td>
-					</tr>
-					<tr>
-						<th width="25%">邮箱：</th>
-						<td width="45%"><input type="text" id="mgrName"
-							name="MGR_NAME" th:value="${user.email}"></td>
-					</tr>
-					<tr>
-						<th width="25%">是否vip：</th>
-						<td width="45%"><input type="text" id="mgrName"
-							disabled="disabled" name="MGR_NAME"
-							th:value="${user.userAvaliable.vip}"></td>
-					</tr>
-					<tr>
-						<th width="25%">全真测试次数：</th>
-						<td width="45%"><input type="text" id="mgrName"
-							disabled="disabled" name="MGR_NAME"
-							th:value="${user.userAvaliable.execFrequency}"></td>
-					</tr>
-					<tr>
-						<th width="25%">在线学习有效期：</th>
-						<td width="45%"><input type="text" id="mgrName"
-							name="MGR_NAME" disabled="disabled"
-							th:value="${user.userAvaliable.lineEffectiveTime}"></td>
-					</tr>
-				</table>
-
 			</div>
-		</div>
 
-	</form>
-	<div th:insert="common/common_index :: index_foot"></div>
-	<script type="text/javascript">
-	// 头像预览
-	$("#avatar").change(function () {
-	    //拿到文件数据
-	    var choose_file = $(this)[0].files[0];
-	    //截取图片名称小数点后的字符串
-	    var ftype=choose_file.name.substring(choose_file.name.lastIndexOf(".")+1);
-	    //校验格式是否是图片类型
-	    if(ftype=="jpg" || ftype=="png" || ftype=="jpeg" || ftype == "JPG"){
-	        //限制大小，照片大小不能超过1M
-	        var size = choose_file.size / 1024 / 1024;
-	        if (size > 1) {
-	            alert("头像不能大于1M");
-	            return false;
-	        }
-	    // 实例化一个阅读器对象
-	    var reader = new FileReader();
-	    // 读取文件的路径，没有返回值,结果在reader.result里
-	    reader.readAsDataURL(choose_file);
-	    // 读取需要时间，读完后再修改图片路径
-	    reader.οnlοad=function () {
-	        //回显给上方图片中
-	        $("#avatar_img").attr("src",this.result); 
-	    }
-	    }else{
-	        alert("头像格式不对，请重新选择！");
-	        return false;
-	    }
-	});
-	</script>
-</body>
-
+		</form>
+		<div th:insert="common/common_index :: index_foot"></div>
+	</body>
 </html>
