@@ -105,11 +105,12 @@ public class UserServiceImpl implements UserService {
 		User user = userMapper.getUserById(formMap);
 		String headPath = user.getHeadPath();
 		if(!StringUtils.isEmpty(headPath)) {
-			deleteHeadPath(headPath);
+			deleteHeadFile(headPath);
 		}
 		if (file != null) {
-			uploadFile(file,user);
+			 uploadFile(file,user);
 		}
+
 
 	}
 	
@@ -130,7 +131,7 @@ public class UserServiceImpl implements UserService {
 	 * 	根据路径删除头像
 	 * @param path
 	 */
-	private void deleteHeadPath(String path) {
+	private void deleteHeadFile(String path) {
 		File file = new File(path);
 		file.delete();
 	}

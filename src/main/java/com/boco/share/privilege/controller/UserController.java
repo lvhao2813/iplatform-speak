@@ -10,12 +10,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
@@ -41,7 +41,7 @@ import io.swagger.annotations.ApiParam;
  *
  */
 @Api(tags = "用户相关接口")
-@Controller
+@RestController
 @RequestMapping("/privilege/user")
 public class UserController extends BaseController implements LoginConstants, PrivilageConstants, ConfigContants {
 
@@ -143,6 +143,7 @@ public class UserController extends BaseController implements LoginConstants, Pr
 	}
 	
 	@ApiOperation(value = "上传/更改头像")
+	@ResponseBody
 	@ApiImplicitParams({
 			@ApiImplicitParam(dataType = "String", paramType = "query", name = "userId", value = "用户id", required = true) })
 	@RequestMapping(value = "/uploadImg", method = RequestMethod.POST)
@@ -152,6 +153,7 @@ public class UserController extends BaseController implements LoginConstants, Pr
 			file = ((StandardMultipartHttpServletRequest) request).getFile("file");
 		}	
 		userService.uploadImg(formMap, file);
+		 
 	}
 
 }
