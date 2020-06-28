@@ -9,7 +9,9 @@
 
 <script type="text/javascript" th:inline="javascript">
 function resetSearch(){
-	$("input[id='questionName']").val("");
+	$("input[id='question']").val("");
+	$("input[id='sim']").val("");
+	$("input[id='top']").val("");
 }
 
 
@@ -22,19 +24,21 @@ function resetSearch(){
 <div th:insert="common/common_index :: index_head"></div>
 <div th:include="common/onload_list_js :: loadJS"></div>
 
-<form id="callForm" name="callForm" th:action="@{/api/v1/question/query}" th:method="get">
-
-	<input style="display:none" name="deleteIds" id="deleteIds" value="">
+<form id="callForm" name="callForm" th:action="@{/api/v1/intelligent/queryQuestion}" th:method="get">
 
 <div id="main">
 		<div class="box">
 			<div class="title">	
-				    	<h2>当前位置：<a th:href="${session.homeUrl}">首页</a> > <a>系统管理 </a>  > <a class="active">题目录入</a></h2>				
+				    	<h2>当前位置：<a th:href="${session.homeUrl}">首页</a> > <a>系统管理 </a>  > <a class="active">问题匹配</a></h2>				
 			</div>
 						<table width="100%" cellpadding="0" cellspacing="0" class="text-table mt10">
 				            <tr>
-					            <th width="8%">题目关键字：</th>
-					            <td width="15%"><input type="text"  id="questionName"  name="QUESTION_NAME" th:value="${formMap['QUESTION_NAME']}"></td>
+					            <th width="8%">问题：</th>
+					            <td width="15%"><input type="text"  id="question"  name="question" th:value="${formMap['question']}"></td>
+					            <th width="8%">阈值：</th>
+					            <td width="15%"><input type="text"  id="sim"  name="sim" th:value="${formMap['sim']}"></td>
+					            <th width="8%">个数：</th>
+					            <td width="15%"><input type="text"  id="top"  name="top" th:value="${formMap['top']}"></td>
 					           <td width="38%">
 						           <a th:onclick="'javascript:callFormSubmit()'">搜索</a>&nbsp;&nbsp;
 						           <a th:onclick="'javascript:resetSearch()'">重置</a>
@@ -47,7 +51,7 @@ function resetSearch(){
 	
 <div class="box">	            
 			<div class="title">	
-				    	<h2> <a class="active">题目列表</a></h2>	
+				    	<h2> <a class="active">问题列表</a></h2>	
 				    	<div class="operation">
 				    	</div>
 				    		
@@ -55,19 +59,12 @@ function resetSearch(){
 			<div class="auto">
 					<table width="100%" cellpadding="0" cellspacing="0" class="user-list mt10">
 			       			<tr>
-				       			<th width="30">
-									<input type="checkbox" class="check-all" id="mainCheckbox" name="mainCheckbox"
-														onClick="selectedAllCheckbox()" />
-								</th>
-	       						<th>题目名称</th>
+	       						<th>问题名称</th>
 								<th>相似度</th>
 			       			</tr>
 			       			<tr th:each="question : ${resultList}">
-								<td align="center">
-									<input type="checkbox" id="checkboxId"  th:name="check"  th:value="${question.id}" />
-								</td>
-								<td th:text="${question.name}"></td>
-								<td th:text="${question.sortName}"></td>
+								<td th:text="${question.question}"></td>
+								<td th:text="${question.similarity}"></td>
 							</tr>
 			       		
 			       		</table>
