@@ -1,4 +1,4 @@
-package com.boco.spss.function.intelligent.fegin;
+package com.boco.share.function.intelligent.fegin;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;

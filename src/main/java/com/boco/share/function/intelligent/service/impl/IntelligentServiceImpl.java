@@ -1,4 +1,4 @@
-package com.boco.spss.function.intelligent.service.impl;
+package com.boco.share.function.intelligent.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,10 +9,10 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSONObject;
-import com.boco.spss.function.intelligent.bean.Intelligent;
-import com.boco.spss.function.intelligent.dao.IntelligentMapper;
-import com.boco.spss.function.intelligent.fegin.IntelligentFegin;
-import com.boco.spss.function.intelligent.service.inter.IntelligentService;
+import com.boco.share.function.intelligent.bean.Intelligent;
+import com.boco.share.function.intelligent.dao.IntelligentMapper;
+import com.boco.share.function.intelligent.fegin.IntelligentFegin;
+import com.boco.share.function.intelligent.service.inter.IntelligentService;
 
 @Service
 public class IntelligentServiceImpl implements IntelligentService {

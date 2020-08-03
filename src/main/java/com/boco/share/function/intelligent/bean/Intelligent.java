@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.boco.spss.function.intelligent.bean;
+package com.boco.share.function.intelligent.bean;
 
 /**
  * @author lv

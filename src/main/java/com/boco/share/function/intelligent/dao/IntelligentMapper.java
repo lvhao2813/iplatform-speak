@@ -1,4 +1,4 @@
-package com.boco.spss.function.intelligent.dao;
+package com.boco.share.function.intelligent.dao;
 
 import java.util.List;
 import java.util.Map;

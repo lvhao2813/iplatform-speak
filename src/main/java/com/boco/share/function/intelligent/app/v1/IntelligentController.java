@@ -1,4 +1,4 @@
-package com.boco.spss.function.intelligent.app.v1;
+package com.boco.share.function.intelligent.app.v1;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.druid.util.StringUtils;
-import com.boco.spss.framework.pagination.Pagination;
-import com.boco.spss.function.intelligent.bean.Intelligent;
-import com.boco.spss.function.intelligent.service.inter.IntelligentService;
+import com.boco.share.framework.pagination.Pagination;
+import com.boco.share.function.intelligent.bean.Intelligent;
+import com.boco.share.function.intelligent.service.inter.IntelligentService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;

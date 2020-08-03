@@ -1,9 +1,9 @@
-package com.boco.spss.function.intelligent.service.inter;
+package com.boco.share.function.intelligent.service.inter;
 
 import java.util.List;
 import java.util.Map;
 
-import com.boco.spss.function.intelligent.bean.Intelligent;
+import com.boco.share.function.intelligent.bean.Intelligent;
 
 public interface IntelligentService {
 
