@@ -1,9 +1,9 @@
-package com.boco.share.function.intelligent.service.inter;
+package com.boco.spss.function.intelligent.service.inter;
 
 import java.util.List;
 import java.util.Map;
 
-import com.boco.share.function.intelligent.bean.Intelligent;
+import com.boco.spss.function.intelligent.bean.Intelligent;
 
 public interface IntelligentService {
 
@@ -12,8 +12,10 @@ public interface IntelligentService {
 	 * 
 	 * @param question
 	 */
-	public void saveQuestion(String question);
+	public void saveQuestion(Map<String, String> formMap);
 
 	public List<Intelligent> queyQuestion(Map<String, String> formMap);
+
+	public String answerInfo(Map<String, String> formMap);
 
 }

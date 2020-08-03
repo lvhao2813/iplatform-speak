@@ -4,7 +4,7 @@
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 	<head>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<div th:insert="common/common_css :: privilege"></div>
+<div th:insert="/common/common_css :: privilege"></div>
 
 
 <script type="text/javascript" th:inline="javascript">
@@ -12,6 +12,7 @@ function resetSearch(){
 	$("input[id='question']").val("");
 	$("input[id='sim']").val("");
 	$("input[id='top']").val("");
+	callFormSubmit();
 }
 
 
@@ -29,7 +30,7 @@ function resetSearch(){
 <div id="main">
 		<div class="box">
 			<div class="title">	
-				    	<h2>当前位置：<a th:href="${session.homeUrl}">首页</a> > <a>系统管理 </a>  > <a class="active">问题匹配</a></h2>				
+				    	<h2>当前位置：<a th:href="${session.homeUrl}">首页</a> > <a>功能模块 </a>  > <a class="active">智能客服</a></h2>				
 			</div>
 						<table width="100%" cellpadding="0" cellspacing="0" class="text-table mt10">
 				            <tr>
@@ -63,7 +64,7 @@ function resetSearch(){
 								<th>相似度</th>
 			       			</tr>
 			       			<tr th:each="question : ${resultList}">
-								<td th:text="${question.question}"></td>
+								<td th:text="${question.question}" th:onclick="'javascript:openAnswerInfo(\'/api/v1/intelligent/answerInfo?questionId='+${question.question}+'\')'"></td>
 								<td th:text="${question.similarity}"></td>
 							</tr>
 			       		
@@ -81,6 +82,10 @@ function resetSearch(){
 				document.getElementById('callForm').action = contextPath + 'info?questionId='+questionId+"&sortId="+sortId;
 				document.getElementById('callForm').method = 'post';
 				document.getElementById('callForm').submit();
+			}
+			
+			function openAnswerInfo(url){
+				openCommonLayer('问题解答','700px','450px',url);
 			}
 		</script>
 	</form>
